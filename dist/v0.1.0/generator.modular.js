@@ -71,8 +71,6 @@ export async function loaddefaults() {
     window.addCopyIcon = addCopyIcon
     var { default: typeAnimate } = await import("./submodules/typeAnimate.js")
     window.typeAnimate = typeAnimate
-
-    load(['./cdn/style/sitestyle.css'])//load default styles()
     addCopyIcon()
     loadSpaceGame()
     loadCopyright()
