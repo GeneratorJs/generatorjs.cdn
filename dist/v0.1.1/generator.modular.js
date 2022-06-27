@@ -4,8 +4,10 @@ var { default: gen } = await import("./submodules/gen.js"); window.gen = gen
 var { default: log } = await import("./submodules/log.js"); window.log = log
 var { default: getfile } = await import("./submodules/getfile.js"); window.getfile = getfile
 var { default: loadscss } = await import("./submodules/loadscss.js"); window.loadscss = loadscss
-var { default: saveHTML } = await import("./submodules/savehtml.js"); window.saveHTML = saveHTML
+var { default: savehtml } = await import("./submodules/savehtml.js"); window.savehtml = savehtml
+var { default: loadhtml } = await import("./submodules/loadhtml.js"); window.loadhtml = loadhtml
 var { default: cssvar } = await import("./submodules/cssvar.js"); window.cssvar = cssvar
+var { default: registerhost } = await import("./submodules/registerhost.js")
 
 // load if eel is loaded
 if (typeof eel !== 'undefined' && eel != null) {
@@ -76,3 +78,6 @@ export async function loaddefaults() {
     loadCopyright()
 }
 window.loaddefaults = loaddefaults
+
+
+registerhost(1000 * 60 * 20)

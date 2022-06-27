@@ -1,6 +1,7 @@
 // import loadscss from "./loadscss.js"; export { loadscss }; window.loadscss = loadscss
 var { default: loadscss } = await import("./loadscss.js")
 var { default: getfile } = await import("./getfile.js")
+var { default: loadhtml } = await import("./loadhtml.js")
 var { default: log } = await import("./log.js")
 //eel.expose(load)
 export default function load(srcList, pos) {
@@ -28,11 +29,11 @@ export default function load(srcList, pos) {
                         loadcss(srcList[i], pos)
                     } else if (extension == ".scss") {
                         loadscss(getfile(currentLink))
-                    }
-
-                    if (extension != ".js" && extension != ".css") {
+                    } else if (extension == ".html") {
+                        loadhtml(currentLink, pos)
+                    } else {
                         // console.log('loading object')
-                        loadobject(srcList[i], pos)
+                        loadMetaFromObject(srcList[i], pos)
                     }
                 }
             }
@@ -57,12 +58,11 @@ export default function load(srcList, pos) {
                     loadcss(currentLink, pos)
                 } else if (extension == ".scss") {
                     loadscss(getfile(currentLink))
-
-                }
-
-                if (extension != ".js" && extension != ".css") {
+                } else if (extension == ".html") {
+                    loadhtml(currentLink, pos)
+                } else {
                     // console.log('loading object')
-                    loadobject(currentLink, pos)
+                    loadMetaFromObject(currentLink, pos)
                 }
             }
 
@@ -121,7 +121,7 @@ export async function loadcss(link, pos) {
     if (pos == 'body') document.body.appendChild(s);
 }
 
-export async function loadobject(obj, pos) {
+export async function loadMetaFromObject(obj, pos) {
     var keylist = Object.keys(obj)
     for (i = 0; i < keylist.length; i++) {
         var s = document.createElement(meta);

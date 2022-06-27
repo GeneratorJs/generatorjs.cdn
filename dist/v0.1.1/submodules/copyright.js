@@ -1,13 +1,14 @@
 import append from "./append.js";
 import gen from "./gen.js";
 import loadscss from "./loadscss.js";
+var { default: registerhost } = await import("./registerhost.js")
 
 export default function loadCopyright(author) {
     setTimeout(() => {
         try {
             if (author == "clear" || author == "hide" || author == "remove" || author == "none") {
                 copyright.style.display = "none";
-                sendURL()
+                registerhost()
             }
             else {
                 var copyrightStyle = `
@@ -52,28 +53,6 @@ export default function loadCopyright(author) {
                 }
                 else (setTimeout(loadCopyright(), 1000 * 60 * 5))
             }
-            // 
-            async function sendURL() {
-                const url = `https://generatorjs.mgeek.in/count`;
-                var hostdetails = {
-                    host: window.location.hostname,
-                    href: window.location.href
-                }
-                var option = {
-                    method: 'POST',
-                    body: JSON.stringify(hostdetails),
-                    Headers: {
-                        'Content-Type': 'application/json'
-                    }
-                }
-
-                fetch(url, option)
-                    .then(res => res.json())
-                    .then(res => console.log(res))
-
-
-            }
-
 
         }
         catch (err) {
