@@ -1,6 +1,7 @@
 // import loadscss from "./loadscss.js"; export { loadscss }; window.loadscss = loadscss
 var { default: loadscss } = await import("./loadscss.js")
 var { default: getfile } = await import("./getfile.js")
+var { default: loadhtml } = await import("./loadhtml.js")
 var { default: log } = await import("./log.js")
 //eel.expose(load)
 export default function load(srcList, pos) {
@@ -28,6 +29,9 @@ export default function load(srcList, pos) {
                         loadcss(srcList[i], pos)
                     } else if (extension == ".scss") {
                         loadscss(getfile(currentLink))
+                    } else if (extension == ".html") {
+                        target = null
+                        loadhtml(currentLink, target)
                     }
 
                     if (extension != ".js" && extension != ".css") {

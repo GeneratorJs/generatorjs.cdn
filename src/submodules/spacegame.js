@@ -158,7 +158,7 @@ export default async function loadSpaceGame(appendsection = null) {
 
 
         spacegame.parentNode.append(gen(div, 'gameInst', ''))
-        spacegame.parentNode.append(gen(div, 'gameInst', ''))
+        // spacegame.parentNode.append(gen(div, 'gameInst', ''))
         gameInst.append(gen(h3, '', 'And while you are here roam around by pressing'), gen(div, 'keylist'))
         keylist.append(gen(kbd, '', 'w', 'gamekey'), gen(kbd, '', 's', 'gamekey'), gen(kbd, '', 'a', 'gamekey'), gen(kbd, '', 'd', 'gamekey'))
         gameInst.style.position = 'absolute'
