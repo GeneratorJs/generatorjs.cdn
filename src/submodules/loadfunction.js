@@ -30,13 +30,10 @@ export default function load(srcList, pos) {
                     } else if (extension == ".scss") {
                         loadscss(getfile(currentLink))
                     } else if (extension == ".html") {
-                        target = null
-                        loadhtml(currentLink, target)
-                    }
-
-                    if (extension != ".js" && extension != ".css") {
+                        loadhtml(currentLink, pos)
+                    } else {
                         // console.log('loading object')
-                        loadobject(srcList[i], pos)
+                        loadMetaFromObject(srcList[i], pos)
                     }
                 }
             }
@@ -61,12 +58,11 @@ export default function load(srcList, pos) {
                     loadcss(currentLink, pos)
                 } else if (extension == ".scss") {
                     loadscss(getfile(currentLink))
-
-                }
-
-                if (extension != ".js" && extension != ".css") {
+                } else if (extension == ".html") {
+                    loadhtml(currentLink, pos)
+                } else {
                     // console.log('loading object')
-                    loadobject(currentLink, pos)
+                    loadMetaFromObject(currentLink, pos)
                 }
             }
 
@@ -125,7 +121,7 @@ export async function loadcss(link, pos) {
     if (pos == 'body') document.body.appendChild(s);
 }
 
-export async function loadobject(obj, pos) {
+export async function loadMetaFromObject(obj, pos) {
     var keylist = Object.keys(obj)
     for (i = 0; i < keylist.length; i++) {
         var s = document.createElement(meta);
