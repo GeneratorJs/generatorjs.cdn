@@ -22,7 +22,7 @@ export default function updatePageNav() {
     --satLink:80%;
     outline-top:1px solid aqua;
     position: absolute;
-    top: calc(100% + 3px);
+    top: calc(100% );
     right: 0px;
     width: minmax(300px, 30%);
     max-width: 80vw;
@@ -44,24 +44,24 @@ export default function updatePageNav() {
 
 
     #themeControl {
-
         position:relative;
-        top:0%;
         display: flex;
         flex-direction: column;
-        padding-inline: 2em;
-        padding-block: 1em;
-        margin-bottom: .5em;
-z-Index:+1;
+        // padding-inline: 2em;
+        padding-top: 1em;
+        // margin-bottom: .5em;
+
         .themeControlUl{
-            // padding-block: 1em;
+
+            margin-top:10px;
+            margin-bottom:10px;
             display: flex;
             flex-direction: row;
             flex-wrap: wrap;
-            justify-content: space-between;
-
+            
+            justify-content:space-around;
             li {
-                padding-inline: 25px;
+                // padding: 20px;
                 // margin-inline: 30px;
                 cursor:pointer;
             }
@@ -89,7 +89,7 @@ z-Index:+1;
         --hueComp:40;
         // background-color: hsla(var(--hueComp,50), 20%, 10%, 0.5);
         display: flex;
-        flex-direction: column;
+        flex-direction: column; 
         min-height: 40vh;
         max-height: min(calc(100% - 2em), calc(100vh - 2em));
         overflow-y: auto;
@@ -185,7 +185,7 @@ z-Index:+1;
 
             }
             catch (err) { console.error(err) }
-        }, 2000)
+        }, 3000)
     }
     catch (err) { console.error(err) }
 
@@ -221,7 +221,7 @@ function updatePageNavUl() {
     }
     append(pageNavUl, "", "over")
 
-    var sectionlist = document.querySelectorAll("main #hero>h1,main div h1,main section h1,main footer h1")
+    var sectionlist = document.querySelectorAll("main #hero>h1,main div h1,main section h1,footer h1")
     sectionlist.forEach(element => {
         var pageNavUl = document.getElementById("pageNavUl")
         append(pageNavUl, gen("li", "", gen(a, "", element.innerHTML, 'hoverblock', `#${element.parentElement.id}`.replaceAll("##", "#"))))
