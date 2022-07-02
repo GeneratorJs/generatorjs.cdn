@@ -9,11 +9,10 @@ var { default: savehtml } = await import("./submodules/savehtml.js"); window.sav
 var { default: loadhtml } = await import("./submodules/loadhtml.js"); window.loadhtml = loadhtml
 var { default: cssvar } = await import("./submodules/cssvar.js"); window.cssvar = cssvar
 var { default: registerhost } = await import("./submodules/registerhost.js")
-var { default: updatePageNav } = await import("./submodules/pagenav.js"); window.updatePageNav = updatePageNav
 
 
 // load if eel is loaded
-if (typeof eel !== 'undefined' && eel != null) {
+if (typeof eel !== "undefined" && eel != null) {
     enableEel()
 } else { /* retry once */
     setTimeout(enableEel, 4000)
@@ -46,17 +45,22 @@ window.hide = hide
 
 //Load generator styles
 export async function loaddefaults() {
-    var { default: loadSpaceGame } = await import("./submodules/spacegame.js")
+    var { default: loadSpaceGame, spaceGameAnimate } = await import("./submodules/spacegame.js")
     window.loadSpaceGame = loadSpaceGame
+    window.spaceGameAnimate = spaceGameAnimate
     var { default: loadCopyright } = await import("./submodules/copyright.js")
     window.loadCopyright = loadCopyright
     var { default: addCopyIcon } = await import("./submodules/addCopyIcon.js")
     window.addCopyIcon = addCopyIcon
     var { default: typeAnimate } = await import("./submodules/typeAnimate.js")
     window.typeAnimate = typeAnimate
+    var { default: updatePageNav } = await import("./submodules/pagenav.js"); window.updatePageNav = updatePageNav
+
     addCopyIcon()
+    updatePageNav()
     loadSpaceGame()
-    loadCopyright()
+    // loadCopyright()
+
 }
 window.loaddefaults = loaddefaults
 

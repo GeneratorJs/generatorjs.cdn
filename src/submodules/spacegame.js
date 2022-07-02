@@ -2,6 +2,58 @@
 
 export default async function loadSpaceGame(appendsection = null) {
 
+    var spacegamestyle = `
+    #spacegame{
+        width:100%;
+        min-height:100vh;
+    }
+    
+#gameInst {
+    opacity: .05;
+    transition: all 500ms ease-out;
+    animation: gameblink 2s 5;
+    padding: 50px;
+
+    &:hover {
+        opacity: .5;
+        // animation: gameblink 2s 1;
+    }
+
+    #keylist {
+        display: flex;
+
+        .gamekey {
+            display: flex;
+            justify-content: left;
+            padding: 4wpx;
+            min-height: 40px;
+            min-width: 40px;
+            margin: 4px;
+            font-style: italic;
+            border-radius: 2px;
+            border: 1px solid #fff;
+
+        }
+    }
+
+
+}
+
+@keyframes gameblink {
+    from {
+        opacity: .01;
+    }
+
+
+    to {
+        opacity: .1;
+    }
+
+}
+
+`
+
+    loadscss(spacegamestyle)
     class Star {
         constructor() {
             this.x = Math.random();
@@ -129,7 +181,7 @@ export default async function loadSpaceGame(appendsection = null) {
         try {
             canvasOne.width = window.innerWidth;
             canvasOne.height = window.innerHeight;
-            canvasOne.style.background = "rgba(0, 40, 60, .1)"
+            canvasOne.style.background = "hsla(0, 40%, calc(30% * var(--lightFactor,1)), .1)"
         }
         catch (e) { console.error(e) }
     }
@@ -154,7 +206,7 @@ export default async function loadSpaceGame(appendsection = null) {
 
         // main.append(gen(div, '', '', 'section'))
 
-        var heroSection = document.getElementsByClassName('section')[0];
+        // var heroSection = document.getElementsByClassName('section')[0];
 
 
 
@@ -168,14 +220,15 @@ export default async function loadSpaceGame(appendsection = null) {
 
         var firstSectionZindex = firstSection.style.zIndex
         firstSection.style.zIndex = firstSectionZindex + 1
-        spacegame.style.zIndex = firstSectionZindex - 1;
-        gameInst.style.zIndex = firstSectionZindex;
+        spacegame.style.zIndex = firstSectionZindex - 2;
+        gameInst.style.zIndex = firstSectionZindex - 3;
 
 
 
         spacegame.style.position = 'absolute'
         spacegame.style.top = 0
         spacegame.style.left = 0
+        spacegame.style.height = firstSection.style.height
         // spacegame.style.zIndex = firstSectionZindex - 1;
         // firstSection.style.zIndex = 2;
         firstSection.style.minHeight = '100vh';
@@ -217,7 +270,7 @@ export default async function loadSpaceGame(appendsection = null) {
             StarArray[i] = cc
         }
 
-        animate()
+        spaceGameAnimate()
 
 
 
@@ -247,15 +300,21 @@ export default async function loadSpaceGame(appendsection = null) {
 
 
 
-    async function animate() {
+    async function spaceGameAnimate() {
         try {
             draw.clearRect(0, 0, canvasOne.width, canvasOne.height)
             for (i = 0; i < StarArray.length; i++) {
                 StarArray[i].show()
             }
-            requestAnimationFrame(animate)
+
+            requestAnimationFrame(spaceGameAnimate)
+        } catch (error) {
+            console.info("error Animating Spacegame");
+            console.error(error)
+            setTimeout(spaceGameAnimate, 1000)
         }
-        catch (error) { console.info("error Animating Spacegame"); console.error(error) }
+
+
 
     }
 

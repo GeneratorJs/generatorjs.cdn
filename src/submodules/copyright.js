@@ -13,6 +13,7 @@ export default function loadCopyright(author) {
             else {
                 var copyrightStyle = `
                 #copyright {
+                    position:relative;
                     display: flex;
                     flex-direction: row;
                     justify-content: space-between;
@@ -23,6 +24,7 @@ export default function loadCopyright(author) {
                     font-weight: 200;
                     z-index:10;
                     box-shadow:-2px 0 2px black;
+                    width:100%;
                     p {
                         padding-left: 10px;
                         margin-left: 20px;
@@ -38,10 +40,13 @@ export default function loadCopyright(author) {
 
 
                 var copyrightparent = document.querySelectorAll("#copyright,.copyright,footer,#footer,.footer")[0]
+                console.info(copyrightparent)
                 if (copyrightparent.innerHTML.length > 200) {
-                    append(copyrightparent, gen(div, "copyright", "", 'copyrights full'))
+                    append(copyrightparent, gen(div, "copyright", "", 'copyrights'), "after")
                     append(copyright, "", 'over')
-                    append(copyright, gen("span", "copyurl", `Designed with <a href="https://generatorjs.mgeek.in">GeneratorJs</a> &copy 2022 <a href="http://mgeek.in">mGeek.in</a>`))
+                    let d = new Date();
+                    let year = d.getFullYear();
+                    append(copyright, gen("span", "copyurl", `Designed with <a href="https://generatorjs.mgeek.in">GeneratorJs</a> &copy ${year} <a href="http://mgeek.in">mGeek.in</a>`))
                     if (author == undefined) {
                         append(copyright, gen("span", "copyauthor", "Designed by "))
                         append(copyauthor, gen("a", "copyrightauthor", "Dr. Prateek Raj Gautam", "", "https://webmaster.mgeek.in/"))
@@ -63,4 +68,4 @@ export default function loadCopyright(author) {
     }, 2500)
 };
 
-// loadCopyright()
+loadCopyright()
