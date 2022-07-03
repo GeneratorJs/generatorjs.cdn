@@ -7,11 +7,11 @@ export default async function loadcustomizer() {
     var customizerStyle = `
 
 :root{
-    --hueComp:120;
-    --hueAscent:40;
-    --hue:180;
-    --hueLink:40;
-    --satLink:80%;
+    // --hueComp:120;
+    // --hueAscent:40;
+    // --hue:180;
+    // --hueLink:40;
+    // --satLink:80%;
     --color-scheme:light dark;
     --lightFactor:1%;
     color-scheme: var(--color-scheme);
