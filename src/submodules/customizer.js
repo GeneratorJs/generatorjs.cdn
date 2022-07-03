@@ -22,8 +22,8 @@ export default async function loadcustomizer() {
     position:relative;
     // top:0px;
     // left:0px;
-    // top: calc(100% );
-    height: calc(100vh - 100%);
+    // // top: calc(100% );
+    // height: calc(100vh - 100%);
     display:flex;
     display:none;
     flex-direction:column;
@@ -31,10 +31,15 @@ export default async function loadcustomizer() {
     // min-height:10em;
     font-size: 16px;
     background-color: hsla(120, 10%, 10%,.2);
-    padding-top:5px;
-    padding:1em;
+    // padding-top:5px;
+    // padding:1em;
     // resize:true;
     transition:display 1s ease-in-out;
+    padding:1em;
+    transform: perspective(100px) translateZ(-10px);
+    border:1px solid white;
+    border-radius:.5em;
+    
 
 
  
@@ -159,7 +164,7 @@ export default async function loadcustomizer() {
     append(customizer, gen("h1", "customizerh3", "customizer", ''))
 
 
-
+    appendSliders()
 
 }
 
@@ -201,3 +206,14 @@ export function resetTheme() {
     sessionStorage.clear()
 }
 window.resetTheme = resetTheme
+
+
+function appendSliders() {
+    console.info("appendSliders")
+    var variables = [["Theme Color", 'hue'], ["Ascent Color", 'hueAscent'], ["Zoom", 'fontScale']]
+    variables.forEach(variable => {
+        append(customizer, gen(p, `${variable[1]}Control`, variable[0]))
+        append(`#${variable[1]}Control`, [gen(span, `${variable[1]}Disp`), gen(input, variable[1], "", "slider themeslider", { "type": "range", "min": 0, "max": 360, "step": .1, "value": 0 })])
+    })
+
+}
