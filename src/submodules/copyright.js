@@ -13,6 +13,7 @@ export default function loadCopyright(author) {
             else {
                 var copyrightStyle = `
                 #copyright {
+                    box-sizing:border-box;
                     position:relative;
                     display: flex;
                     flex-direction: row;
@@ -22,7 +23,7 @@ export default function loadCopyright(author) {
                     background-color: hsla(236, 36%, 20%, 1);
                     font-size: 12px;
                     font-weight: 200;
-                    z-index:10;
+                    z-index:100;
                     box-shadow:-2px 0 2px black;
                     width:100%;
                     p {

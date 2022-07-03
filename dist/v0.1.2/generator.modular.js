@@ -1,3 +1,4 @@
+var { default: loadhtmltags } = await import("./submodules/loadhtmltags.js"); loadhtmltags()
 var { default: load } = await import("./submodules/loadfunction.js"); window.load = load
 var { default: append } = await import("./submodules/append.js"); window.append = append
 var { default: gen } = await import("./submodules/gen.js"); window.gen = gen
@@ -9,8 +10,9 @@ var { default: loadhtml } = await import("./submodules/loadhtml.js"); window.loa
 var { default: cssvar } = await import("./submodules/cssvar.js"); window.cssvar = cssvar
 var { default: registerhost } = await import("./submodules/registerhost.js")
 
+
 // load if eel is loaded
-if (typeof eel !== 'undefined' && eel != null) {
+if (typeof eel !== "undefined" && eel != null) {
     enableEel()
 } else { /* retry once */
     setTimeout(enableEel, 4000)
@@ -27,29 +29,7 @@ async function enableEel() {
 }
 //function to declare basic tags as const
 const app = document.getElementById('app')
-function loadBasicHtmlVariables() {
-    var listOfBasicHtmlTags = "div,p,span,b,i,img,video,picture,canvas,svg,audio,h1,h2,h3,h4,h5,h6,table,thead,tbody,tr,td,ul,li,ol,a,textarea,input,output,select,option,checkbox,radio,button,embed,object,iframe,kbd,code,dl,dt,dd,meta,pre,form,fieldset,legend,label,section,main,aside,header,footer,nav,meta,head,body,dialog,details,summary,figure,figcaption,sidebar,style,script,del,ins,wbr,mark,time";
-    var list = listOfBasicHtmlTags.replaceAll(' ', ',').replaceAll(',,', ',')
-    let start = 0;
-    let end = list.length
-    let comaAt = []
-    for (let i = 0; i < list.length; i++) {
-        if (list[i] == ',') comaAt[comaAt.length] = i
-    }
-    if (comaAt.length == 0) eval(eval(`const ${list}='${list}';`))
-    if (comaAt.length > 0) {
-        comaAt[comaAt.length] = end
-        for (let i = 0; i < comaAt.length; i++) {
-            var tag = list.slice(start, comaAt[i])
-            start = comaAt[i] + 1
-            if (tag.length > 0) {
-                let expression = `window.${tag} = '${tag}'`
-                window.eval(expression)
-            }
-        }
-    }
-}
-loadBasicHtmlVariables()
+
 
 function remove(c) {
     if (c != null) append(c, "", 'replace')
@@ -65,17 +45,22 @@ window.hide = hide
 
 //Load generator styles
 export async function loaddefaults() {
-    var { default: loadSpaceGame } = await import("./submodules/spacegame.js")
+    var { default: loadSpaceGame, spaceGameAnimate } = await import("./submodules/spacegame.js")
     window.loadSpaceGame = loadSpaceGame
+    window.spaceGameAnimate = spaceGameAnimate
     var { default: loadCopyright } = await import("./submodules/copyright.js")
     window.loadCopyright = loadCopyright
     var { default: addCopyIcon } = await import("./submodules/addCopyIcon.js")
     window.addCopyIcon = addCopyIcon
     var { default: typeAnimate } = await import("./submodules/typeAnimate.js")
     window.typeAnimate = typeAnimate
+    var { default: updatePageNav } = await import("./submodules/pagenav.js"); window.updatePageNav = updatePageNav
+
     addCopyIcon()
+    updatePageNav()
     loadSpaceGame()
-    loadCopyright()
+    // loadCopyright()
+
 }
 window.loaddefaults = loaddefaults
 

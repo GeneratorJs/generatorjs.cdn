@@ -2,12 +2,64 @@
 
 export default async function loadSpaceGame(appendsection = null) {
 
-    class Particle {
+    var spacegamestyle = `
+    #spacegame{
+        width:100%;
+        min-height:100vh;
+    }
+    
+#gameInst {
+    opacity: .05;
+    transition: all 500ms ease-out;
+    animation: gameblink 2s 5;
+    padding: 50px;
+
+    &:hover {
+        opacity: .5;
+        // animation: gameblink 2s 1;
+    }
+
+    #keylist {
+        display: flex;
+
+        .gamekey {
+            display: flex;
+            justify-content: left;
+            padding: 4wpx;
+            min-height: 40px;
+            min-width: 40px;
+            margin: 4px;
+            font-style: italic;
+            border-radius: 2px;
+            border: 1px solid #fff;
+
+        }
+    }
+
+
+}
+
+@keyframes gameblink {
+    from {
+        opacity: .01;
+    }
+
+
+    to {
+        opacity: .1;
+    }
+
+}
+
+`
+
+    loadscss(spacegamestyle)
+    class Star {
         constructor() {
             this.x = Math.random();
             this.y = Math.random();
             this.size = Math.random() * .1
-            this.maxSize = 4
+            this.maxSize = 3
             this.z = Math.random();
 
             this.speed = .0005;
@@ -41,43 +93,43 @@ export default async function loadSpaceGame(appendsection = null) {
             // this.hue += Math.random() * 5wwww
             if (this.hue >= 360) this.hue = Math.random();
 
-            if (pressedKeys.has("w") || pressedKeys.has("W")) {
+            if (pressedKeys.has("w") || pressedKeys.has("W") || pressedKeys.has("ArrowUp")) {
                 speed_x = speed_x * 4
                 speed_y = speed_y * 4
                 speed_z = speed_z * 2
-                if (pressedKeys.has("d") || pressedKeys.has("D")) {
+                if (pressedKeys.has("d") || pressedKeys.has("D") || pressedKeys.has("ArrowRight")) {
                     this.x -= speed_z / this.z
                     this.checkReset()
                 }
-                if (pressedKeys.has("a") || pressedKeys.has("A")) {
+                if (pressedKeys.has("a") || pressedKeys.has("A") || pressedKeys.has("ArrowLeft")) {
                     this.x += speed_z / this.z
                     this.checkReset()
                 }
 
             }
-            if (pressedKeys.has("s") || pressedKeys.has("S")) {
+            if (pressedKeys.has("s") || pressedKeys.has("S") || pressedKeys.has("ArrowDown")) {
                 speed_x = speed_x * -4
                 speed_y = speed_y * -4
                 speed_z = speed_z * -2
                 if (this.z <= .1) {
                     this.reset(-1)
                 }
-                if (pressedKeys.has("d") || pressedKeys.has("D")) {
+                if (pressedKeys.has("d") || pressedKeys.has("D") || pressedKeys.has("ArrowRight")) {
                     this.x -= speed_z / this.z
                     this.checkReset()
                 }
-                if (pressedKeys.has("a") || pressedKeys.has("A")) {
+                if (pressedKeys.has("a") || pressedKeys.has("A") || pressedKeys.has("ArrowLeft")) {
                     this.x += speed_z / this.z
                     this.checkReset()
                 }
             }
 
             if (!(pressedKeys.has("s") || pressedKeys.has("S") || pressedKeys.has("w") || pressedKeys.has("W"))) {
-                if (pressedKeys.has("d") || pressedKeys.has("D")) {
+                if (pressedKeys.has("d") || pressedKeys.has("D") || pressedKeys.has("ArrowRight")) {
                     this.x -= speed_z / this.z
                     this.checkReset()
                 }
-                if (pressedKeys.has("a") || pressedKeys.has("A")) {
+                if (pressedKeys.has("a") || pressedKeys.has("A") || pressedKeys.has("ArrowLeft")) {
                     this.x += speed_z / this.z
                     this.checkReset()
                 }
@@ -126,11 +178,13 @@ export default async function loadSpaceGame(appendsection = null) {
         }
     }
     function resizeCanvas() {
-        // var canvasOne = document.getElementById('spacegame');
-        // log(canvasOne.parentElement.height)
-        canvasOne.width = window.innerWidth;
-        canvasOne.height = window.innerHeight;
-        canvasOne.style.background = "rgba(0, 40, 60, .1)"
+        try {
+
+            canvasOne.width = window.innerWidth;
+            canvasOne.height = Math.max(window.innerHeight, firstSection.offsetHeight);
+            canvasOne.style.background = "hsla(0, 40%, calc(30% * var(--lightFactor,1)), .1)"
+        }
+        catch (e) { console.error(e) }
     }
     console.info("loading space game")
     var canvasOne = document.createElement(canvas)
@@ -153,26 +207,36 @@ export default async function loadSpaceGame(appendsection = null) {
 
         // main.append(gen(div, '', '', 'section'))
 
-        var heroSection = document.getElementsByClassName('section')[0];
+        // var heroSection = document.getElementsByClassName('section')[0];
 
 
+        var firstSectionZindex = firstSection.style.zIndex
+        firstSection.style.zIndex = firstSectionZindex + 1
+        spacegame.style.zIndex = firstSectionZindex - 2;
 
-        spacegame.parentNode.append(gen(div, 'gameInst', ''))
-        // spacegame.parentNode.append(gen(div, 'gameInst', ''))
-        gameInst.append(gen(h3, '', 'And while you are here roam around by pressing'), gen(div, 'keylist'))
-        keylist.append(gen(kbd, '', 'w', 'gamekey'), gen(kbd, '', 's', 'gamekey'), gen(kbd, '', 'a', 'gamekey'), gen(kbd, '', 'd', 'gamekey'))
-        gameInst.style.position = 'absolute'
-        gameInst.style.top = '70vh'
-        gameInst.style.right = '5em'
-        gameInst.style.zIndex = 1;
+
+        function showGameKeys() {
+            spacegame.parentNode.append(gen(div, 'gameInst', ''))
+            // spacegame.parentNode.append(gen(div, 'gameInst', ''))
+            gameInst.append(gen(h3, '', 'And while you are here roam around by pressing'), gen(div, 'keylist'))
+            keylist.append(gen(kbd, '', 'w', 'gamekey'), gen(kbd, '', 's', 'gamekey'), gen(kbd, '', 'a', 'gamekey'), gen(kbd, '', 'd', 'gamekey'))
+            gameInst.style.position = 'absolute'
+            gameInst.style.top = '70vh'
+            gameInst.style.right = '5em'
+
+            gameInst.style.zIndex = firstSectionZindex - 3;
+        }
+
+
 
 
 
         spacegame.style.position = 'absolute'
         spacegame.style.top = 0
         spacegame.style.left = 0
-        spacegame.style.zIndex = -1;
-        firstSection.style.zIndex = 2;
+        spacegame.style.height = firstSection.style.height
+        // spacegame.style.zIndex = firstSectionZindex - 1;
+        // firstSection.style.zIndex = 2;
         firstSection.style.minHeight = '100vh';
         // firstSection.style.opacity = .5;
         // var canvasOne = document.getElementById('bg');
@@ -198,8 +262,6 @@ export default async function loadSpaceGame(appendsection = null) {
         draw.stroke();
 
 
-        // draw.line
-        // draw.showfill()
         var center = {
             'x': .6,
             'y': .5
@@ -207,17 +269,15 @@ export default async function loadSpaceGame(appendsection = null) {
 
 
         var pressedKeys = new Set()
-        var particleArray = []
+        var StarArray = []
         for (i = 0; i < 150; i++) {
-            var cc = new Particle();
+            var cc = new Star();
             // log(cc)
-            particleArray[i] = cc
+            StarArray[i] = cc
         }
 
-        animate()
+        spaceGameAnimate()
 
-
-        // spacegame.addEventListener('keypess', (e) => { console.log(e.key) })
 
 
 
@@ -246,20 +306,23 @@ export default async function loadSpaceGame(appendsection = null) {
 
 
 
-    async function animate() {
-        draw.clearRect(0, 0, canvasOne.width, canvasOne.height)
-        for (i = 0; i < particleArray.length; i++) {
-            particleArray[i].show()
-        }
-        // var pressedKeys = new Set()
+    async function spaceGameAnimate() {
+        try {
+            draw.clearRect(0, 0, canvasOne.width, canvasOne.height)
+            for (i = 0; i < StarArray.length; i++) {
+                StarArray[i].show()
+            }
 
-        requestAnimationFrame(animate)
+            requestAnimationFrame(spaceGameAnimate)
+        } catch (error) {
+            console.info("error Animating Spacegame");
+            console.error(error)
+            setTimeout(spaceGameAnimate, 1000)
+        }
+
+
+
     }
 
-    // appmain.append(spacegame)
 }
 
-
-// setTimeout(loadSpaceGame, 2500)
-
-// export runSpaceGame = () => { setTimeout(loadSpaceGame, 1000) }

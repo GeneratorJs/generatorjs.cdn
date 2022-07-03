@@ -1,4 +1,4 @@
-export default function getfile(URL, storage) {
+export default async function getfile(URL, storage) {
     if (typeof storage === 'undefined') storage = sessionStorage
     var name = URL
     var response = null
