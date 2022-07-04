@@ -18,27 +18,19 @@ export default async function loadcustomizer() {
 
 }
 .customizer {
-    flex-grow:1;
     position:relative;
-    // top:0px;
-    // left:0px;
-    // // top: calc(100% );
-    // height: calc(100vh - 100%);
     display:flex;
     display:none;
     flex-direction:column;
     justify-content:space-between;
-    // min-height:10em;
     font-size: 16px;
     background-color: hsla(120, 10%, 10%,.2);
-    // padding-top:5px;
-    // padding:1em;
-    // resize:true;
     transition:display 1s ease-in-out;
     padding:1em;
     transform: perspective(100px) translateZ(-10px);
-    border:1px solid white;
-    border-radius:.5em;
+    border:2px solid white;
+    border-radius:5px;
+    margin-block:2px;
     
 
 
