@@ -14,6 +14,10 @@ export default function updatePageNav() {
         if (document.getElementById("googleIconsPageNav") == null) append("head", gen("link", "googleIconsPageNav", "", "", { "rel": "stylesheet", "href": googleRoundIcon }))
         var pageNavStyle = `
 
+        body{
+            overflow-x: hidden;
+        }
+
         #pageNav {
             --hueComp:120;
             --hueAscent:40;
@@ -157,7 +161,17 @@ export default function updatePageNav() {
 
             
         }
+ 
 
+        .active.hoverblock:before{
+            content:"";
+            position:absolute;
+            height:100%;
+            width:100%;
+            top:0px;
+            right:0px;
+            border-top:4px solid aqua;
+        }
 
 }
 `
@@ -217,8 +231,11 @@ function updatePageNavUl() {
     var sectionlist = document.querySelectorAll("main #hero>h1,main div h1,main section h1,footer h1")
     sectionlist.forEach(element => {
         var pageNavUl = document.getElementById("pageNavUl")
-        append(pageNavUl, gen("li", "", gen(a, "", element.innerHTML, 'hoverblock', `#${element.parentElement.id}`.replaceAll("##", "#"))))
+        append(pageNavUl, gen("li", "", gen(a, "", element.innerHTML, 'pageNavUlLiA hoverblock', `#${element.parentElement.id}`.replaceAll("##", "#")), "pageNavUlLi"))
     });
+    updateActiveSection()
+
+
 }
 
 
@@ -253,7 +270,32 @@ function loadThemeControl() {
 window.updatePageNav = updatePageNav
 
 
-// updatePageNav()
+
+
+document.addEventListener('scroll', updateActiveSection)
+export async function updateActiveSection() {
+    let windowTop = document.documentElement.scrollTop
+    let windowHeight = window.innerHeight
+    let windowBottom = windowTop + windowHeight
+
+    var sectionlist = document.querySelectorAll("main #hero>h1,main div h1,main section h1,footer h1")
+    var pageNavUlLiA = document.querySelectorAll('.pageNavUlLiA')
+    sectionlist.forEach(sec => {
+        let sectionTop = sec.parentElement.offsetTop
+        let sectionBottom = sec.parentElement.offsetTop + sec.parentElement.offsetHeight
+        if (sectionTop <= windowTop && sectionTop <= windowBottom) {
+            let currentId = sec.parentElement.id
+            pageNavUlLiA.forEach(link => {
+                link.classList.remove('active')
+                if (link.href.includes(`#${currentId}`)) {
+                    link.classList.add('active')
+                }
+            })
+
+        }
+    })
+}
+window.updateActiveSection = updateActiveSection
 
 
 
