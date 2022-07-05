@@ -21,6 +21,7 @@ export default function loadCopyright(author) {
                     flex-wrap: wrap;
                     padding: 20px;
                     background-color: hsla(236, 36%, 20%, 1);
+                    color:white;
                     font-size: 12px;
                     font-weight: 200;
                     z-index:100;
