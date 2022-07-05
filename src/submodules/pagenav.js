@@ -46,6 +46,12 @@ export default function updatePageNav() {
             
             width: var(--leftpadding);
 
+
+
+            *{
+                text-decoration:none;
+                link-style:none;
+            }
            h1{
                 text-transform:uppercase;
             }
@@ -185,10 +191,6 @@ export default function updatePageNav() {
                 loadThemeControl()
                 updatePageNavUl()
                 loadCustomizer()
-                // append(pageNav, gen("span", 'mGeekCopyright', "mGeek", "mGeek"))
-
-
-                // document.querySelectorAll("header")[0].addEventListener('click', updatePageNav)
 
             }
             catch (err) { console.error(err) }
@@ -207,6 +209,20 @@ export default function updatePageNav() {
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 function loadPageNav(target = header) {
@@ -284,7 +300,7 @@ export async function updateActiveSection() {
         let sectionTop = sec.parentElement.offsetTop
         let sectionBottom = sec.parentElement.offsetTop + sec.parentElement.offsetHeight
         // if (windowTop > sectionTop && windowBottom < sectionTop) {
-        if (windowTop >= sectionTop) {
+        if (windowTop > sectionTop) {
             let currentId = sec.parentElement.id
             pageNavUlLiA.forEach(link => {
                 link.classList.remove('active')

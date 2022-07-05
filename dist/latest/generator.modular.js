@@ -66,3 +66,6 @@ window.loaddefaults = loaddefaults
 
 
 registerhost(1000 * 60 * 20)
+
+var $ = document.querySelectorAll
+window.$ = $;

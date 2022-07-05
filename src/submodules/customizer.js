@@ -12,9 +12,8 @@ export default async function loadcustomizer() {
     // --hue:180;
     // --hueLink:40;
     // --satLink:80%;
-    --color-scheme:light dark;
-    --lightFactor:1%;
-    color-scheme: var(--color-scheme);
+    // --color-scheme:light dark;
+    // --lightFactor:1;
 
 }
 .customizer {
@@ -31,116 +30,26 @@ export default async function loadcustomizer() {
     border:2px solid white;
     border-radius:5px;
     margin-block:2px;
+.sliderDisp{
+    padding:.5em;
+}
+   .buttonGroup{
+    display:flex;
+    flex-direction:row;
+    flex-wrap:wrap;
+    .themeButton{
+        border-radius:1em;
+        border:2px solid white;
+        width:max(auto,10em);
+        margin:1em;
+        padding:.5em 1em ;
+       
+    }
+   }
     
+   
 
 
- 
-
-    // #fixedCustomizer{
-
-    // background-color: hsla(120, 10%, 10%,.9);
-    //     position: sticky;
-    //     top: 0px;
-    //     // min-height:100vh;
-
-    // padding:1em;
-    // }
-    // #bottomCustomizer{
-    //     flex-grow:1;
-    // }
-
-
-    // #themeselectionfloat {
-    //     display: inline-grid;
-    //     display: grid;
-    //     background-color: hsl(120, 10%, 10%);
-    //     color: hsl(var(--hueTextLight), 10%, 95%);
-    //     grid-template-columns: 1fr 10fr 1fr;
-    //     grid-template-rows: auto auto 1fr;
-    //     overflow-y: auto;
-    //     padding-bottom: 50vh;
-
-    // }
-
-
-
-    // .slidecontainer {
-    //     grid-column: 2/3;
-    //     display: grid;
-    //     padding: 10px;
-
-    //     p {
-    //         font-size: 24px;
-
-    //         span {
-    //             max-width: 80%;
-    //         }
-    //     }
-
-    // }
-
-
-
-
-    // .showCustomizer {
-    //     cursor: pointer;
-    //     position: relative;
-
-    //     &:before {
-    //         font-size: .8em;
-    //         display: none;
-    //         top: 100%;
-    //     }
-
-    //     &:hover::before {
-    //         content: "Color Theme";
-    //         text-transform: capitalize;
-    //         font-size: .8em;
-    //         position: absolute;
-    //         top: 170%;
-    //         opacity: 0.75;
-    //         background-color: #323232;
-    //         color: #fff;
-    //         padding: 4px;
-    //         border-radius: 3px;
-    //         display: block;
-    //         width: 6em;
-
-    //     }
-    // }
-
-
-
-    // .showColorTheme {
-    //     padding-inline: 2em;
-    // }
-
-    // #themeConfig {
-    //     display: grid;
-    //     grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
-    //     grid-gap: 2em;
-
-    //     >.button {
-    //         padding: 5px;
-    //         margin: 0px;
-    //         max-width: minmax(50px, 200px);
-    //         font-size: 12px;
-    //     }
-    // }
-
-
-
-    // .vspace {
-    //     display: block;
-    //     padding-block: 12px;
-    //     content: ""
-
-    //     &:after {
-    //         display: block;
-    //         padding-block: 12px;
-    //         content: ""
-    //     }
-    // }
 }
 `
     loadscss(customizerStyle, "customizer")
@@ -157,6 +66,10 @@ export default async function loadcustomizer() {
 
 
     appendSliders()
+    append(customizer, gen(div, "buttonGroup", "", "buttonGroup"))
+    append(buttonGroup, gen(span, "customizerSaveThemeButton", 'Save', 'themeButton', { "onclick": "saveTheme()" }))
+    append(buttonGroup, gen(span, "customizerResetThemeButton", 'Reset', 'themeButton', { "onclick": "resetTheme()" }))
+    // append(customizer, gen(span, "customizerSaveThemeButton", 'save', 'themeButton', { "onclick": "saveTheme()" }))
 
 }
 
@@ -183,29 +96,155 @@ export function toggleDarkMode() {
     if (window.DEBUG == 1) console.info(currentState)
     if (currentState == 'light') {
         cssvar('color-scheme', 'dark')
-        cssvar('lightFactor', .3)
+        cssvar('lightFactor', 1)
+        cssvar('textColor', "#EEE")
+        cssvar('textShadow', "#222")
     }
     else {
         cssvar('color-scheme', 'light')
-        cssvar('lightFactor', 1)
+        cssvar('lightFactor', 3)
+        cssvar('textColor', "#222")
+        cssvar('textShadow', "#555")
     }
 
 }
 window.toggleDarkMode = toggleDarkMode
 
-export function resetTheme() {
-    localStorage.clear()
-    sessionStorage.clear()
-}
-window.resetTheme = resetTheme
+
 
 
 function appendSliders() {
     console.info("appendSliders")
-    var variables = [["Theme Color", 'hue'], ["Ascent Color", 'hueAscent'], ["Zoom", 'fontScale']]
+
+    var variables = [["Theme Color", 'hue'], ["Brightness", 'light'], ["Ascent Color", 'hueAscent'], ["Zoom", 'fontScale']]
+    // var variables = [["Theme Color", 'hue'], ["Ascent Color", 'hueAscent'], ["Zoom", 'fontScale']]
     variables.forEach(variable => {
         append(customizer, gen(p, `${variable[1]}Control`, variable[0]))
-        append(`#${variable[1]}Control`, [gen(span, `${variable[1]}Disp`), gen(input, variable[1], "", "slider themeslider", { "type": "range", "min": 0, "max": 360, "step": .1, "value": 0 })])
+        append(`#${variable[1]}Control`, [gen(span, `${variable[1]}Disp`, "", "sliderDisp"), gen(input, variable[1], "", "slider themeslider", { "type": "range", "min": 0, "max": 360, "step": .1, "value": 0, "onchange": "updateVar(this)" })])
     })
 
+    updateThemeSliders()
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function updateThemeSliders(variables = ["hue", "hueAscent", "light", "fontScale", "fontFamily"]) {
+    variables.forEach(variable => {
+        try {
+            var id = variable
+            var val = cssvar(id)
+
+
+            if (id.includes("light") || id.includes("sat")) {
+                append(`#${id}Disp`, val, 'over')
+                val = val * 360;
+            }
+            else if (id.includes("fontScale")) {
+                append(`#${id}Disp`, val, 'over')
+                val = (val - .4) * 360 / 2;
+            }
+            else if (id.includes("fontFamily")) someFn()
+            else append(`#${id}Disp`, val, 'over')
+            var elem = document.getElementById(id);
+            elem.setAttribute("value", val)
+        }
+        catch (e) { console.error(e) }
+    })
+}
+// from MAC
+
+
+
+
+
+
+
+
+
+
+
+export function resetTheme() {
+    // cssVar("--light", cssVar("--lightDefault"))
+    // cssVar("--sat", cssVar("--satDefault"))
+    // cssVar("--hue", cssVar("--hueDefault"))
+    localStorage.clear()
+    sessionStorage.clear()
+    // reloadAll()
+    // loadColorConfig()
+}
+
+window.resetTheme = resetTheme
+
+
+
+function saveTheme() {
+    var selectedFont = document.getElementById("FontSelect").value
+    cssVar("--font-body", selectedFont)
+
+    var colorConfig = [
+        cssVar("--hue"),
+        cssVar("--hueAscent"),
+        cssVar("--fontSize"),
+        cssVar("--font-body")
+        // document.getElementById("FontSelect").value
+    ]
+    sessionStorage.removeItem("colorConfig")
+    sessionStorage.setItem("colorConfig", JSON.stringify(colorConfig))
+}
+
+async function loadColorConfig(inputConfig) {
+    if (inputConfig == null) inputConfig = await JSON.parse(sessionStorage.getItem("colorConfig"))
+    cssVar("--hue", inputConfig[0])
+    cssVar("--hueAscent", inputConfig[1])
+    cssVar("--fontSize", inputConfig[2])
+    cssVar("--font-body", inputConfig[3])
+    document.getElementById("FontSelect").value = inputConfig[3]
+    changeBodyFont()
+    // closecustomizer()
+}
+
+
+function changeBodyFont() {
+    var fontselecteled = document.getElementById("FontSelect").value
+    cssVar("--font-body", `"${fontselecteled}"`)
+    document.body.style.fontFamily = fontselecteled
+    var all_headings = document.querySelectorAll("h1,h2,h3,h4,h5,h6")
+    for (i = 0; i < all_headings.length; i++) {
+        cssVar("--font-body", `"${fontselecteled}"; `)
+        all_headings[i].style.fontFamily = fontselecteled
+    }
+}
+
+function updateVar(target) {
+    try {
+
+        var id = target.id
+        var val = target.value
+        // if (window.DEBUG == 1) {
+        //     log(target.id)
+        //     log(id.includes("fontScale"))
+        //     log(val / 360 + .6)
+        // }
+        if (id.includes("light") || id.includes("sat")) cssvar(id, Math.round(val * 100 / 360, 2) + "%")
+        else if (id.includes("fontScale")) cssvar(id, Math.round(((val / 360) * 2) + .4, 2))
+        else if (id.includes("fontFamily")) someFn()
+        else cssvar(id, val)
+        updateThemeSliders()
+    }
+    catch (e) { console.error(e) }
+
+}
+window.updateVar = updateVar
