@@ -14,9 +14,7 @@ export default function updatePageNav() {
         if (document.getElementById("googleIconsPageNav") == null) append("head", gen("link", "googleIconsPageNav", "", "", { "rel": "stylesheet", "href": googleRoundIcon }))
         var pageNavStyle = `
 
-        body{
-            overflow-x: hidden;
-        }
+        
 
         #pageNav {
             --hueComp:120;
@@ -34,19 +32,21 @@ export default function updatePageNav() {
             max-width: 80vw;
             
             color: white;
-            // padding-top: 4em;
-            // z-index: 20;
             filter: blur(4px);
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
-            padding:2em;
+            justify-content: flex-start;;
             --leftpadding: min(8vw, 15em);
             padding-left: var(--leftpadding);
-            transform: translateX(calc(100% - var(--leftpadding) + 10px));
+            transform: translateX(calc(100% - var(--leftpadding)));
             transition: all 200ms ease-out;
 
-            h1{
+            overflow-x: hidden;
+            overflow-y: auto;
+            
+            width: var(--leftpadding);
+
+           h1{
                 text-transform:uppercase;
             }
             #themeControl {
@@ -122,7 +122,7 @@ export default function updatePageNav() {
                 background-color: hsla(var(--hueComp,180), var(--sat), var(--light), var(--alpha));
                 transform: translateX(0%);
                 filter: blur(0px);
-
+                width: auto;
             }
             
             .hoverblock {
@@ -283,7 +283,8 @@ export async function updateActiveSection() {
     sectionlist.forEach(sec => {
         let sectionTop = sec.parentElement.offsetTop
         let sectionBottom = sec.parentElement.offsetTop + sec.parentElement.offsetHeight
-        if (sectionTop <= windowTop && sectionTop <= windowBottom) {
+        // if (windowTop > sectionTop && windowBottom < sectionTop) {
+        if (windowTop >= sectionTop) {
             let currentId = sec.parentElement.id
             pageNavUlLiA.forEach(link => {
                 link.classList.remove('active')
