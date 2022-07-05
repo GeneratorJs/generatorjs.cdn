@@ -38,13 +38,23 @@ export default async function loadcustomizer() {
         .themeSliderGroupP{
             max-width:100%;
             .sliderDisp{
-                padding:.5em;
+                // padding:.5em;
                 margin-inline:.2em;
             }
     
-            .themeSlider{
+            .themeslider,.themeselect{
                 max-width:100%;
+                width:100%;
                 cursor:pointer;
+            }
+            .themeselect{
+                padding:.2em;
+                margin-left:.5em;
+            }
+
+            >span{
+                display:flex;
+                flex-direction:row;
             }
         }
 
@@ -94,16 +104,13 @@ export default async function loadcustomizer() {
 
 export function toggleCustomizerFn() {
     let currentState = customizer.style.display
-    console.log("toggleOption", currentState)
     if (currentState == "flex") { hide() }
     else if (currentState == "none") { show() }
     else { show() }
     function show() {
-        console.log("show")
         customizer.style.display = "flex";
     }
     function hide() {
-        console.log("hide")
         customizer.style.display = "none";
 
     }
@@ -135,17 +142,30 @@ window.toggleDarkMode = toggleDarkMode
 function appendSliders() {
     console.info("appendSliders")
 
-    var variables = [["Theme Color", 'hue'], ["Brightness", 'light'], ["Ascent Color", 'hueAscent'], ["Zoom", 'fontScale']]
+    var variables = [["Theme Color", 'hue'], ["Brightness", 'light'], ["Ascent Color", 'hueAscent'], ["Zoom", 'fontScale'], ["Font", 'fontFamily']]
     // var variables = [["Theme Color", 'hue'], ["Ascent Color", 'hueAscent'], ["Zoom", 'fontScale']]
     append(customizer, gen(div, "themeSliderGroup", "", "themeSliderGroup"))
     variables.forEach(variable => {
         var id = `${variable[1]}Control`
-        append(themeSliderGroup, gen(p, id, gen(span, "", variable[0]), "themeSliderGroupP"))
-        append(`#${id}`, gen(span, `${variable[1]}Disp`, "", "sliderDisp"))
-        append(`#${id}`, "<br")
-        append(`#${id}`, gen(input, variable[1], "", "slider themeslider", { "type": "range", "min": 0, "max": 360, "step": .1, "value": 0, "onchange": "updateVar(this)" }))
-    })
+        append(themeSliderGroup, gen(p, id, gen(span, `${id}Span`, variable[0]), "themeSliderGroupP"))
+        if (variable[1] == "fontFamily") {
+            append(`#${id}Span`, gen(select, variable[1], "", "themeselect", { "onchange": "updateVar(this)" }))
 
+            if (fontList == undefined) var fontList = new Set(["Poppins", "Exo", "Play", "Bebas Neue", "Comic Neue", "Cutive Mono", "Dancing Script", "Roboto", "Montserrat", "Gulzar", "Splash", "Bebas Neue", "Comic Neue", "Cutive Mono", "Dancing Script", "Tahoma", "Arial", "Lora", "Hind", "Cairo", "Bitter", "The Nautigal", "Abel", "Yellowtail", "Caveat", "Open sans", "Verdana", "Inter", "Segoe UI", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "sans serif"].sort())
+            fontList.forEach(f => {
+                append(`#${variable[1]}`, gen(option, "", f, "", { 'value': f }))
+            })
+        }
+        else {
+            append(`#${id}Span`, gen(span, `${variable[1]}Disp`, "", "sliderDisp"))
+            append(`#${id}`, "<br")
+
+            append(`#${id}`, gen(input, variable[1], "", "slider themeslider", { "type": "range", "min": 0, "max": 360, "step": .1, "value": 0, "onchange": "updateVar(this)" }))
+        }
+
+
+    })
+    loadColorConfig()
     updateThemeSliders()
 
 }
@@ -165,6 +185,7 @@ function appendSliders() {
 
 
 function updateThemeSliders(variables = ["hue", "hueAscent", "light", "fontScale", "fontFamily"]) {
+
     variables.forEach(variable => {
         try {
             var id = variable
@@ -177,10 +198,9 @@ function updateThemeSliders(variables = ["hue", "hueAscent", "light", "fontScale
             }
             else if (id.includes("fontScale")) {
                 append(`#${id}Disp`, Math.round(val * 100) / 100, 'over')
-                val = (val - 0.4) * 360.0 / 2.0;
+                val = (val - 0.4) * 360.0 / 4.0;
             }
-            else if (id.includes("fontFamily")) someFn()
-            else append(`#${id}Disp`, val, 'over')
+            else if (!id.includes("fontFamily")) append(`#${id}Disp`, val, 'over')
             var elem = document.getElementById(id);
             elem.setAttribute("value", val)
         }
@@ -215,13 +235,13 @@ window.resetTheme = resetTheme
 
 function saveTheme() {
     var selectedFont = document.getElementById("FontSelect").value
-    cssVar("--font-body", selectedFont)
+    cssVar("--fontFamily", selectedFont)
 
     var colorConfig = [
         cssVar("--hue"),
         cssVar("--hueAscent"),
         cssVar("--fontSize"),
-        cssVar("--font-body")
+        cssVar("--fontFamily")
         // document.getElementById("FontSelect").value
     ]
     sessionStorage.removeItem("colorConfig")
@@ -229,14 +249,16 @@ function saveTheme() {
 }
 
 async function loadColorConfig(inputConfig) {
-    if (inputConfig == null) inputConfig = await JSON.parse(sessionStorage.getItem("colorConfig"))
-    cssVar("--hue", inputConfig[0])
-    cssVar("--hueAscent", inputConfig[1])
-    cssVar("--fontSize", inputConfig[2])
-    cssVar("--font-body", inputConfig[3])
-    document.getElementById("FontSelect").value = inputConfig[3]
-    changeBodyFont()
-    // closecustomizer()
+    try {
+        if (inputConfig == null) inputConfig = await JSON.parse(sessionStorage.getItem("colorConfig"))
+        if (inputConfig != null) {
+            cssVar("--hue", inputConfig[0])
+            cssVar("--hueAscent", inputConfig[1])
+            cssVar("--fontSize", inputConfig[2])
+            cssVar("--fontFamily", inputConfig[3])
+        }
+    }
+    catch (e) { console.error(e) }
 }
 
 
@@ -256,19 +278,17 @@ function updateVar(target) {
 
         var id = target.id
         var val = target.value
-        // if (window.DEBUG == 1) {
-        //     log(target.id)
-        //     log(id.includes("fontScale"))
-        //     log(val / 360 + .6)
-        // }
+        if (id.includes("fontFamily")) {
+            var FontName = cssvar("fontFamily").replaceAll(" ", "+")
+            var googleFontUrlStyle = `@import url('https://fonts.googleapis.com/css2?family=${FontName}:wght@100&display=swap');`
+            loadscss(googleFontUrlStyle, 'FontImport')
+        }
 
         if (id.includes("light") || id.includes("sat")) cssvar(id, Math.round(val * 100.0 / 360.0, 2) + "%")
         else if (id.includes("fontScale")) {
-            // cssvar(id, Math.round(((val / 360.0) * 2.0) + 0.4, 2))
-            cssvar(id, ((val / 360.0) * 2.0) + 0.4)
-            // log(((val / 360.0) * 2.0) + 0.4)
+            cssvar(id, ((val / 360.0) * 4.0) + 0.4)
         }
-        else if (id.includes("fontFamily")) someFn()
+
         else cssvar(id, val)
         updateThemeSliders()
     }

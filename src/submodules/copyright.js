@@ -42,7 +42,7 @@ export default function loadCopyright(author) {
 
 
                 var copyrightparent = document.querySelectorAll("#copyright,.copyright,footer,#footer,.footer")[0]
-                console.info(copyrightparent)
+                // console.info(copyrightparent)
                 if (copyrightparent.innerHTML.length > 200) {
                     append(copyrightparent, gen(div, "copyright", "", 'copyrights'), "after")
                     append(copyright, "", 'over')

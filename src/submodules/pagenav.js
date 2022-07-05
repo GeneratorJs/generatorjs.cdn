@@ -131,6 +131,16 @@ export default function updatePageNav() {
                 filter: blur(0px);
                 width: auto;
             }
+            &:focus-within{
+                padding-inline: 3em;
+                --sat: 10%;
+                --light: 5%;
+                --alpha:.8;
+                background-color: hsla(var(--hueComp,180), var(--sat), var(--light), var(--alpha));
+                transform: translateX(0%);
+                filter: blur(0px);
+                width: auto;
+            }
             
             .hoverblock {
                 display: block;
