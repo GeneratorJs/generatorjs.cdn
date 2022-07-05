@@ -6,16 +6,16 @@ export default async function loadcustomizer() {
 
     var customizerStyle = `
 
-:root{
-    // --hueComp:120;
-    // --hueAscent:40;
-    // --hue:180;
-    // --hueLink:40;
-    // --satLink:80%;
-    // --color-scheme:light dark;
-    // --lightFactor:1;
+// :root{
+//     // --hueComp:120;
+//     // --hueAscent:40;
+//     // --hue:180;
+//     // --hueLink:40;
+//     // --satLink:80%;
+//     // --color-scheme:light dark;
+//     // --lightFactor:1;
 
-}
+// }
 .customizer {
     position:relative;
     display:flex;
@@ -30,9 +30,27 @@ export default async function loadcustomizer() {
     border:2px solid white;
     border-radius:5px;
     margin-block:2px;
-.sliderDisp{
-    padding:.5em;
-}
+
+
+    .themeSliderGroup{
+        display:flex;
+        flex-direction:column;
+        .themeSliderGroupP{
+            max-width:100%;
+            .sliderDisp{
+                padding:.5em;
+                margin-inline:.2em;
+            }
+    
+            .themeSlider{
+                max-width:100%;
+                cursor:pointer;
+            }
+        }
+
+
+
+    }
    .buttonGroup{
     display:flex;
     flex-direction:row;
@@ -43,6 +61,7 @@ export default async function loadcustomizer() {
         width:max(auto,10em);
         margin:1em;
         padding:.5em 1em ;
+        cursor:pointer;
        
     }
    }
@@ -118,9 +137,13 @@ function appendSliders() {
 
     var variables = [["Theme Color", 'hue'], ["Brightness", 'light'], ["Ascent Color", 'hueAscent'], ["Zoom", 'fontScale']]
     // var variables = [["Theme Color", 'hue'], ["Ascent Color", 'hueAscent'], ["Zoom", 'fontScale']]
+    append(customizer, gen(div, "themeSliderGroup", "", "themeSliderGroup"))
     variables.forEach(variable => {
-        append(customizer, gen(p, `${variable[1]}Control`, variable[0]))
-        append(`#${variable[1]}Control`, [gen(span, `${variable[1]}Disp`, "", "sliderDisp"), gen(input, variable[1], "", "slider themeslider", { "type": "range", "min": 0, "max": 360, "step": .1, "value": 0, "onchange": "updateVar(this)" })])
+        var id = `${variable[1]}Control`
+        append(themeSliderGroup, gen(p, id, gen(span, "", variable[0]), "themeSliderGroupP"))
+        append(`#${id}`, gen(span, `${variable[1]}Disp`, "", "sliderDisp"))
+        append(`#${id}`, "<br")
+        append(`#${id}`, gen(input, variable[1], "", "slider themeslider", { "type": "range", "min": 0, "max": 360, "step": .1, "value": 0, "onchange": "updateVar(this)" }))
     })
 
     updateThemeSliders()
@@ -150,11 +173,11 @@ function updateThemeSliders(variables = ["hue", "hueAscent", "light", "fontScale
 
             if (id.includes("light") || id.includes("sat")) {
                 append(`#${id}Disp`, val, 'over')
-                val = val * 360;
+                val = val * 360.0;
             }
             else if (id.includes("fontScale")) {
-                append(`#${id}Disp`, val, 'over')
-                val = (val - .4) * 360 / 2;
+                append(`#${id}Disp`, Math.round(val * 100) / 100, 'over')
+                val = (val - 0.4) * 360.0 / 2.0;
             }
             else if (id.includes("fontFamily")) someFn()
             else append(`#${id}Disp`, val, 'over')
@@ -238,8 +261,13 @@ function updateVar(target) {
         //     log(id.includes("fontScale"))
         //     log(val / 360 + .6)
         // }
-        if (id.includes("light") || id.includes("sat")) cssvar(id, Math.round(val * 100 / 360, 2) + "%")
-        else if (id.includes("fontScale")) cssvar(id, Math.round(((val / 360) * 2) + .4, 2))
+
+        if (id.includes("light") || id.includes("sat")) cssvar(id, Math.round(val * 100.0 / 360.0, 2) + "%")
+        else if (id.includes("fontScale")) {
+            // cssvar(id, Math.round(((val / 360.0) * 2.0) + 0.4, 2))
+            cssvar(id, ((val / 360.0) * 2.0) + 0.4)
+            // log(((val / 360.0) * 2.0) + 0.4)
+        }
         else if (id.includes("fontFamily")) someFn()
         else cssvar(id, val)
         updateThemeSliders()

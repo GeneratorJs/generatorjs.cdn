@@ -17,6 +17,7 @@ export default function updatePageNav() {
         
 
         #pageNav {
+            font-size:1rem;
             --hueComp:120;
             --hueAscent:40;
             --hue:180;
@@ -113,7 +114,7 @@ export default function updatePageNav() {
                     color: hsl(var(--hueLink), var(--satLink), var(--lightLink));
                     background-color: hsl(var(--hueComp), var(--sat), var(--light));
                     margin-block: .2em;
-                    max-width: 18em;
+                    max-width: max(18em,100%);
                     overflow-x:auto;
                     text-shadow:none;
                 }
@@ -176,7 +177,7 @@ export default function updatePageNav() {
             width:100%;
             top:0px;
             right:0px;
-            border-top:4px solid aqua;
+            border-top:.3em solid aqua;
         }
 
 }
@@ -250,8 +251,6 @@ function updatePageNavUl() {
         append(pageNavUl, gen("li", "", gen(a, "", element.innerHTML, 'pageNavUlLiA hoverblock', `#${element.parentElement.id}`.replaceAll("##", "#")), "pageNavUlLi"))
     });
     updateActiveSection()
-
-
 }
 
 
