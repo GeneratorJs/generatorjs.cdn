@@ -53,7 +53,7 @@ export default async function loadSpaceGame(appendsection = null) {
 
 `
 
-    loadscss(spacegamestyle)
+    loadscss(spacegamestyle, "spaceGame")
     class Star {
         constructor() {
             this.x = Math.random();

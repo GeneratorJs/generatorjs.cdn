@@ -26,6 +26,9 @@ export default function loadscss(scss, styleid) {
         var cssEnd = 0;
         var comment = 0
         var mediaQuery = 0
+        var importStatement = 0
+        var importStart;
+        var importEnd;
         var mediaId = ""
         for (var i = 0; i <= len; i++) {
 
@@ -55,89 +58,138 @@ export default function loadscss(scss, styleid) {
                 // media querry start
 
                 if (testSymbol == '@') {
-                    //mediaQuerryStarted
-                    mediaQuery = 1;
-                }
+                    if (scss.substr(i, 10).includes("media")) mediaQuery = 1;               //mediaQuerryStarted
+                    else if (scss.substr(i, 10).includes("import")) {
+                        importStatement = 1;               //import statement
+                        importStart = i;
+                    }
 
+                }
                 //cssBracketStart
-                if (testSymbol == '{') {
-
-                    idEnd = i
-                    var currentId = scss.substr(idStart, idEnd - idStart)
-
-                    if (id.length > 0) {
-                        cssSelectorChain = ""
-                        for (let i_id = mediaQuery; i_id < id.length; i_id++) {
-                            cssSelectorChain = cssSelectorChain + " " + id[i_id]
-                        }
-                        cssSelectorChain = cssSelectorChain.replaceAll(" :", ":").replaceAll(" &:", ":")
-                        var currentCss = ""
-                        currentCss = scss.substr(cssBegin, cssEnd - cssBegin)
-                        if (currentCss.replaceAll("}", " ").replaceAll("\n", " ").trim().length != 0) {
-                            var idCss = cssSelectorChain + currentCss + "}\n"
-                            idCss = idCss
-                            css = css + "\n" + idCss
-
-                            if (scss[cssBegin] == "{" && scss[cssEnd + 1] == ";") {
-
-                                // console.log(NestingLevel, id.length)
-
-                            }
-
-                        }
+                if (importStatement == 1) {
+                    if (scss.substr(i, 1) == ';' || scss.substr(i, 1) == '\n') {
+                        importEnd = i;
+                        importStatement = 0;
+                        css += scss.substr(importStart, importEnd - importStart) + "\n"
                     }
-                    if (currentId != undefined) {
-
-                        id.push(currentId.trim().replaceAll("\n", " "))
-                        if (mediaQuery == 1) {
-                            if (id.length == 0) {
-                                mediaId = id[0]
-                                console.log(mediaId)
-                                css = css + "\n" + mediaId + "{\n"
-                            }
-                        }
-                    }
-
-                    cssEnd = i
-                    cssBegin = i
-                    NestingLevel++
                 }
-                if (testSymbol == ';' || testSymbol == '}') {
-                    idStart = i + 1;
-                    cssEnd = i + 1
-                    if (testSymbol == '}') {
-                        if (scss[cssBegin - 1] != scss[cssEnd - 1]) {
-                            cssSelectorChain = ""
-                            for (let i_id = mediaQuery; i_id < id.length; i_id++) {
-                                cssSelectorChain = cssSelectorChain + " " + id[i_id]
-                            }
+                else if (importStatement == 0) {
+                    if (testSymbol == '{') {
 
-                            cssSelectorChain = cssSelectorChain.replaceAll("  ", " ").replaceAll(" :", ":").replaceAll(" &:", ":")
+                        idEnd = i
+                        var currentId = scss.substr(idStart, idEnd - idStart)
 
+                        if (id.length > 0) {
+                            // cssSelectorChain = ""
+                            // for (let i_id = mediaQuery; i_id < id.length; i_id++) {
+                            //     cssSelectorChain = cssSelectorChain + " " + id[i_id]
+                            // }
+                            // cssSelectorChain = cssSelectorChain.replaceAll(" :", ":").replaceAll(" &:", ":")
+                            cssSelectorChain = idToCssSelectorChain(id, mediaQuery)
                             var currentCss = ""
                             currentCss = scss.substr(cssBegin, cssEnd - cssBegin)
-
                             if (currentCss.replaceAll("}", " ").replaceAll("\n", " ").trim().length != 0) {
-                                var idCss = cssSelectorChain + currentCss
+                                var idCss = cssSelectorChain + currentCss + "}\n"
+                                idCss = idCss
                                 css = css + "\n" + idCss
+
+                                if (scss[cssBegin] == "{" && scss[cssEnd + 1] == ";") {
+
+                                    // console.log(NestingLevel, id.length)
+
+                                }
+
                             }
-                            NestingLevel--
-                            cssBegin = i + 1
+                        }
+                        if (currentId != undefined) {
+
+                            id.push(currentId.trim().replaceAll("\n", " "))
+                            if (mediaQuery == 1) {
+                                if (id.length == 0) {
+                                    mediaId = id[0]
+                                    console.log(mediaId)
+                                    css = css + "\n" + mediaId + "{\n"
+                                }
+                            }
                         }
 
-                        id.pop()
-                        if (mediaQuery == 1) {
-                            if (id.length == 0) {
+                        cssEnd = i
+                        cssBegin = i
+                        NestingLevel++
+                    }
+                    if (testSymbol == ';' || testSymbol == '}') {
+                        idStart = i + 1;
+                        cssEnd = i + 1
+                        if (testSymbol == '}') {
+                            if (scss[cssBegin - 1] != scss[cssEnd - 1]) {
+                                // cssSelectorChain = ""
+                                // for (let i_id = mediaQuery; i_id < id.length; i_id++) {
+                                //     cssSelectorChain = cssSelectorChain + " " + id[i_id]
+                                // }
 
-                                mediaId = id[0]
-                                css = css + "\n}\n"
+                                // cssSelectorChain = cssSelectorChain.replaceAll("  ", " ").replaceAll(" :", ":").replaceAll(" &:", ":")
 
+                                cssSelectorChain = idToCssSelectorChain(id, mediaQuery)
+                                var currentCss = ""
+                                currentCss = scss.substr(cssBegin, cssEnd - cssBegin)
+
+                                if (currentCss.replaceAll("}", " ").replaceAll("\n", " ").trim().length != 0) {
+                                    var idCss = cssSelectorChain + currentCss
+                                    css = css + "\n" + idCss
+                                }
+                                NestingLevel--
+                                cssBegin = i + 1
+                            }
+
+                            id.pop()
+                            if (mediaQuery == 1) {
+                                if (id.length == 0) {
+
+                                    mediaId = id[0]
+                                    css = css + "\n}\n"
+
+                                }
                             }
                         }
                     }
                 }
             }
         }
+
+
+
+
+
+        function idToCssSelectorChain(id, mediaQuery) {
+            cssSelectorChain = ""
+            for (let i_id = mediaQuery; i_id < id.length; i_id++) {
+                var currentId = id[i_id];
+                if (currentId.includes(",")) {
+
+                    currentId = currentId.replaceAll(" ,", ',').replaceAll(", ", ',')
+                    var idParts = currentId.split(",")
+                    var expandedChain = ""
+                    idParts.forEach(idPart => {
+                        expandedChain += cssSelectorChain + " " + idPart + ", "
+                    });
+                    // log(expandedChain.substring(0, expandedChain.length - 2))
+                    cssSelectorChain = expandedChain.substring(0, expandedChain.length - 2)
+                }
+                else { cssSelectorChain = cssSelectorChain + " " + id[i_id] }
+            }
+            cssSelectorChain = cssSelectorChain.replaceAll(" :", ":").replaceAll(" &:", ":")
+
+            return cssSelectorChain
+        }
+
+
+
+
+
+
+
+
+
         // console.log(css)
         css = css.replaceAll("  ", " ").replaceAll(" :", ":").replaceAll(" &", "").replaceAll("\n&", "").replaceAll("  ", " ").replaceAll("  ", " ")
         css = css.replaceAll("{", "{\n").replaceAll("{\n\n", "{\n").replaceAll("}", "\n}").replaceAll("\n\n}", "\n}")

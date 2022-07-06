@@ -151,7 +151,7 @@ function appendSliders() {
         if (variable[1] == "fontFamily") {
             append(`#${id}Span`, gen(select, variable[1], "", "themeselect", { "onchange": "updateVar(this)" }))
 
-            if (fontList == undefined) var fontList = new Set(["Poppins", "Exo", "Play", "Bebas Neue", "Comic Neue", "Cutive Mono", "Dancing Script", "Roboto", "Montserrat", "Gulzar", "Splash", "Bebas Neue", "Comic Neue", "Cutive Mono", "Dancing Script", "Tahoma", "Arial", "Lora", "Hind", "Cairo", "Bitter", "The Nautigal", "Abel", "Yellowtail", "Caveat", "Open sans", "Verdana", "Inter", "Segoe UI", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "sans serif"].sort())
+            if (fontList == undefined) var fontList = new Set(["Poppins", "Exo", "Play", "Bebas Neue", "Comic Neue", "Cutive Mono", "Permanent Marker", "Dancing Script", "Roboto", "Montserrat", "Gulzar", "Splash", "Bebas Neue", "Comic Neue", "Cutive Mono", "Dancing Script", "Tahoma", "Arial", "Lora", "Hind", "Cairo", "Bitter", "The Nautigal", "Abel", "Yellowtail", "Caveat", "Open sans", "Verdana", "Inter", "Segoe UI", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "sans serif"].sort())
             fontList.forEach(f => {
                 append(`#${variable[1]}`, gen(option, "", f, "", { 'value': f }))
             })
@@ -280,8 +280,11 @@ function updateVar(target) {
         var val = target.value
         if (id.includes("fontFamily")) {
             var FontName = cssvar("fontFamily").replaceAll(" ", "+")
-            var googleFontUrlStyle = `@import url('https://fonts.googleapis.com/css2?family=${FontName}:wght@100&display=swap');`
-            loadscss(googleFontUrlStyle, 'FontImport')
+            var googleFontUrlStyle = `@import url('https://fonts.googleapis.com/css2?family=${FontName}');`
+
+            loadscss(googleFontUrlStyle, "FontImport")
+
+            append("head", gen(style, "", googleFontUrlStyle))
         }
 
         if (id.includes("light") || id.includes("sat")) cssvar(id, Math.round(val * 100.0 / 360.0, 2) + "%")
