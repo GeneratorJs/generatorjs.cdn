@@ -102,7 +102,7 @@ export default async function loadcustomizer() {
 
 }
 
-export function toggleCustomizerFn() {
+export async function toggleCustomizerFn() {
     let currentState = customizer.style.display
     if (currentState == "flex") { hide() }
     else if (currentState == "none") { show() }
@@ -117,7 +117,7 @@ export function toggleCustomizerFn() {
 }
 window.toggleCustomizerFn = toggleCustomizerFn
 
-export function toggleDarkMode() {
+export async function toggleDarkMode() {
     let currentState = cssvar('color-scheme')
     if (window.DEBUG == 1) console.info(currentState)
     if (currentState == 'light') {
@@ -184,7 +184,7 @@ function appendSliders() {
 
 
 
-function updateThemeSliders(variables = ["hue", "hueAscent", "light", "fontScale", "fontFamily"]) {
+async function updateThemeSliders(variables = ["hue", "hueAscent", "light", "fontScale", "fontFamily"]) {
 
     variables.forEach(variable => {
         try {
@@ -219,7 +219,7 @@ function updateThemeSliders(variables = ["hue", "hueAscent", "light", "fontScale
 
 
 
-export function resetTheme() {
+export async function resetTheme() {
     // cssVar("--light", cssVar("--lightDefault"))
     // cssVar("--sat", cssVar("--satDefault"))
     // cssVar("--hue", cssVar("--hueDefault"))
@@ -233,7 +233,7 @@ window.resetTheme = resetTheme
 
 
 
-function saveTheme() {
+export async function saveTheme() {
     var selectedFont = document.getElementById("FontSelect").value
     cssVar("--fontFamily", selectedFont)
 
@@ -262,29 +262,32 @@ async function loadColorConfig(inputConfig) {
 }
 
 
-function changeBodyFont() {
-    var fontselecteled = document.getElementById("FontSelect").value
-    cssVar("--font-body", `"${fontselecteled}"`)
-    document.body.style.fontFamily = fontselecteled
-    var all_headings = document.querySelectorAll("h1,h2,h3,h4,h5,h6")
-    for (i = 0; i < all_headings.length; i++) {
-        cssVar("--font-body", `"${fontselecteled}"; `)
-        all_headings[i].style.fontFamily = fontselecteled
-    }
-}
+// function changeBodyFont() {
+//     var fontselecteled = document.getElementById("FontSelect").value
+//     cssVar("--font-body", `"${fontselecteled}"`)
+//     document.body.style.fontFamily = fontselecteled
+//     var all_headings = document.querySelectorAll("h1,h2,h3,h4,h5,h6")
+//     for (i = 0; i < all_headings.length; i++) {
+//         cssVar("--font-body", `"${fontselecteled}"; `)
+//         all_headings[i].style.fontFamily = fontselecteled
+//     }
+// }
 
-function updateVar(target) {
+async function updateVar(target) {
     try {
 
         var id = target.id
         var val = target.value
         if (id.includes("fontFamily")) {
-            var FontName = cssvar("fontFamily").replaceAll(" ", "+")
-            var googleFontUrlStyle = `@import url('https://fonts.googleapis.com/css2?family=${FontName}');`
+            // var FontName = cssvar("fontFamily").replaceAll(" ", "+")
+            var FontName = val.replaceAll(" ", "+")
+            var googleFontUrlStyle = `
+            @import url('https://fonts.googleapis.com/css2?family=${FontName}&display=swap');
+            `
+            loadscss(googleFontUrlStyle)
 
-            loadscss(googleFontUrlStyle, "FontImport")
+            document.fonts.ready.then(cssvar(id, val));
 
-            append("head", gen(style, "", googleFontUrlStyle))
         }
 
         if (id.includes("light") || id.includes("sat")) cssvar(id, Math.round(val * 100.0 / 360.0, 2) + "%")
@@ -293,6 +296,9 @@ function updateVar(target) {
         }
 
         else cssvar(id, val)
+        // setTimeout(() => {
+        //     cssvar(id, val)
+        // }, 2000)
         updateThemeSliders()
     }
     catch (e) { console.error(e) }
