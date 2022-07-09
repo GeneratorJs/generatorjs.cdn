@@ -24,7 +24,6 @@ export default function updatePageNav() {
             --hue:180;
             --hueLink:40;
             --satLink:80%;
-            border-top:2px solid aqua;
             position: absolute;
             top: 100%;
             height: calc(100vh - 100%);
@@ -120,6 +119,8 @@ export default function updatePageNav() {
             }
 
             &:hover,&:focus-within{
+
+            border-top:2px solid aqua;
                 padding-inline: 30px;
                 --sat: 10%;
                 --light: 5%;
