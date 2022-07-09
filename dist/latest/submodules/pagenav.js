@@ -17,13 +17,14 @@ export default function updatePageNav() {
         
 
         #pageNav {
+            font-family:Open sans, Arial,sans-serif,Verdana;
             font-size:1rem;
             --hueComp:120;
             --hueAscent:40;
             --hue:180;
             --hueLink:40;
             --satLink:80%;
-            outline-top:1px solid aqua;
+            border-top:2px solid aqua;
             position: absolute;
             top: 100%;
             height: calc(100vh - 100%);
@@ -37,7 +38,7 @@ export default function updatePageNav() {
             display: flex;
             flex-direction: column;
             justify-content: flex-start;;
-            --leftpadding: min(8vw, 15em);
+            --leftpadding: min(8vw, 150px);
             padding-left: var(--leftpadding);
             transform: translateX(calc(100% - var(--leftpadding)));
             transition: all 200ms ease-out;
@@ -58,12 +59,9 @@ export default function updatePageNav() {
             }
             #themeControl {
                 position:sticky;
-                // top:2em;
                 display: flex;
                 flex-direction: column;
-                padding:1em;
-                // padding-top: 1em;
-                // margin-bottom: .5em;
+                padding:10px;
                 
                 .themeControlUl{
                     margin-top:10px;
@@ -102,18 +100,18 @@ export default function updatePageNav() {
                 display: flex;
                 flex-direction: column; 
                 min-height: 40vh;
-                max-height: min(calc(100% - 2em), calc(100vh - 2em));
+                max-height: min(calc(100% - 20px), calc(100vh -20px));
                 overflow-y: auto;
-                padding-top: 1em;
+                padding-top: 10px;
                 padding-bottom: 110%;
                 // z-index: 4;
                 li>a {
                     --sat: 10%;
                     --light: 80%;
                     --lightLink: 10%;
-                    color: hsl(var(--hueLink), var(--satLink), var(--lightLink));
-                    background-color: hsl(var(--hueComp), var(--sat), var(--light));
-                    margin-block: .2em;
+                    // color: hsl(var(--hueLink,var(--hueAscent,180)), var(--satLink,var(--satAscent,60%)), var(--lightLink,var(--lightAscent,60%)));
+                    // background-color: hsl(var(--hueComp,40), var(--sat,15%), var(--light,70%));
+                    margin-block: 10px;
                     max-width: max(18em,100%);
                     overflow-x:auto;
                     text-shadow:none;
@@ -121,18 +119,8 @@ export default function updatePageNav() {
 
             }
 
-            &:hover {
-                padding-inline: 3em;
-                --sat: 10%;
-                --light: 5%;
-                --alpha:.8;
-                background-color: hsla(var(--hueComp,180), var(--sat), var(--light), var(--alpha));
-                transform: translateX(0%);
-                filter: blur(0px);
-                width: auto;
-            }
-            &:focus-within{
-                padding-inline: 3em;
+            &:hover,&:focus-within{
+                padding-inline: 30px;
                 --sat: 10%;
                 --light: 5%;
                 --alpha:.8;
@@ -144,10 +132,10 @@ export default function updatePageNav() {
             
             .hoverblock {
                 display: block;
-                padding: .5em;
-                padding-inline: 1em;
-                margin-block: .1em;
-                background-color: hsl(var(--hueAscent), 20%, 90%);
+                padding: 5px;
+                padding-inline: 10px;
+                background-color: hsl(var(--hueAscent,30), 20%, 90%);
+                color: hsl(var(--hueLink,var(--hueAscent,180)), var(--satLink,var(--satAscent,60%)), var(--lightLink,var(--lightAscent,60%)));
                 max-width: min(90%, 90vw);
                 text-transform: uppercase;
                 // perspective:100px;
@@ -159,17 +147,16 @@ export default function updatePageNav() {
                 transform: perspective(100px) translateZ(0);
                     // transform: perspective(100px) translateZ(10px);
                     box-shadow: 2px 2px 15px rgba(0, 0, 0, .5);
-                    z-index:calc(inherit + 2 );
-                    padding-block:calc(inherit + .5em);
-                    margin-block:calc(inherit + -.5em);
+                    // z-index:calc(inherit + 2 );
+                    padding-block:calc(inherit + 5px);
+                    margin-block:calc(inherit + -5px);
 
                 }
             }                                           
 
 
             .copyurl{
-                // position:sticky;
-                padding-bottom:4em;
+                padding-bottom:40px;
                 font-size:12px;
                 a{
                     color:aqua;
@@ -180,15 +167,30 @@ export default function updatePageNav() {
         }
  
 
+
+
+
+
         .active.hoverblock:before{
-            content:"";
-            position:absolute;
-            height:100%;
-            width:100%;
-            top:0px;
-            right:0px;
-            border-top:.3em solid aqua;
+                content:"";
+                position:absolute;
+                height:100%;
+                width:100%;
+                top:0px;
+                right:0px;
+                border-top:5px solid aqua;
+                color:hsl(var(--hueAscent,180),60%,50%);
+
+   
+            
         }
+
+        // .active+.hoverblock{
+        //     padding-block:calc(inherit + 10px);
+        //     margin-block:calc(inherit + -10px);
+        //     transform: perspective(100px) translateZ(-5px);
+        //     color:red;
+        // }
 
 }
 `
@@ -274,9 +276,9 @@ function loadThemeControl() {
 
     // append(themeControl, gen("h3", "", "Theme Control"))
     append(themeControl, gen("ul", "themeControlUl", "", 'themeControlUl'))
-    var ThemeButtonAndFunction = [["resetTheme()", 'restart_alt'], ["toggleDarkMode()", 'dark_mode'], ["toggleCustomizerFn()", 'tune']]
+    var ThemeButtonAndFunction = [["resetTheme()", 'restart_alt', "Reset Theme"], ["toggleDarkMode()", 'dark_mode', "Dark Mode / Light Mode"], ["toggleCustomizerFn()", 'tune', 'Customize Color Theme']]
     ThemeButtonAndFunction.forEach(t => {
-        append(themeControlUl, gen("li", "", t[1], 'material-symbols-outlined', { "onclick": t[0] }))
+        append(themeControlUl, gen("li", "", t[1], 'material-symbols-outlined', { "onclick": t[0], "title": t[2] }))
     })
     // }
 

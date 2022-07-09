@@ -66,3 +66,26 @@ window.loaddefaults = loaddefaults
 
 
 registerhost(1000 * 60 * 20)
+
+// const $ = document.querySelectorAll
+
+
+export function htmltostring(input) {
+    var op = input.outerHTML.toString()
+    return op
+}
+window.htmltostring = htmltostring
+
+export function verb(input) {
+    var op = input.outerHTML.toString().replaceAll("&", '&amp;').replaceAll('</', '&lt;&#47;').replaceAll("<", "&lt;").replaceAll(">", '&gt;')
+    return op
+}
+
+window.verb = verb
+
+
+function $(query) {
+    var a = document.querySelectorAll(query)
+    return a
+}
+window.$ = $

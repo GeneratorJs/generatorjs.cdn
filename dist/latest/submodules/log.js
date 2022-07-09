@@ -4,6 +4,7 @@ import loadscss from "./loadscss.js"
 var logStyle = `
 #applog {
 
+    position:relative;
     font-size:.8rem;
     // display: flex;
     display: none;
@@ -13,66 +14,51 @@ var logStyle = `
     right:20px;
     top:20px;
     z-index: 1000;
-    padding: 1em;
+    padding: .5em 1em;
     border-radius: 5px;
     color: #fff;
-    background-color: hsla(225, 20%, 40%, 1);
+    background-color: hsla(330, 80%, 40%, 1);
     box-shadow:2px 2px 5px black;
     resize: both;
     overflow:auto;
-    max-height:80vh;
-    max-width:80vw;
+    max-height:90vh;
+    max-width:90vw;
     min-height:3em;
+    font-family: "Courier", "Courier New", "Lucida Console", Inconsolata, terminal,consolas,arial;
+    word-spacing: 1em;
+    user-select:none;
+    
 
     >.log{
+        user-select:text;
         position:relative;
         font-size:12px;
         font-family:"arial";
-        padding: 1.5em;
-        background-color: hsla(230, 80%, 5%, 1);
-        margin:1em;
+        padding: .5em 1em;
+        background-color: hsla(230, 80%, 15%, 1);
+        margin:.5em;
         box-shadow:1px 1px 2px black;
         border-radius: 5px;
         
-
-    
-
-
-}
-
-
-.cross {
-
-    cursor:pointer;
-    margin:1em;
-    position:absolute;
-    top: 0px;
-    right: 0px;
-    padding:1em;
-    max-width:15px;
-    
-    &:after{
-        content: "";
-        position: absolute;
+    }
+    .cross {
+        user-select:none;
+        cursor:pointer;
+        position:absolute;
         top: 0px;
         right: 0px;
-        height: 1px;
-        width: 100%;
-        transform: rotateZ(-45deg);
-        background-color: white;
+        &:hover{
+            color:red;
+        }
         
     }
-    &:before {
-        content: "";
-        position: absolute;
-        top: 0px;
-        right: 0px;
-        height: 1px;
-        width: 100%;
-        transform: rotateZ(45deg);
-        background-color: white;
-    }
+       
+    
+
+
 }
+
+
 `
 
 
@@ -82,7 +68,7 @@ export default function log(data = '', pos = "before") {
         var applog = document.getElementById("applog")
         if (applog == null || applog == undefined) {
             // document.getElementById("app").append(gen(div, "applog", "", "applog,applog"))
-            append(app, gen("div", "applog", gen(span, "", "", "cross", { "onclick": "hide(this.parentElement)" }), "applog"))
+            append(app, gen("div", "applog", gen(span, "", "close", "cross material-symbols-outlined", { "onclick": "hide(this.parentElement)" }), "applog"))
 
             // append(app, gen("div", "applog", "", "applog", { "onclick": "hide(this)" }))
             loadscss(logStyle, "log")
@@ -97,6 +83,14 @@ export default function log(data = '', pos = "before") {
 
             var applog = document.getElementById("applog")
             console.log(data)
+
+            try {
+                var datastring = verb(data)
+            }
+            catch (e) {
+                datastring = data
+            }
+            data = datastring
             try {
                 applog.style.display = 'flex';
                 try {
@@ -106,7 +100,7 @@ export default function log(data = '', pos = "before") {
                 catch {
                     var logno = `log-${document.querySelectorAll(".log").length + 1}`
                     append(applog, gen("span", logno, data, 'log'), pos)
-                    append(`#${logno}`, gen(span, "", "", "cross", { "onclick": "hide(this.parentElement)" }))
+                    append(`#${logno}`, gen(span, "", "close", "cross material-symbols-outlined", { "onclick": "hide(this.parentElement)" }))
                 }
             }
             catch (err) {

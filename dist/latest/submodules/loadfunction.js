@@ -106,6 +106,8 @@ export async function loadjs(src, pos) {
         document.body.appendChild(s);
     }
 }
+
+window.loadjs = loadjs
 export async function loadcss(link, pos) {
     var s = document.createElement("link");  // create a script DOM node
     s.rel = 'stylesheet';
@@ -113,14 +115,11 @@ export async function loadcss(link, pos) {
     // s.href = srcList[i];  // set its src to the provided URL
     s.href = link;  // set its src to the provided URL
 
-    // script.crossorigin = "anonymous";
-    // script.integrity = "sha384-EzBXYPt0/T6gxNp0nuPtLkmRpmDBbjg6WmCUZRLXBBwYYmwAUxzlSGej0ARHX0Bo";
-    // document.head.appendChild(s);
-    // document.head.appendChild(s);
+
     if (pos == 'head') document.head.appendChild(s);
     if (pos == 'body') document.body.appendChild(s);
 }
-
+window.loadcss = loadcss
 export async function loadMetaFromObject(obj, pos) {
     var keylist = Object.keys(obj)
     for (i = 0; i < keylist.length; i++) {
@@ -137,11 +136,7 @@ export async function loadMetaFromObject(obj, pos) {
         }
     }
 
-    // var s = document.createElement("link");  // create a script DOM node
-    // s.rel = 'stylesheet';
-    // s.href = srcList[i];  // set its src to the provided URL
-    // if (pos == 'head') document.head.appendChild(s);
-    // if (pos == 'body') document.body.appendChild(s);
+
 }
 
 
@@ -165,15 +160,6 @@ export function loadDefaultApp() {
 
     // load(ListOfScripts);
 }
-
-
-// export function loadCopyright() {
-//     append("copyright", [
-//         gen("span", "copyurl", `Designed with <a href="https://generatorjs.mgeek.in">GeneratorJs</a> &copy 2022 <a href="http://mgeek.in">mGeek.in</a>`),
-//         gen("span", "copyauthor", `Designed by <a href="http://mgeek.in/webmaster">Dr. Prateek Raj Gautam</a>`)
-//     ], 'over')
-// };
-
 
 
 

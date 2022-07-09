@@ -13,6 +13,7 @@ export default function loadCopyright(author) {
             else {
                 var copyrightStyle = `
                 #copyright {
+                    opacity:.5;
                     box-sizing:border-box;
                     position:relative;
                     display: flex;
@@ -24,9 +25,14 @@ export default function loadCopyright(author) {
                     color:white;
                     font-size: 12px;
                     font-weight: 200;
+                    font-family:"Verdana","Helvetica","Courier New","Arial";
                     z-index:100;
                     box-shadow:-2px 0 2px black;
                     width:100%;
+                    &:hover{
+                        opacity:1;
+                    }
+
                     p {
                         padding-left: 10px;
                         margin-left: 20px;

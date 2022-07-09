@@ -33,19 +33,12 @@ export default function gen(elementtype, idin, htmlin, classin, src, event) {
                 };
                 if (htmlin.nodeName != undefined) {
                     element.append(htmlin);
-                    // console.log(htmlin);
-                    // console.log(htmlin.nodeName);
                 };
                 if (classin != undefined && classin != "") {
                     // element.classList.add(classin);
                     element.classList += classin.replace(',', ' ').replace(', ', ' ');
                 }
             }
-            // console.log("array")
-            // console.log(htmlin)
-
-
-
             //generate multiple element if array
             if (Array.isArray(htmlin) == true) {
                 // console.log(htmlin)
@@ -124,9 +117,6 @@ export default function gen(elementtype, idin, htmlin, classin, src, event) {
             if (src instanceof Object == true) {
                 var objArray = Object.entries(src);
                 objArray.forEach(A1 => {
-                    // console.log(`element.${A1[0]} = "${A1[1]}"`)
-                    // eval(`element.${A1[0]} = "${A1[1]}"`)
-                    // console.log(`element.setAttribute(${A1[0]}, ${A1[1]})`)
                     element.setAttribute(A1[0], A1[1])
                 })
 
@@ -136,17 +126,7 @@ export default function gen(elementtype, idin, htmlin, classin, src, event) {
             }
         }
 
-        // if (event != undefined) {
-        //     if (event instanceof Object == true) {
-        //         var eventArray = Object.entries(event)
-        //         eventArray.forEach(A1 => {
-        //             // console.log(`element.${A1[0]} = "${A1[1]}"`)
-        //             // eval(`element.${A1[0]} = "${A1[1]}"`)
-        //             console.log(`element.addEventListener(${A1[0]}, ${A1[1]})`)
-        //             element.addEventListener(A1[0], () => { console.log("hi") })
-        //         })
-        //     }
-        // }
+
         return element;
 
     }

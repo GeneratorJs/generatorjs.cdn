@@ -17,6 +17,7 @@ export default async function loadcustomizer() {
 
 // }
 .customizer {
+    font-family:Open sans, Arial,sans-serif,Verdana;
     position:relative;
     display:flex;
     display:none;
@@ -31,15 +32,27 @@ export default async function loadcustomizer() {
     border-radius:5px;
     margin-block:2px;
 
+    #customizerh3{
+        // font-family:Open sans, Arial,sans-serif,Verdana;
+        font-size:20px;
+        text-transform:uppercase;
+    }
 
     .themeSliderGroup{
         display:flex;
         flex-direction:column;
+
         .themeSliderGroupP{
             max-width:100%;
+            padding:2px;
+
+            &:nth-child(3n){
+                margin-bottom:20px;
+                // padding-bottom:.5em;
+
+            }
             .sliderDisp{
-                // padding:.5em;
-                margin-inline:.2em;
+                margin-inline:4px;
             }
     
             .themeslider,.themeselect{
@@ -48,8 +61,8 @@ export default async function loadcustomizer() {
                 cursor:pointer;
             }
             .themeselect{
-                padding:.2em;
-                margin-left:.5em;
+                padding:4px;
+                margin-left:6px;
             }
 
             >span{
@@ -66,13 +79,16 @@ export default async function loadcustomizer() {
     flex-direction:row;
     flex-wrap:wrap;
     .themeButton{
-        border-radius:1em;
+        border-radius:10px;
         border:2px solid white;
-        width:max(auto,10em);
-        margin:1em;
-        padding:.5em 1em ;
+        width:max(auto,160px);
+        margin:10px;
+        padding:3px 8px;
         cursor:pointer;
-       
+       &:hover{
+        box-shadow:0px 0px 4px white;
+
+       }
     }
    }
     
@@ -91,7 +107,7 @@ export default async function loadcustomizer() {
     }
 
 
-    append(customizer, gen("h1", "customizerh3", "customizer", ''))
+    append(customizer, gen("h3", "customizerh3", "customizer", ''))
 
 
     appendSliders()
@@ -118,16 +134,16 @@ export async function toggleCustomizerFn() {
 window.toggleCustomizerFn = toggleCustomizerFn
 
 export async function toggleDarkMode() {
-    let currentState = cssvar('color-scheme')
+    let currentState = cssvar('colorScheme')
     if (window.DEBUG == 1) console.info(currentState)
     if (currentState == 'light') {
-        cssvar('color-scheme', 'dark')
+        cssvar('colorScheme', 'dark')
         cssvar('lightFactor', 1)
         cssvar('textColor', "#EEE")
         cssvar('textShadow', "#222")
     }
     else {
-        cssvar('color-scheme', 'light')
+        cssvar('colorScheme', 'light')
         cssvar('lightFactor', 3)
         cssvar('textColor', "#222")
         cssvar('textShadow', "#555")
@@ -142,7 +158,7 @@ window.toggleDarkMode = toggleDarkMode
 function appendSliders() {
     console.info("appendSliders")
 
-    var variables = [["Theme Color", 'hue'], ["Brightness", 'light'], ["Ascent Color", 'hueAscent'], ["Zoom", 'fontScale'], ["Font", 'fontFamily']]
+    var variables = [["Theme Color", 'hue'], ["Saturation", "sat"], ["Brightness", 'light'], ["Ascent Color", 'hueAscent'], ["Ascent Saturation", 'satAscent'], ["Ascent Brigntness", 'lightAscent'], ["Zoom", 'fontScale'], ["Font", 'fontFamily']]
     // var variables = [["Theme Color", 'hue'], ["Ascent Color", 'hueAscent'], ["Zoom", 'fontScale']]
     append(customizer, gen(div, "themeSliderGroup", "", "themeSliderGroup"))
     variables.forEach(variable => {
@@ -165,7 +181,15 @@ function appendSliders() {
 
 
     })
-    loadColorConfig()
+    // loadColorConfig()
+    if (localStorage.getItem("ColorConfig") == null) {
+        if (localStorage.getItem("defaultColorConfig") == null) {
+            saveTheme("defaultColorConfig")
+        }
+    }
+    else {
+        loadSavedTheme()
+    }
     updateThemeSliders()
 
 }
@@ -184,9 +208,10 @@ function appendSliders() {
 
 
 
-async function updateThemeSliders(variables = ["hue", "hueAscent", "light", "fontScale", "fontFamily"]) {
+async function updateThemeSliders(
+    variables = "hue,sat,light,hueAscent,satAscent,lightAscent,fontScale,fontFamily") {
+    variables.split(",").forEach(variable => {
 
-    variables.forEach(variable => {
         try {
             var id = variable
             var val = cssvar(id)
@@ -194,15 +219,21 @@ async function updateThemeSliders(variables = ["hue", "hueAscent", "light", "fon
 
             if (id.includes("light") || id.includes("sat")) {
                 append(`#${id}Disp`, val, 'over')
-                val = val * 360.0;
+                val = val.split("%")[0] / 100 * 360.0;
             }
             else if (id.includes("fontScale")) {
                 append(`#${id}Disp`, Math.round(val * 100) / 100, 'over')
                 val = (val - 0.4) * 360.0 / 4.0;
             }
-            else if (!id.includes("fontFamily")) append(`#${id}Disp`, val, 'over')
+            else if (!id.includes("fontFamily")) {
+                val = val.replaceAll('""', '"')
+                append(`#${id}Disp`, val, 'over')
+            }
+
             var elem = document.getElementById(id);
+            elem.value = val;
             elem.setAttribute("value", val)
+
         }
         catch (e) { console.error(e) }
     })
@@ -210,7 +241,7 @@ async function updateThemeSliders(variables = ["hue", "hueAscent", "light", "fon
 // from MAC
 
 
-
+window.updateThemeSliders = updateThemeSliders
 
 
 
@@ -220,58 +251,61 @@ async function updateThemeSliders(variables = ["hue", "hueAscent", "light", "fon
 
 
 export async function resetTheme() {
-    // cssVar("--light", cssVar("--lightDefault"))
-    // cssVar("--sat", cssVar("--satDefault"))
-    // cssVar("--hue", cssVar("--hueDefault"))
-    localStorage.clear()
-    sessionStorage.clear()
-    // reloadAll()
-    // loadColorConfig()
+    loadSavedTheme("defaultColorConfig")
+    updateThemeSliders()
+    localStorage.removeItem("colorConfig")
+    sessionStorage.removeItem("colorConfig")
 }
 
 window.resetTheme = resetTheme
 
 
 
-export async function saveTheme() {
-    var selectedFont = document.getElementById("FontSelect").value
-    cssVar("--fontFamily", selectedFont)
 
-    var colorConfig = [
-        cssVar("--hue"),
-        cssVar("--hueAscent"),
-        cssVar("--fontSize"),
-        cssVar("--fontFamily")
-        // document.getElementById("FontSelect").value
-    ]
-    sessionStorage.removeItem("colorConfig")
-    sessionStorage.setItem("colorConfig", JSON.stringify(colorConfig))
+export async function saveTheme(varName = "colorConfig") {
+    // var selectedFont = document.getElementById("FontSelect").value
+    // cssVar("--fontFamily", selectedFont)
+
+    var varsToSave = "hue,sat,light,hueAscent,satAscent,lightAscent,lightFactor,fontScale,fontFamily,colorScheme,textColor"
+    var expression = `var ${varName} = {};`
+    eval(expression)
+    var colorConfig = {}
+    varsToSave.split(",").forEach(v => {
+        // var string = `colorConfig.${v} = cssvar("${v}")`
+        var string = `colorConfig.${v} = cssvar("${v}")`.replaceAll('""', '"')
+        // log(string)
+        eval(string)
+    })
+    localStorage.removeItem(varName)
+    localStorage.setItem(varName, JSON.stringify(colorConfig))
 }
+window.saveTheme = saveTheme
 
-async function loadColorConfig(inputConfig) {
-    try {
-        if (inputConfig == null) inputConfig = await JSON.parse(sessionStorage.getItem("colorConfig"))
-        if (inputConfig != null) {
-            cssVar("--hue", inputConfig[0])
-            cssVar("--hueAscent", inputConfig[1])
-            cssVar("--fontSize", inputConfig[2])
-            cssVar("--fontFamily", inputConfig[3])
+export async function loadSavedTheme(varName = "colorConfig") {
+    // log(varName)
+    var colorConfig = JSON.parse(localStorage.getItem(varName))
+    // window.colorConfig = colorConfig
+    // log(colorConfig)
+    Object.entries(colorConfig).forEach(pair => {
+
+
+        // [key, val] = pair
+        var key = pair[0]
+        var val = pair[1]
+        try {
+            if (key != null && val != null) {
+                val = val.replaceAll('""', '"')
+                var string = `cssvar("${key}","${val}")`
+                string = string.replaceAll('""', '"')
+                eval(string)
+            }
+
         }
-    }
-    catch (e) { console.error(e) }
+        catch (e) { console.error(e) }
+    })
 }
+window.loadSavedTheme = loadSavedTheme
 
-
-// function changeBodyFont() {
-//     var fontselecteled = document.getElementById("FontSelect").value
-//     cssVar("--font-body", `"${fontselecteled}"`)
-//     document.body.style.fontFamily = fontselecteled
-//     var all_headings = document.querySelectorAll("h1,h2,h3,h4,h5,h6")
-//     for (i = 0; i < all_headings.length; i++) {
-//         cssVar("--font-body", `"${fontselecteled}"; `)
-//         all_headings[i].style.fontFamily = fontselecteled
-//     }
-// }
 
 async function updateVar(target) {
     try {
@@ -299,9 +333,11 @@ async function updateVar(target) {
         // setTimeout(() => {
         //     cssvar(id, val)
         // }, 2000)
-        updateThemeSliders()
     }
     catch (e) { console.error(e) }
+    finally {
+        updateThemeSliders()
+    }
 
 }
 window.updateVar = updateVar
