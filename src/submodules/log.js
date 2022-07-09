@@ -17,7 +17,7 @@ var logStyle = `
     padding: .5em 1em;
     border-radius: 5px;
     color: #fff;
-    background-color: hsla(330, 80%, 40%, 1);
+    background-color: hsla(328, 88%, 64%, 1);
     box-shadow:2px 2px 5px black;
     resize: both;
     overflow:auto;
@@ -27,18 +27,21 @@ var logStyle = `
     font-family: "Courier", "Courier New", "Lucida Console", Inconsolata, terminal,consolas,arial;
     word-spacing: 1em;
     user-select:none;
+
     
 
     >.log{
         user-select:text;
         position:relative;
-        font-size:12px;
+        font-size:14px;
         font-family:"arial";
         padding: .5em 1em;
-        background-color: hsla(230, 80%, 15%, 1);
+        background-color: hsla(239, 40%, 42%, 1);
         margin:.5em;
         box-shadow:1px 1px 2px black;
         border-radius: 5px;
+
+        color: #fff;
         
     }
     .cross {

@@ -1,11 +1,12 @@
-export default async function getfile(URL, storage) {
-    if (typeof storage === 'undefined') storage = sessionStorage
+export default async function getfile(URL, callback) {
+    // if (typeof storage === 'undefined') 
+
     var name = URL
     var response = null
     try {
-        if (storage.getItem(name) != null) {
-            response = storage.getItem(name)
-        } else if (storage.getItem(name) == null) {
+        if (sessionStorage.getItem(name) != null && sessionStorage.getItem(name) != "") {
+            response = sessionStorage.getItem(name)
+        } else if (sessionStorage.getItem(name) == null) {
             let xhr = new XMLHttpRequest();
             var method = "GET"
             xhr.open(method, URL)
@@ -17,10 +18,12 @@ export default async function getfile(URL, storage) {
                     response = await xhr.response
                     xhr.DONE
                     // save to local stoage
-                    if (window.DEBUG != 1 || window.DEBUG != true || typeof window.DEBUG !== "undefined") storage.setItem(name, response)
+                    if (window.DEBUG != 1 || window.DEBUG != true || typeof window.DEBUG !== "undefined") sessionStorage.setItem(name, response)
                 }
             }
         }
+
+        if (typeof callback === "function") callback(response)
     }
     catch (err) {
         console.log(`getfile(${URL}, ${storage})`)
