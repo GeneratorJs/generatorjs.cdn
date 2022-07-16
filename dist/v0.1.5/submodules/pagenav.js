@@ -279,7 +279,7 @@ function loadThemeControl() {
     append(themeControl, gen("ul", "themeControlUl", "", 'themeControlUl'))
     var ThemeButtonAndFunction = [["resetTheme()", 'restart_alt', "Reset Theme"], ["toggleDarkMode()", 'dark_mode', "Dark Mode / Light Mode"], ["toggleCustomizerFn()", 'tune', 'Customize Color Theme']]
     ThemeButtonAndFunction.forEach(t => {
-        append(themeControlUl, gen("li", "", t[1], 'material-symbols-outlined', { "onclick": t[0], "title": t[2] }))
+        append(themeControlUl, gen("li", "", t[1], 'material-symbols-outlined', { "onclick": t[0], "title": t[2], "tabindex": "" }))
     })
     // }
 

@@ -36,7 +36,7 @@ export default function gen(elementtype, idin, htmlin, classin, src, event) {
                 };
                 if (classin != undefined && classin != "") {
                     // element.classList.add(classin);
-                    element.classList += classin.replace(',', ' ').replace(', ', ' ');
+                    element.classList += classin.replaceAll(',', ' ').replaceAll(', ', ' ');
                 }
             }
             //generate multiple element if array
@@ -80,7 +80,7 @@ export default function gen(elementtype, idin, htmlin, classin, src, event) {
                         };
                         if (classin != undefined && classin != "") {
                             // element.classList.add(classin);
-                            elementarray.classList += classin.replace(',', ' ').replace(', ', ' ');
+                            elementarray.classList += classin.replaceAll(',', ' ').replaceAll(', ', ' ');
                         }
                     }
 
@@ -109,7 +109,7 @@ export default function gen(elementtype, idin, htmlin, classin, src, event) {
             }
             if (classin != undefined && classin != "") {
                 // element.classList.add(classin);
-                element.classList += classin.replace(',', ' ').replace(', ', ' ');
+                element.classList += classin.replaceAll(',', ' ').replaceAll(', ', ' ');
             }
         }
         // var src = { "id": "testid" }

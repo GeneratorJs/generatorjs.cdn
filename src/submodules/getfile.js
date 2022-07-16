@@ -31,7 +31,7 @@ export default async function getfile(URL, callback) {
 
     }
     catch (err) {
-        console.log(`getfile(${URL}, ${storage})`)
+        console.log(`getfile(${URL}, ${callback})`)
         console.error(err)
     }
     // try {

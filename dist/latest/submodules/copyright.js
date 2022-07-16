@@ -21,7 +21,7 @@ export default function loadCopyright(author) {
                     justify-content: space-between;
                     flex-wrap: wrap;
                     padding: 20px;
-                    background-color: hsla(236, 36%, 20%, 1);
+                    background-color: hsla(236, 38%, 15%, 1);
                     color:white;
                     font-size: 12px;
                     font-weight: 200;
@@ -77,3 +77,4 @@ export default function loadCopyright(author) {
 };
 
 loadCopyright()
+window.loadCopyright = loadCopyright
