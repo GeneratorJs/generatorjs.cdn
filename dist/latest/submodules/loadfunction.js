@@ -28,7 +28,8 @@ export default function load(srcList, pos) {
                     } else if (extension == ".css") {
                         loadcss(srcList[i], pos)
                     } else if (extension == ".scss") {
-                        loadscss(getfile(currentLink))
+                        // loadscss(getfile(currentLink))
+                        getfile(currentLink, (res) => { loadscss(res, currentLink) })
                     } else if (extension == ".html") {
                         loadhtml(currentLink, pos)
                     } else {
@@ -57,7 +58,8 @@ export default function load(srcList, pos) {
                 } else if (extension == ".css") {
                     loadcss(currentLink, pos)
                 } else if (extension == ".scss") {
-                    loadscss(getfile(currentLink))
+                    // loadscss(getfile(currentLink))
+                    getfile(currentLink, (res) => { loadscss(res, currentLink) })
                 } else if (extension == ".html") {
                     loadhtml(currentLink, pos)
                 } else {
