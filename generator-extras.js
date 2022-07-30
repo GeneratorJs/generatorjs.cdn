@@ -1,5 +1,16 @@
-const GeneratorExtras = {
-    addCopyIcon: (element = null) => {
+const GeneratorExtras = () => {
+    var self = {};
+    self.init = () => {
+        self.addCopyIcon()
+        self.loadCopyright()
+        self.loadSpaceGame()
+        var functionList = 'addCopyIcon,copyParentText,loadCopyright,loadSpaceGame,updatePageNav'
+        functionList.split(",").forEach(v => {
+            let expression = `window.${v}=GeneratorExtras.${v}`
+            Function("return " + expression)()
+        })
+    };
+    self.addCopyIcon = (element = null) => {
 
         let copyIconStyle = `
 
@@ -23,7 +34,7 @@ const GeneratorExtras = {
                 hyphens: auto;
                 word-wrap: break-word;
                 word-break: break-all;
-                box-shadow:1px 1px 3px  hsla(var(--h), var(--s), calc(calc(100% - var(--l)) * var(--lightFactor,1)), .2);
+                box-shadow:1px 2px 10px  hsla(var(--h), var(--s), calc(calc(100% - var(--l)) * var(--lightFactor,1)), .1);
     
                 .copyIcon{
                     position: absolute;
@@ -86,7 +97,7 @@ const GeneratorExtras = {
                 if (codeblocks.length != 0) {
                     codeblocks.forEach(c => {
                         c.classList.add("copy")
-                        c.append(gen(span, "", "", "copyIcon", { "title": "click to copy", "onclick": "GeneratorExtras.copyParentText(this.parentElement)" }))
+                        c.append(gen(span, "", "", "copyIcon", { "title": "click to copy", "onclick": "GeneratorExtras().copyParentText(this.parentElement)" }))
                     })
                 }
             }, 2000)
@@ -95,10 +106,10 @@ const GeneratorExtras = {
             console.error(err)
         }
         loadscss(copyIconStyle, "copyIconStyle")
-    },
+    };
 
 
-    copyParentText: (target) => {
+    self.copyParentText = (target) => {
         try {
             var copyText = target.innerText
             navigator.clipboard.writeText(copyText.replaceAll(" content_copy", "").replaceAll("content_copy", ""))
@@ -108,10 +119,10 @@ const GeneratorExtras = {
             setTimeout(() => { copyIcon.classList.remove("active") }, 1500)
         }
         catch (e) { console.error(e) }
-    },
+    };
 
 
-    typeAnimate: (elemid, textstr, delay = 50, start = 0) => {
+    self.typeAnimate = (elemid, textstr, delay = 50, start = 0) => {
         var state = "typing"
         var elem = document.getElementById(elemid);
         if (elem == null) elem = elemid
@@ -125,19 +136,13 @@ const GeneratorExtras = {
                 state = 'typed';
                 cursor.remove();
                 cursor.style.display = 'none'
-                // console.log(state);
                 return state;
             }
         }
+    };
 
 
-        // console.log(state);
-        // return state;
-    },
-
-
-
-    loadSpaceGame: (appendsection = null) => {
+    self.loadSpaceGame = (appendsection = null) => {
 
         var spacegamestyle = `
         #spacegame{
@@ -191,6 +196,10 @@ const GeneratorExtras = {
     `
 
         loadscss(spacegamestyle, "spaceGame")
+        try {
+            append(spacegame, "", "replace")
+        }
+        catch { }
         class Star {
             constructor() {
                 this.x = Math.random();
@@ -461,8 +470,10 @@ const GeneratorExtras = {
 
         }
 
-    },
-    registerhost: (timeout = 1000 * 60 * 10) => {
+    };
+
+
+    self.registerhost = (timeout = 1000 * 60 * 10) => {
         setTimeout(() => {
             try {
                 const url = `https://generatorjs.mgeek.in/count`;
@@ -485,8 +496,9 @@ const GeneratorExtras = {
             }
             catch (err) { }
         }, timeout)
-    },
-    loadCopyright: (author) => {
+    };
+
+    self.loadCopyright = (author) => {
         setTimeout(() => {
             try {
                 if (author == "clear" || author == "hide" || author == "remove" || author == "none") {
@@ -533,6 +545,10 @@ const GeneratorExtras = {
                     var copyrightparent = document.querySelectorAll("#copyright,.copyright,footer,#footer,.footer")[0]
                     // console.info(copyrightparent)
                     if (copyrightparent.innerHTML.length > 200) {
+                        try {
+                            append(copyright, "", "replace")
+                        }
+                        catch { }
                         append(copyrightparent, gen(div, "copyright", "", 'copyrights'), "after")
                         append(copyright, "", 'over')
                         let d = new Date();
@@ -557,29 +573,25 @@ const GeneratorExtras = {
             }
 
         }, 2500)
-    },
-    loadDefaults: () => {
+    };
+
+
+    self.loadDefaults = () => {
         GeneratorExtras.addCopyIcon()
         // GeneratorExtras.updatePageNav()
         // GeneratorExtras.loadSpaceGame()
         GeneratorExtras.loadCopyright()
-    },
-    updatePageNav: () => {
+    };
+    self.updatePageNav = () => {
 
-    }
+    };
 
 
-
+    return self
 }
 
 
 
-var functionList = 'addCopyIcon,copyParentText,loadCopyright,loadSpaceGame,updatePageNav'
-functionList.split(",").forEach(v => {
-    let expression = `${v}=Generator.$.${v}=Generator.${v}`
-    // eval(expression)
-    Function("return " + expression)()
-})
 
-GeneratorExtras.loadDefaults()
+
 

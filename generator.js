@@ -1,7 +1,6 @@
-
-
-const GeneratorJs = () => {
-    this.self = (...args) => {
+function GeneratorJs() {
+    var self = {}
+    self = (...args) => {
         console.log(args.length)
         if (args.length == 1) {
             let selector = args[0];
@@ -11,37 +10,26 @@ const GeneratorJs = () => {
             let selector = args[0]; let index = args[1];
             return document.querySelectorAll(selector)[index];
         }
-        // this.self.loadBasicHtmlVariables()
+        // self.loadBasicHtmlVariables()
     };
-    this.self.eval = (expression) => {
-        Function("return " + expression)()
+    self.eval = (expression) => {
+        Function("return " + expression)();
+        // eval(expression)
     };
-    this.self.loadBasicHtmlVariables = () => {
+    self.loadBasicHtmlVariables = () => {
         // console.info("loadBasicHtmlVariables")
-        var listOfBasicHtmlTags = "div,p,span,b,i,img,video,picture,canvas,svg,audio,h1,h2,h3,h4,h5,h6,table,thead,tbody,tr,td,ul,li,ol,a,textarea,input,output,select,option,checkbox,radio,button,embed,object,iframe,kbd,code,dl,dt,dd,meta,pre,form,fieldset,legend,label,section,main,aside,header,footer,nav,meta,head,body,dialog,details,summary,figure,figcaption,sidebar,style,script,del,ins,wbr,mark,time";
-        var list = listOfBasicHtmlTags.replaceAll(' ', ',').replaceAll(',,', ',')
-        let start = 0;
-        let end = list.length
-        let comaAt = []
-        for (let i = 0; i < list.length; i++) {
-            if (list[i] == ',') comaAt[comaAt.length] = i
-        }
-        if (comaAt.length == 0) eval(eval(`const ${list}='${list}';`))
-        if (comaAt.length > 0) {
-            comaAt[comaAt.length] = end
-            for (let i = 0; i < comaAt.length; i++) {
-                var tag = list.slice(start, comaAt[i])
-                start = comaAt[i] + 1
-                if (tag.length > 0) {
-                    // let expression = `window.${tag} = '${tag}'`
-                    let expression = `window.${tag} = '${tag}'`
-                    window.eval(expression)
-                }
+        let listOfBasicHtmlTags = "div,p,span,b,i,img,video,picture,canvas,svg,audio,h1,h2,h3,h4,h5,h6,table,thead,tbody,tr,td,ul,li,ol,a,textarea,input,output,select,option,checkbox,radio,button,embed,object,iframe,kbd,code,dl,dt,dd,meta,pre,form,fieldset,legend,label,section,main,aside,header,footer,nav,meta,head,body,dialog,details,summary,figure,figcaption,sidebar,style,script,del,ins,wbr,mark,time";
+        let list = listOfBasicHtmlTags.replaceAll(' ', ',').replaceAll(',,', ',')
+        list.split(",").forEach(tag => {
+            if (tag.length > 0) {
+                var expression = `window.${tag} = '${tag}'`
+                self.eval(expression)
             }
-        }
+
+        })
     };
 
-    this.self.append = (parentid, childhtml, position = 'after') => {
+    self.append = (parentid, childhtml, position = 'after') => {
         try {
             if (parentid instanceof Object == true) { var parentElement = parentid }
             else {
@@ -115,7 +103,7 @@ const GeneratorJs = () => {
         ;
 
 
-    this.self.gen = (elementtype, idin, htmlin, classin, src, event) => {
+    self.gen = (elementtype, idin, htmlin, classin, src, event) => {
         try {
             if (htmlin != undefined) {
                 // console.log(htmlin.isArray)
@@ -252,7 +240,7 @@ const GeneratorJs = () => {
         ;
 
 
-    this.self.jsonToElement = (obj) => {
+    self.jsonToElement = (obj) => {
         // obj={"tag":"a","id":"idname","href":"url","class","class1,class2,class3"}
         // objectToElement(obj)
         // console.log(obj)
@@ -298,7 +286,7 @@ const GeneratorJs = () => {
         ;
 
 
-    this.self.cssvar = (name, value) => {
+    self.cssvar = (name, value) => {
         var r = document.querySelector(':root')
         var rs = getComputedStyle(r)
         if (name[0] != '-') name = '--' + name
@@ -307,7 +295,7 @@ const GeneratorJs = () => {
     }
 
         ;
-    this.self.getfile = (URL, callback) => {
+    self.getfile = (URL, callback) => {
         // if (typeof storage === 'undefined') 
 
         var name = URL
@@ -349,7 +337,7 @@ const GeneratorJs = () => {
     }
 
         ;
-    this.self.load = (srcList, pos = "head") => {
+    self.load = (srcList, pos = "head") => {
 
         try {
             if (pos == undefined) { var pos = 'head' }
@@ -369,17 +357,17 @@ const GeneratorJs = () => {
                             }
                         }
                         if (extension == ".js") {
-                            this.self.loadjs(srcList[i], pos)
+                            self.loadjs(srcList[i], pos)
                         } else if (extension == ".css") {
-                            this.self.loadcss(srcList[i], pos)
+                            self.loadcss(srcList[i], pos)
                         } else if (extension == ".scss") {
                             // loadscss(getfile(currentLink))
-                            this.self.getfile(currentLink, (res) => { loadscss(res, currentLink) })
+                            self.getfile(currentLink, (res) => { loadscss(res, currentLink) })
                         } else if (extension == ".html") {
-                            this.self.loadhtml(currentLink, pos)
+                            self.loadhtml(currentLink, pos)
                         } else {
                             // console.log('loading object')
-                            this.self.loadMetaFromObject(srcList[i], pos)
+                            self.loadMetaFromObject(srcList[i], pos)
                         }
                     }
                 }
@@ -399,17 +387,17 @@ const GeneratorJs = () => {
                     }
 
                     if (extension == ".js") {
-                        this.self.loadjs(currentLink, pos)
+                        self.loadjs(currentLink, pos)
                     } else if (extension == ".css") {
-                        this.self.loadcss(currentLink, pos)
+                        self.loadcss(currentLink, pos)
                     } else if (extension == ".scss") {
                         // loadscss(getfile(currentLink))
-                        this.self.getfile(currentLink, (res) => { loadscss(res, currentLink) })
+                        self.getfile(currentLink, (res) => { loadscss(res, currentLink) })
                     } else if (extension == ".html") {
-                        this.self.loadhtml(currentLink, pos)
+                        self.loadhtml(currentLink, pos)
                     } else {
                         // console.log('loading object')
-                        this.self.loadMetaFromObject(currentLink, pos)
+                        self.loadMetaFromObject(currentLink, pos)
                     }
                 }
 
@@ -425,7 +413,7 @@ const GeneratorJs = () => {
     }
 
         ;
-    this.self.loadjs = (src, pos = 'head') => {
+    self.loadjs = (src, pos = 'head') => {
         var s = document.createElement("script");  // create a script DOM node
         s.type = 'text/javascript'
         s.src = src;  // set its src to the provided URL
@@ -442,7 +430,7 @@ const GeneratorJs = () => {
     };
 
 
-    this.self.loadcss = (link, pos = 'head') => {
+    self.loadcss = (link, pos = 'head') => {
         var s = document.createElement("link");  // create a script DOM node
         s.href = link;  // set its src to the provided URL
         s.rel = 'stylesheet'
@@ -454,7 +442,7 @@ const GeneratorJs = () => {
     }
 
         ;
-    this.self.loadMetaFromObject = (obj, pos) => {
+    self.loadMetaFromObject = (obj, pos) => {
         var keylist = Object.keys(obj)
         for (i = 0; i < keylist.length; i++) {
             var s = document.createElement(meta);
@@ -476,7 +464,7 @@ const GeneratorJs = () => {
         ;
 
 
-    this.self.loadscss = (scss, styleid) => {
+    self.loadscss = (scss, styleid) => {
 
         try {
 
@@ -658,38 +646,31 @@ const GeneratorJs = () => {
             }
 
 
-
-
-
-
-
-
-
             // console.log(css)
             css = css.replaceAll("  ", " ").replaceAll(" :", ":").replaceAll(" &", "").replaceAll("\n&", "").replaceAll("  ", " ").replaceAll("  ", " ")
             css = css.replaceAll("{", "{\n").replaceAll("{\n\n", "{\n").replaceAll("}", "\n}").replaceAll("\n\n}", "\n}")
             // css = css.replaceAll(">", "&gt;")
             css = css.replaceAll(">", " > ").replaceAll("  >", " >").replaceAll(">  ", "> ")
             css = css.replaceAll("{", " {\n").replaceAll("  {", " {").replaceAll("{\n\n", "{\n")
-            append('head', gen("style", styleid, css))
+            self.append('head', self.gen("style", styleid, css))
             return css
         }
         catch (err) {
             console.log(`loadscss(${scss}, ${styleid})`)
             console.error(err)
         }
-    }
+    };
 
-        ;
-    this.self.log = (data = '', pos = "before") => {
+
+    self.log = (data = '', pos = "before") => {
         try {
             var applog = document.getElementById("applog")
             if (applog == null || applog == undefined) {
                 // document.getElementById("app").append(gen(div, "applog", "", "applog,applog"))
-                append(app, gen("div", "applog", gen(span, "", "close", "cross material-symbols-outlined", { "onclick": "hide(this.parentElement)" }), "applog"))
+                self.append(app, self.gen("div", "applog", self.gen(span, "", "close", "cross material-symbols-outlined", { "onclick": "GeneratorJs().hide(this.parentElement)" }), "applog"))
 
                 // append(app, gen("div", "applog", "", "applog", { "onclick": "hide(this)" }))
-                loadscss(logStyle, "log")
+                self.loadscss(self.logStyleScss, "log")
 
             }
             if (data === 'clear' || data === 'hide' || data === null || data === undefined || data === "") {
@@ -703,7 +684,7 @@ const GeneratorJs = () => {
                 console.log(data)
 
                 try {
-                    var datastring = verb(data)
+                    var datastring = self.verb(data)
                 }
                 catch (e) {
                     datastring = data
@@ -713,16 +694,16 @@ const GeneratorJs = () => {
                     applog.style.display = 'flex';
                     try {
                         temp.id = ""
-                        append(applog, [gen("div", '', data), gen("span", '', data.outerHTML, 'log', { "onclick": "remove(this)" })], pos)
+                        self.append(applog, [self.gen("div", '', data), self.gen("span", '', data.outerHTML, 'log', { "onclick": "GeneratorJs().remove(this)" })], pos)
                     }
                     catch {
                         var logno = `log-${document.querySelectorAll(".log").length + 1}`
-                        append(applog, gen("span", logno, data, 'log'), pos)
-                        append(`#${logno}`, gen(span, "", "close", "cross material-symbols-outlined", { "onclick": "hide(this.parentElement)" }))
+                        self.append(applog, self.gen("span", logno, data, 'log'), pos)
+                        self.append(`#${logno}`, self.gen(span, "", "close", "cross material-symbols-outlined", { "onclick": "GeneratorJs().hide(this.parentElement)" }))
                     }
                 }
                 catch (err) {
-                    append(applog, data, pos)
+                    self.append(applog, data, pos)
                 }
             }
 
@@ -732,17 +713,33 @@ const GeneratorJs = () => {
             console.log(`log(${data}, ${pos})`)
             console.error(err)
         }
-    }
-
-        ;
-    this.self.remove = (c) => {
-        if (c != null) append(c, "", 'replace')
     };
-    this.self.hide = (c) => {
+
+
+
+    self.remove = (c) => {
+        if (c != null) self.append(c, "", 'replace')
+    };
+
+
+    self.hide = (c) => {
         if (c != null) c.style.display = "none"
     };
 
-    this.self.logStyleScss = `
+
+    self.verb = (input) => {
+        var op = input.outerHTML.toString().replaceAll("&", '&amp;').replaceAll('</', '&lt;&#47;').replaceAll("<", "&lt;").replaceAll(">", '&gt;')
+        return op
+    };
+
+    self.htmltostring = (input) => {
+        var op = input.outerHTML.toString()
+        return op
+    };
+
+
+
+    self.logStyleScss = `
 #applog {
 
     position:relative;
@@ -781,7 +778,6 @@ const GeneratorJs = () => {
         margin:.5em;
         box-shadow:1px 1px 2px black;
         border-radius: 5px;
-
         color: #fff;
         
     }
@@ -801,20 +797,25 @@ const GeneratorJs = () => {
 `;
 
 
-    this.self.loadFunctions = (RequiredFunctions = 'append,cssvar,gen,getfile,hide,jsonToElement,loadcss,loadjs,loadscss,load,log,remove') => {
+    self.loadFunctions = (RequiredFunctions) => {
+        if (RequiredFunctions == undefined) RequiredFunctions = 'append,cssvar,gen,getfile,hide,jsonToElement,loadcss,loadjs,loadscss,load,log,remove'
         RequiredFunctions.split(",").forEach(v => {
-            let expression = `window.${v}=this.self.${v}`
-            this.self.eval(expression)
+            // let expression = `window.${v}=self.${v}`
+
+            var expression = `window.${v} = GeneratorJs().${v}`
+            self.eval(expression)
+            // Function("return " + expression)()
         })
     };
 
-    this.self.init = (RequiredFunctions = undefined) => {
-        this.self.loadBasicHtmlVariables();
-        this.self.loadFunctions(RequiredFunctions);
+    self.init = (RequiredFunctions) => {
+        self.loadBasicHtmlVariables();
+        self.loadFunctions(RequiredFunctions);
         console.info('GeneratorJs Ready')
     };
-    // this.self.init();
-    return this.self
+    // self.init();
+    self.loadBasicHtmlVariables()
+    return self
 }
 
 
