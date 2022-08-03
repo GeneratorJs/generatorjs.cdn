@@ -1,21 +1,22 @@
-var { default: append } = await import("./append.js")
-var { default: loadscss } = await import("./loadscss.js")
-var { default: loadCustomizer } = await import("./customizer.js")
-export default function updatePageNav() {
+const PageNav = () => {
 
-
-
-
-    try {
-
-
-
+    self = {}
+    self.init = () => {
         var googleRoundIcon = `https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200`
-        if (document.getElementById("googleIconsPageNav") == null) append("head", gen("link", "googleIconsPageNav", "", "", { "rel": "stylesheet", "href": googleRoundIcon }))
-        var pageNavStyle = `
+        if (document.getElementById("googleIconsPageNav") == null) {
+            append("head", gen("link", "googleIconsPageNav", "", "", { "rel": "stylesheet", "href": googleRoundIcon }))
+        }
+        loadscss(self.pageNavStyle, 'pageNav')
+        self.loadPageNav()
+        self.loadThemeControl()
+        self.updatePageNavUl()
+        self.customizer()
 
-        
+        document.addEventListener('scroll', self.updateActiveSection)
+    }
 
+
+    self.pageNavStyle = `
         #pageNav {
             font-family:Open sans, Arial,sans-serif,Verdana;
             font-size:1rem;
@@ -166,11 +167,6 @@ export default function updatePageNav() {
 
             
         }
- 
-
-
-
-
 
         .active.hoverblock:before{
                 content:"";
@@ -193,138 +189,117 @@ export default function updatePageNav() {
         //     color:red;
         // }
 
-}
-`
+    }
+    `
 
-        loadscss(pageNavStyle, 'pageNav')
 
-        setTimeout(() => {
-            try {
 
-                loadPageNav()
-                loadThemeControl()
-                updatePageNavUl()
-                loadCustomizer()
+    self.loadPageNav(target = header) {
+        if (document.getElementById("pageNav") == null) {
+            append(target, gen(aside, "pageNav"))
+        } else {
+            append(pageNav, "", "over")
+        }
+    }
+
+
+
+
+
+    self.updatePageNavUl() {
+        if (document.getElementById("pageNavUl") == null) {
+            append(themeControl, gen("ul", "pageNavUl"))
+        } else {
+            append(pageNavUl, "", "over")
+        }
+        append(pageNavUl, "", "over")
+
+        var sectionlist = document.querySelectorAll("main #hero>h1,main div h1,main section h1,footer h1")
+        sectionlist.forEach(element => {
+            var pageNavUl = document.getElementById("pageNavUl")
+            append(pageNavUl, gen("li", "", gen(a, "", element.innerHTML, 'pageNavUlLiA hoverblock', `#${element.parentElement.id}`.replaceAll("##", "#")), "pageNavUlLi"))
+        });
+        updateActiveSection()
+    }
+
+
+    self.loadThemeControl() {
+        if (document.getElementById("themeControl") == null) {
+            append(pageNav, gen("div", "themeControl"))
+        } else {
+            append(themeControl, "", "over")
+        }
+
+
+        // append(themeControl, gen("h3", "", "Theme Control"))
+        append(themeControl, gen("ul", "themeControlUl", "", 'themeControlUl'))
+        var ThemeButtonAndFunction = [["resetTheme()", 'restart_alt', "Reset Theme"], ["toggleDarkMode()", 'dark_mode', "Dark Mode / Light Mode"], ["toggleCustomizerFn()", 'tune', 'Customize Color Theme']]
+        ThemeButtonAndFunction.forEach(t => {
+            append(themeControlUl, gen("li", "", t[1], 'material-symbols-outlined', { "onclick": t[0], "title": t[2], "tabindex": "0" }))
+        })
+        // }
+
+
+        append(pageNav, gen(aside, "customizer", "", "customizer"))
+
+        append(pageNav, gen("ul", "pageNavUl", ""))
+        let d = new Date();
+        let year = d.getFullYear();
+        append(pageNav, gen("span", "", `&copy ${year} <a href="http://mgeek.in">mGeek.in</a>`, 'copyurl'))
+
+
+    }
+
+
+
+
+
+
+    self.updateActiveSection() {
+        let windowTop = document.documentElement.scrollTop
+        let windowHeight = window.innerHeight
+        let windowBottom = windowTop + windowHeight
+
+        var sectionlist = document.querySelectorAll("main #hero>h1,main div h1,main section h1,footer h1")
+        var pageNavUlLiA = document.querySelectorAll('.pageNavUlLiA')
+        sectionlist.forEach(sec => {
+            let sectionTop = sec.parentElement.offsetTop
+            let sectionBottom = sec.parentElement.offsetTop + sec.parentElement.offsetHeight
+            // if (windowTop > sectionTop && windowBottom < sectionTop) {
+            if (windowTop > sectionTop) {
+                let currentId = sec.parentElement.id
+                pageNavUlLiA.forEach(link => {
+                    link.classList.remove('active')
+                    if (link.href.includes(`#${currentId}`)) {
+                        link.classList.add('active')
+                    }
+                })
 
             }
-            catch (err) { console.error(err) }
-        }, 3000)
-    }
-    catch (err) { console.error(err) }
-
-
-
-
-
-
-
-
-
-
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function loadPageNav(target = header) {
-    if (document.getElementById("pageNav") == null) {
-        append(target, gen(aside, "pageNav"))
-    } else {
-        append(pageNav, "", "over")
+        })
     }
 
 
+
+
+
+    self.init()
+    return self
 }
 
 
-function updatePageNavUl() {
-    if (document.getElementById("pageNavUl") == null) {
-        append(themeControl, gen("ul", "pageNavUl"))
-    } else {
-        append(pageNavUl, "", "over")
-    }
-    append(pageNavUl, "", "over")
-
-    var sectionlist = document.querySelectorAll("main #hero>h1,main div h1,main section h1,footer h1")
-    sectionlist.forEach(element => {
-        var pageNavUl = document.getElementById("pageNavUl")
-        append(pageNavUl, gen("li", "", gen(a, "", element.innerHTML, 'pageNavUlLiA hoverblock', `#${element.parentElement.id}`.replaceAll("##", "#")), "pageNavUlLi"))
-    });
-    updateActiveSection()
-}
-
-
-function loadThemeControl() {
-    if (document.getElementById("themeControl") == null) {
-        append(pageNav, gen("div", "themeControl"))
-    } else {
-        append(themeControl, "", "over")
-    }
-
-
-    // append(themeControl, gen("h3", "", "Theme Control"))
-    append(themeControl, gen("ul", "themeControlUl", "", 'themeControlUl'))
-    var ThemeButtonAndFunction = [["resetTheme()", 'restart_alt', "Reset Theme"], ["toggleDarkMode()", 'dark_mode', "Dark Mode / Light Mode"], ["toggleCustomizerFn()", 'tune', 'Customize Color Theme']]
-    ThemeButtonAndFunction.forEach(t => {
-        append(themeControlUl, gen("li", "", t[1], 'material-symbols-outlined', { "onclick": t[0], "title": t[2], "tabindex": "0" }))
-    })
-    // }
-
-
-    append(pageNav, gen(aside, "customizer", "", "customizer"))
-
-    append(pageNav, gen("ul", "pageNavUl", ""))
-    let d = new Date();
-    let year = d.getFullYear();
-    append(pageNav, gen("span", "", `&copy ${year} <a href="http://mgeek.in">mGeek.in</a>`, 'copyurl'))
-
-
-}
-
-
-window.updatePageNav = updatePageNav
 
 
 
 
-document.addEventListener('scroll', updateActiveSection)
-export async function updateActiveSection() {
-    let windowTop = document.documentElement.scrollTop
-    let windowHeight = window.innerHeight
-    let windowBottom = windowTop + windowHeight
 
-    var sectionlist = document.querySelectorAll("main #hero>h1,main div h1,main section h1,footer h1")
-    var pageNavUlLiA = document.querySelectorAll('.pageNavUlLiA')
-    sectionlist.forEach(sec => {
-        let sectionTop = sec.parentElement.offsetTop
-        let sectionBottom = sec.parentElement.offsetTop + sec.parentElement.offsetHeight
-        // if (windowTop > sectionTop && windowBottom < sectionTop) {
-        if (windowTop > sectionTop) {
-            let currentId = sec.parentElement.id
-            pageNavUlLiA.forEach(link => {
-                link.classList.remove('active')
-                if (link.href.includes(`#${currentId}`)) {
-                    link.classList.add('active')
-                }
-            })
 
-        }
-    })
-}
-window.updateActiveSection = updateActiveSection
+
+
+
+
+
+
 
 
 
