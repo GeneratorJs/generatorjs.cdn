@@ -1,4 +1,4 @@
-function GeneratorWebHelper() {
+const GeneratorWebHelper = () => {
     let loadscss = GeneratorJs().loadscss
     let append = GeneratorJs().append
     let gen = GeneratorJs().gen
@@ -786,8 +786,9 @@ function GeneratorWebHelper() {
             // PageNavSelf.customizer()
             PageNavSelf.customizer().init()
 
-            document.addEventListener('scroll', PageNavSelf.updateActiveSection)
-
+            GeneratorWebHelper().PageNav().updateActiveSection()
+            // document.addEventListener('scroll', PageNavSelf.updateActiveSection)
+            document.addEventListener("scroll", () => { GeneratorWebHelper().PageNav().updateActiveSection() })
             console.info("PageNav")
         }
 
