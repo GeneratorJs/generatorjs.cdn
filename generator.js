@@ -1,3 +1,5 @@
+const { match } = require("assert");
+
 function GeneratorJs() {
     var self = {}
     self = (...args) => {
@@ -807,10 +809,54 @@ function GeneratorJs() {
         })
     };
 
+
+
+
+
+
+//     (\*{3})[\w\s\d&,.?\N]+?\1
+    self.parsemd = (mdString)=>{
+        if (mdString==undefined) mdString="# Heading\n ## Suheading \n \n hi this is *bold*, this is **Italic**\n \
+        ***BOLD ITALIC ***"
+        var searchAndReplace=[
+
+            [/(\*{1})[\w\s\d&,.?\N]+?\1/g,"<b>$&</b>"],
+            [/(\*{2})[\w\s\d&,.?\N]+?\1/g,'<i>$&</i>'],
+            [/(\*{3})[\w\s\d&,.?\N]+?\1/g,"<b><i>$&</i></b>"],
+
+            
+            // ["<b><i>***","</b></i>"],
+            // ["***</i></b>","</i></b>"],
+            // ["<i>**","<i>"],
+            // ["**</i>","</i>"],
+            // ["<b>*","<b>"],
+            // ["*</b>","</b>"],
+        ]
+        var res=mdString;
+        // console.log(searchAndReplace[0])
+        searchAndReplace.forEach(G=>{
+            var M=res.match(G[0])
+            if(M!= null && M.length>0){
+                res=res.replace(G[0],G[1])
+            }
+            else{
+                try{
+                    res=res.replaceAll(G[0],G[1])
+                }
+                catch{}
+            }
+        })
+
+
+        self.log(res)
+
+    }
+
     self.init = (RequiredFunctions) => {
         self.loadBasicHtmlVariables();
         self.loadFunctions(RequiredFunctions);
         console.info('GeneratorJs Ready')
+        setTimeout(()=>{self.parsemd(),2000})
     };
     // self.init();
     self.loadBasicHtmlVariables()
