@@ -816,15 +816,22 @@ function GeneratorJs() {
 
 //     (\*{3})[\w\s\d&,.?\N]+?\1
     self.parsemd = (mdString)=>{
-        if (mdString==undefined) mdString="# Heading\n ## Suheading \n \n hi this is *bold*, this is **Italic**\n \
+        if (mdString==undefined) mdString="# Heading\n ``` some code``` \n## Suheading \n \n hi this is *bold*, this is **Italic**\n \
         ***BOLD ITALIC ***"
         var searchAndReplace=[
+            [/(\*{3})([\w\s\d&,.?\N]+?)(\1)/g,`<b><i>$2</i></b>`],
+            [/(\*{2})([\w\s\d&,.?\N]+?)(\1)/g,`<i>$2</i>`],
+            [/(\*{1})([\w\s\d&,.?\N]+?)(\1)/g,`<b>$2</b>`],
+            [/(\#{6} )([\w\s\d&,.?\N]+?)(\n)/g,`<h6>$2</h6>`],
+            [/(\#{5} )([\w\s\d&,.?\N]+?)(\n)/g,`<h5>$2</h5>`],
+            [/(\#{4} )([\w\s\d&,.?\N]+?)(\n)/g,`<h4>$2</h4>`],
+            [/(\#{3} )([\w\s\d&,.?\N]+?)(\n)/g,`<h3>$2</h3>`],
+            [/(\#{2} )([\w\s\d&,.?\N]+?)(\n)/g,`<h2>$2</h2>`],
+            [/(\#{1})\s([\w\s\d&,.?\N]+?)(\n)/g,`<h1>$2</h1>`],
+            [/(\`{3})\s([\w\s\d&,.?\N]+?)(\1)/g,`<code>$2</code>`],
 
-            [/(\*{1})[\w\s\d&,.?\N]+?\1/g,"<b>$&</b>"],
-            [/(\*{2})[\w\s\d&,.?\N]+?\1/g,'<i>$&</i>'],
-            [/(\*{3})[\w\s\d&,.?\N]+?\1/g,"<b><i>$&</i></b>"],
+            // [/(?:\*{0,1,2})(\*{1})[\w\s\d&,.?\N]+(\2)/g,"<b>$&</b>"],
 
-            
             // ["<b><i>***","</b></i>"],
             // ["***</i></b>","</i></b>"],
             // ["<i>**","<i>"],
@@ -837,14 +844,12 @@ function GeneratorJs() {
         searchAndReplace.forEach(G=>{
             var M=res.match(G[0])
             if(M!= null && M.length>0){
+                // log(M[0])
+                // var temp=M[0].replace(/(\*)/g,"")
+                // log(temp)
                 res=res.replace(G[0],G[1])
             }
-            else{
-                try{
-                    res=res.replaceAll(G[0],G[1])
-                }
-                catch{}
-            }
+
         })
 
 
