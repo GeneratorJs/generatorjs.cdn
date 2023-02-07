@@ -296,12 +296,11 @@ function GeneratorJs() {
 
         ;
     self.getfile = (URL, callback) => {
-        // if (typeof storage === 'undefined') 
 
         var name = URL
         var response
         try {
-            if (sessionStorage.getItem(name) != null && sessionStorage.getItem(name) != "") {
+            if (window.DEBUG != 1 && sessionStorage.getItem(name) != null && sessionStorage.getItem(name) != "") {
                 response = sessionStorage.getItem(name)
                 if (response != null && response != "") {
                     if (typeof callback === "function") callback(response)
@@ -465,30 +464,6 @@ function GeneratorJs() {
 
 
     self.loadscss = (scss, styleid) => {
-        var path = styleid
-
-        for (i = styleid.length; i > 0; i--) {
-            if (styleid[i] == '/') {
-                path = styleid.substring(0, i)
-                break
-            }
-        }
-
-
-        // var singleLineCommentsPattern = /\/\/([^\n]*)\n/gmi
-        var importPattern = /^@([\w]*)[^"|']["|'](.*[^"|'])["|']/gmi
-        // log(scss)
-        var importFilenames = scss.matchAll(importPattern)
-        var importFilenameList = Array.from(importFilenames)
-        //LoadIncludes
-        importFilenameList.forEach(n => {
-            // log(scss)
-            // log(n[0])
-            var fileImportUrl = n[2].replaceAll('./', '');
-            var fullPath = `${path}/${fileImportUrl}.scss`
-            // log(fullPath);
-            // load(fullPath)
-        })
 
         try {
 
@@ -677,7 +652,6 @@ function GeneratorJs() {
             css = css.replaceAll(">", " > ").replaceAll("  >", " >").replaceAll(">  ", "> ")
             css = css.replaceAll("{", " {\n").replaceAll("  {", " {").replaceAll("{\n\n", "{\n")
             self.append('head', self.gen("style", styleid, css))
-            css = css.replaceAll(';', ';\n').replaceAll(';\n\n', ';\n')
             return css
         }
         catch (err) {
