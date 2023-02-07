@@ -737,6 +737,67 @@ function GeneratorJs() {
     };
 
 
+    self.parsemd = (md) => {
+        var parsedmd = ""
+        if (md.length > 2) {
+            // var md = `###### headin6
+            // ## asdfsaf  sdfsf ![asdf](asdf)
+            // *assfdfds*
+            // **asfsa**
+            // ***asdfadsf ***
+            // [text](url)
+            // # asdfsadf
+            // `        
+
+            // heading pattern
+            headingPattern = /^([#]*) ([^\n]*)$/gmi
+            match1 = md.matchAll(headingPattern)
+            matchList = Array.from(match1)
+            matchList.forEach(p => {
+                //               console.log(p)
+                md = md.replaceAll(p[0], `<h${p[1].length}>${p[2]}</h${p[1].length}>\n`)
+            })
+
+            // imageurl
+            imageUrlPattern = /!\[([^\]]*)\]\(([^\)]*)\)/gmi
+            match1 = md.matchAll(imageUrlPattern)
+            matchList = Array.from(match1)
+            matchList.forEach(p => {
+                //               console.log(p)
+                md = md.replaceAll(p[0], `<img src="${p[2]}" alt="${p[1]}" />`)
+            })
+
+            // link
+            linkPattern = /\[([^\]]*)\]\(([^\)]*)\)/gmi
+            match1 = md.matchAll(linkPattern)
+            matchList = Array.from(match1)
+            matchList.forEach(p => {
+                //               console.log(p)
+                md = md.replaceAll(p[0], `<a href="${p[2]}">${p[1]}</a>`)
+            })
+
+            // bold
+            italicPattern = /([\*]*)([^\*]*)\1/gmi
+            match1 = md.matchAll(italicPattern)
+            matchList = Array.from(match1)
+            matchList.forEach(p => {
+                //               console.log(p)
+                if (p[1].length == 3) {
+                    md = md.replaceAll(p[0], `<emph><strong>${p[2]}</strong></emph>`)
+                }
+                if (p[1].length == 2) {
+                    md = md.replaceAll(p[0], `<strong>${p[2]}</strong>`)
+                }
+                if (p[1].length == 1) {
+                    md = md.replaceAll(p[0], `<emph>${p[2]}</emph>`)
+                }
+            })
+
+            parsedmd = md
+            // console.log(parsedmd)
+        }
+        return parsedmd
+    };
 
     self.remove = (c) => {
         if (c != null) self.append(c, "", 'replace')
