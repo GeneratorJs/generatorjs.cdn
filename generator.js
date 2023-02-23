@@ -464,14 +464,18 @@ function GeneratorJs() {
 
 
     self.loadscss = (scss, styleid) => {
-        var path = styleid
 
-        for (i = styleid.length; i > 0; i--) {
-            if (styleid[i] == '/') {
-                path = styleid.substring(0, i)
-                break
+        if (styleid != undefined) {
+            var path = styleid
+
+            for (i = styleid.length; i > 0; i--) {
+                if (styleid[i] == '/') {
+                    path = styleid.substring(0, i)
+                    break
+                }
             }
         }
+
 
 
         // var singleLineCommentsPattern = /\/\/([^\n]*)\n/gmi
@@ -737,28 +741,37 @@ function GeneratorJs() {
     };
 
 
-    self.parsemd = (md) => {
-        var parsedmd = ""
+
+
+
+
+
+
+
+
+
+
+
+
+    self.parsemd = (md, callback) => {
+        // var parsedmd = ""
+
+        console.log("loading markdown")
         if (md.length > 2) {
-            // var md = `###### headin6
-            // ## asdfsaf  sdfsf ![asdf](asdf)
-            // *assfdfds*
-            // **asfsa**
-            // ***asdfadsf ***
-            // [text](url)
-            // # asdfsadf
-            // `        
+
 
             // heading pattern
-            headingPattern = /^([#]*) ([^\n]*)$/gmi
+            headingPattern = /^([#]+) ([^\n]*)$/gmi
             match1 = md.matchAll(headingPattern)
             matchList = Array.from(match1)
             matchList.forEach(p => {
-                //               console.log(p)
+                // console.log(p[0])
+                // console.log(p[1])
+                // console.log(p[2])
                 md = md.replaceAll(p[0], `<h${p[1].length}>${p[2]}</h${p[1].length}>\n`)
             })
 
-            // imageurl
+            // // imageurl
             imageUrlPattern = /!\[([^\]]*)\]\(([^\)]*)\)/gmi
             match1 = md.matchAll(imageUrlPattern)
             matchList = Array.from(match1)
@@ -767,7 +780,7 @@ function GeneratorJs() {
                 md = md.replaceAll(p[0], `<img src="${p[2]}" alt="${p[1]}" />`)
             })
 
-            // link
+            // // link
             linkPattern = /\[([^\]]*)\]\(([^\)]*)\)/gmi
             match1 = md.matchAll(linkPattern)
             matchList = Array.from(match1)
@@ -776,8 +789,8 @@ function GeneratorJs() {
                 md = md.replaceAll(p[0], `<a href="${p[2]}">${p[1]}</a>`)
             })
 
-            // bold
-            italicPattern = /([\*]*)([^\*]*)\1/gmi
+            // // bold/italic/emph
+            italicPattern = /([\*]*)([^\*\n]*)\1/gmi
             match1 = md.matchAll(italicPattern)
             matchList = Array.from(match1)
             matchList.forEach(p => {
@@ -793,11 +806,84 @@ function GeneratorJs() {
                 }
             })
 
-            parsedmd = md
-            // console.log(parsedmd)
+
+            // // code
+            codePattern = /```([^\s]*)([^```]*)```/gmi
+            match1 = md.matchAll(codePattern)
+            matchList = Array.from(match1)
+            matchList.forEach(p => {
+                //               console.log(p)
+                md = md.replaceAll(p[0], `<code class=${p[1]}>${p[2]}</code>`)
+            })
+
+            // // code
+            inlinecodePattern = /`([^`]*)`/gmi
+            match1 = md.matchAll(codePattern)
+            matchList = Array.from(match1)
+            matchList.forEach(p => {
+                //               console.log(p)
+                md = md.replaceAll(p[0], `<code>${p[2]}</code>`)
+            })
+
+
+            //list
+
+            // // // code
+            // listPattern = /^\* (.*)[\n\n]/gmi
+            // match1 = md.matchAll(codePattern)
+            // matchList = Array.from(match1)
+            // matchList.forEach(p => {
+            //     console.log(p)
+            //     md = md.replaceAll(p[0], `<ul>${p[2]}</ul>`)
+            // })
+
+
+
+
         }
-        return parsedmd
+        if (callback != undefined) callback(md)
+        return md
     };
+
+
+
+
+
+
+
+
+    // function{            //             var searchAndReplace = [
+    //     //     [/(\*{3})([\w\s\d&,.?\N]+?)(\1)/g, `<b><i>$2</i></b>`],
+    //     //     [/(\*{2})([\w\s\d&,.?\N]+?)(\1)/g, `<i>$2</i>`],
+    //     //     [/(\*{1})([\w\s\d&,.?\N]+?)(\1)/g, `<b>$2</b>`],
+    //     //     [/(\#{6} )([\w\s\d&,.?\N]+?)(\n)/g, `<h6>$2</h6>`],
+    //     //     [/(\#{5} )([\w\s\d&,.?\N]+?)(\n)/g, `<h5>$2</h5>`],
+    //     //     [/(\#{4} )([\w\s\d&,.?\N]+?)(\n)/g, `<h4>$2</h4>`],
+    //     //     [/(\#{3} )([\w\s\d&,.?\N]+?)(\n)/g, `<h3>$2</h3>`],
+    //     //     [/(\#{2} )([\w\s\d&,.?\N]+?)(\n)/g, `<h2>$2</h2>`],
+    //     //     [/(\#{1})\s([\w\s\d&,.?\N]+?)(\n)/g, `<h1>$2</h1>`],
+    //     //     [/(\`{3})\s([\w\s\d&,.?\N]+?)(\1)/g, `<code>$2</code>`],
+    //     // ]
+
+    //     // searchAndReplace.forEach(G => {
+    //     //     var M = res.match(G[0])
+    //     //     if (M != null && M.length > 0) {
+    //     //         res = res.replace(G[0], G[1])
+    //     //     }
+
+    //     // })}
+
+
+
+
+
+
+
+
+
+
+
+
 
     self.remove = (c) => {
         if (c != null) self.append(c, "", 'replace')
@@ -878,8 +964,16 @@ function GeneratorJs() {
 `;
 
 
+
+
+
+
+
+
+
+
     self.loadFunctions = (RequiredFunctions) => {
-        if (RequiredFunctions == undefined) RequiredFunctions = 'append,cssvar,gen,getfile,hide,jsonToElement,loadcss,loadjs,loadscss,load,log,remove'
+        if (RequiredFunctions == undefined) RequiredFunctions = 'append,cssvar,gen,getfile,hide,jsonToElement,loadcss,loadjs,loadscss,load,log,remove,parsemd'
         RequiredFunctions.split(",").forEach(v => {
             // let expression = `window.${v}=self.${v}`
 
