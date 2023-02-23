@@ -1161,7 +1161,7 @@ const GeneratorWebHelper = () => {
                         var googleFontUrlStyle = `
                     @import url('https://fonts.googleapis.com/css2?family=${FontName}&display=swap');
                     `
-                        loadscss(googleFontUrlStyle)
+                        loadscss(googleFontUrlStyle, "googleFont")
 
                         document.fonts.ready.then(cssvar(id, val));
 
