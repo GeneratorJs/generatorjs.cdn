@@ -759,90 +759,194 @@ function GeneratorJs() {
         console.log("loading markdown")
         if (md.length > 2) {
 
+            function cleanMdLinebreak(md) {
+                // Clear extra linebreaks
+                cleanLinebreakPattern = /([\n]{3,})/gmi
+                match1 = md.matchAll(cleanLinebreakPattern)
+                matchList = Array.from(match1)
+                matchList.forEach(p => {
+                    // log(p[0])
+                    md = md.replaceAll(p[0], '\n\n')
+                })
 
-            // heading pattern
-            headingPattern = /^([#]+) ([^\n]*)$/gmi
-            match1 = md.matchAll(headingPattern)
-            matchList = Array.from(match1)
-            matchList.forEach(p => {
-                // console.log(p[0])
-                // console.log(p[1])
-                // console.log(p[2])
-                md = md.replaceAll(p[0], `<h${p[1].length}>${p[2]}</h${p[1].length}>\n`)
-            })
-
-            // // imageurl
-            imageUrlPattern = /!\[([^\]]*)\]\(([^\)]*)\)/gmi
-            match1 = md.matchAll(imageUrlPattern)
-            matchList = Array.from(match1)
-            matchList.forEach(p => {
-                //               console.log(p)
-                md = md.replaceAll(p[0], `<img src="${p[2]}" alt="${p[1]}" />`)
-            })
-
-            // // link
-            linkPattern = /\[([^\]]*)\]\(([^\)]*)\)/gmi
-            match1 = md.matchAll(linkPattern)
-            matchList = Array.from(match1)
-            matchList.forEach(p => {
-                //               console.log(p)
-                md = md.replaceAll(p[0], `<a href="${p[2]}">${p[1]}</a>`)
-            })
-
-            // // bold/italic/emph
-            italicPattern = /([\*]*)([^\*\n]*)\1/gmi
-            match1 = md.matchAll(italicPattern)
-            matchList = Array.from(match1)
-            matchList.forEach(p => {
-                //               console.log(p)
-                if (p[1].length == 3) {
-                    md = md.replaceAll(p[0], `<emph><strong>${p[2]}</strong></emph>`)
+                mdBlocks = md.split("\n\n")
+                for (i = 0; i < mdBlocks.length; i++) {
+                    mdBlocks[i] = mdBlocks[i] + '\n\n'
                 }
-                if (p[1].length == 2) {
-                    md = md.replaceAll(p[0], `<strong>${p[2]}</strong>`)
-                }
-                if (p[1].length == 1) {
-                    md = md.replaceAll(p[0], `<emph>${p[2]}</emph>`)
-                }
+                return { md, mdBlocks };
+            }
+
+
+
+
+            function parseBlock(md) {
+                // heading pattern
+                headingPattern = /^([#]+) ([^\n]*)$/gmi
+                match1 = md.matchAll(headingPattern)
+                matchList = Array.from(match1)
+                matchList.forEach(p => {
+                    // console.log(p[0])
+                    // console.log(p[1])
+                    // console.log(p[2])
+                    md = md.replaceAll(p[0], `<h${p[1].length}>${p[2]}</h${p[1].length}>\n`)
+                })
+
+
+                // h1 pattern with====
+                headingPattern = /^([^\n]*)\n[=]{4,}\n$/gmi
+                match1 = md.matchAll(headingPattern)
+                matchList = Array.from(match1)
+                matchList.forEach(p => {
+                    md = md.replaceAll(p[0], `<h1>${p[1]}</h1>\n`)
+                })
+
+                // h2 pattern with----
+                headingPattern = /^([^\n]*)\n[-]{4,}\n$/gmi
+                match1 = md.matchAll(headingPattern)
+                matchList = Array.from(match1)
+                matchList.forEach(p => {
+                    md = md.replaceAll(p[0], `<h2>${p[1]}</h2>\n`)
+                })
+
+
+                // Hline pattern
+                headingPattern = /^[-]{3}\n$/gmi
+                match1 = md.matchAll(headingPattern)
+                matchList = Array.from(match1)
+                matchList.forEach(p => {
+                    md = md.replaceAll(p[0], `<hr /><br />`)
+                })
+
+                // // imageurl
+                imageUrlPattern = /!\[([^\]]*)\]\(([^\)]*)\)/gmi
+                match1 = md.matchAll(imageUrlPattern)
+                matchList = Array.from(match1)
+                matchList.forEach(p => {
+                    //               console.log(p)
+                    md = md.replaceAll(p[0], `<img src="${p[2]}" alt="${p[1]}" />`)
+                })
+
+                // // link
+                linkPattern = /\[([^\]]*)\]\(([^\)]*)\)/gmi
+                match1 = md.matchAll(linkPattern)
+                matchList = Array.from(match1)
+                matchList.forEach(p => {
+                    //               console.log(p)
+                    md = md.replaceAll(p[0], `<a href="${p[2]}">${p[1]}</a>`)
+                })
+
+                // // bold/italic/emph
+                italicPattern = /([\*]*)([^\*\n]*)\1/gmi
+                match1 = md.matchAll(italicPattern)
+                matchList = Array.from(match1)
+                matchList.forEach(p => {
+                    //               console.log(p)
+                    if (p[1].length == 3) {
+                        md = md.replaceAll(p[0], `<emph><strong>${p[2]}</strong></emph>`)
+                    }
+                    if (p[1].length == 2) {
+                        md = md.replaceAll(p[0], `<strong>${p[2]}</strong>`)
+                    }
+                    if (p[1].length == 1) {
+                        md = md.replaceAll(p[0], `<emph>${p[2]}</emph>`)
+                    }
+                })
+
+
+                // // code
+                codePattern = /```([^\s]*)([^```]*)```/gmi
+                match1 = md.matchAll(codePattern)
+                matchList = Array.from(match1)
+                matchList.forEach(p => {
+                    //               console.log(p)
+                    md = md.replaceAll(p[0], `<div><br /><pre class=${p[1]}>${p[2]}</pre><br /></div>`)
+                })
+
+                // // code
+                inlinecodePattern = /`([^`]*)`/gmi
+                match1 = md.matchAll(codePattern)
+                matchList = Array.from(match1)
+                matchList.forEach(p => {
+                    //               console.log(p)
+                    md = md.replaceAll(p[0], `<code>${p[2]}</code>`)
+                })
+
+
+                // // reference
+                referrencePattern = /\[\^([^\]]*)][^:]/gmi
+                match1 = md.matchAll(referrencePattern)
+                matchList = Array.from(match1)
+                matchList.forEach(p => {
+                    // console.log(p)
+                    md = md.replaceAll(p[0], `<sup><a href="#${p[1]}">${p[1]}</a></sup>`)
+                })
+
+
+
+
+
+
+                // // referencelist
+                // referrencePatternList = /^\[\^([^\]]*)]:([^\n]*)$/gmi
+                // match1 = md.matchAll(referrencePatternList)
+                // matchList = Array.from(match1)
+                // matchList.forEach(p => {
+                //     // console.log(p[0])
+                //     md = md.replaceAll(p[0], `<li id="${p[1]}">${p[2]}</li>`)
+                // })
+
+
+
+
+
+
+
+
+
+                //list
+
+                // // // code
+                // listPattern = /^\* (.*)[\n\n]/gmi
+                // match1 = md.matchAll(codePattern)
+                // matchList = Array.from(match1)
+                // matchList.forEach(p => {
+                //     console.log(p)
+                //     md = md.replaceAll(p[0], `<ul>${p[2]}</ul>`)
+                // })
+                return md
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            var { mdClean, mdBlocks } = cleanMdLinebreak(md)
+            var output = ""
+            mdBlocks.forEach(block => {
+                var parsedBlock = parseBlock(block)
+                // log(parsedBlock)
+                // output = output + `<div>${parsedBlock}</div>`
+                output = output + `${parsedBlock}`
             })
 
 
-            // // code
-            codePattern = /```([^\s]*)([^```]*)```/gmi
-            match1 = md.matchAll(codePattern)
-            matchList = Array.from(match1)
-            matchList.forEach(p => {
-                //               console.log(p)
-                md = md.replaceAll(p[0], `<code class=${p[1]}>${p[2]}</code>`)
-            })
-
-            // // code
-            inlinecodePattern = /`([^`]*)`/gmi
-            match1 = md.matchAll(codePattern)
-            matchList = Array.from(match1)
-            matchList.forEach(p => {
-                //               console.log(p)
-                md = md.replaceAll(p[0], `<code>${p[2]}</code>`)
-            })
-
-
-            //list
-
-            // // // code
-            // listPattern = /^\* (.*)[\n\n]/gmi
-            // match1 = md.matchAll(codePattern)
-            // matchList = Array.from(match1)
-            // matchList.forEach(p => {
-            //     console.log(p)
-            //     md = md.replaceAll(p[0], `<ul>${p[2]}</ul>`)
-            // })
 
 
 
 
         }
         if (callback != undefined) callback(md)
-        return md
+        return output
     };
 
 
