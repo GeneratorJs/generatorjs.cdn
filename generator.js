@@ -769,11 +769,17 @@ function GeneratorJs() {
                     md = md.replaceAll(p[0], '\n\n')
                 })
 
-                mdBlocks = md.split("\n\n")
+                var mdBlocks = md.split("\n\n")
+                var processedmd = [""]
                 for (i = 0; i < mdBlocks.length; i++) {
                     mdBlocks[i] = mdBlocks[i] + '\n\n'
+                    processedmd[0] = processedmd[0] + mdBlocks[i]
                 }
+                mdBlocks = processedmd  // problem with splitting inside code blocks```
                 return { md, mdBlocks };
+                // log(processedmd[0])
+                // return { md, processedmd };
+
             }
 
 
@@ -781,6 +787,7 @@ function GeneratorJs() {
 
             function parseBlock(md) {
                 // heading pattern
+                // https://regex101.com/r/eXAQjk/1
                 headingPattern = /^([#]+) ([^\n]*)$/gmi
                 match1 = md.matchAll(headingPattern)
                 matchList = Array.from(match1)
@@ -793,6 +800,7 @@ function GeneratorJs() {
 
 
                 // h1 pattern with====
+                // https://regex101.com/r/q2Q4tD/1
                 headingPattern = /^([^\n]*)\n[=]{4,}\n$/gmi
                 match1 = md.matchAll(headingPattern)
                 matchList = Array.from(match1)
@@ -801,6 +809,7 @@ function GeneratorJs() {
                 })
 
                 // h2 pattern with----
+                // https://regex101.com/r/EDSCl6/1
                 headingPattern = /^([^\n]*)\n[-]{4,}\n$/gmi
                 match1 = md.matchAll(headingPattern)
                 matchList = Array.from(match1)
@@ -810,6 +819,7 @@ function GeneratorJs() {
 
 
                 // Hline pattern
+                // https://regex101.com/r/KkWAJn/1
                 headingPattern = /^[-]{3}\n$/gmi
                 match1 = md.matchAll(headingPattern)
                 matchList = Array.from(match1)
@@ -818,25 +828,30 @@ function GeneratorJs() {
                 })
 
                 // // imageurl
+                // https://regex101.com/r/zmkGnC/1
                 imageUrlPattern = /!\[([^\]]*)\]\(([^\)]*)\)/gmi
                 match1 = md.matchAll(imageUrlPattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
                     //               console.log(p)
                     md = md.replaceAll(p[0], `<img src="${p[2]}" alt="${p[1]}" />`)
+
                 })
 
                 // // link
-                linkPattern = /\[([^\]]*)\]\(([^\)]*)\)/gmi
+                https://regex101.com/r/1JnwUz/1
+                linkPattern = /[^!]\[([^\]]*)\]\(([^\)]*)\)/gmi
                 match1 = md.matchAll(linkPattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
                     //               console.log(p)
                     md = md.replaceAll(p[0], `<a href="${p[2]}">${p[1]}</a>`)
+
                 })
 
                 // // bold/italic/emph
-                italicPattern = /([\*]*)([^\*\n]*)\1/gmi
+                // https://regex101.com/r/pcSMGQ/1
+                italicPattern = /([\*]{1,3})([^\n\*]*)\1/gmi
                 match1 = md.matchAll(italicPattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
@@ -854,7 +869,9 @@ function GeneratorJs() {
 
 
                 // // code
-                codePattern = /```([^\s]*)([^```]*)```/gmi
+                // https://regex101.com/r/WpO7gY/1
+                // codePattern = /```([^\s]*)([^```]*)```/gmi
+                codePattern = /`{3}([^\n]*)\n([^`]*)`{3}/gmi
                 match1 = md.matchAll(codePattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
@@ -863,7 +880,9 @@ function GeneratorJs() {
                 })
 
                 // // code
-                inlinecodePattern = /`([^`]*)`/gmi
+                // https://regex101.com/r/hPFQIP/1
+                // inlinecodePattern = /`([^`]*)`/gmi
+                inlinecodePattern = /`([^`\n][^`]+)`[^`]/gmi
                 match1 = md.matchAll(codePattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
@@ -873,12 +892,13 @@ function GeneratorJs() {
 
 
                 // // reference
+                // https://regex101.com/r/CZ2fjd/1
                 referrencePattern = /\[\^([^\]]*)][^:]/gmi
                 match1 = md.matchAll(referrencePattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
                     // console.log(p)
-                    md = md.replaceAll(p[0], `<sup><a href="#${p[1]}">${p[1]}</a></sup>`)
+                    md = md.replaceAll(p[0], `<sup><a href="#Reference-${p[1]}">${p[1]}</a></sup>`)
                 })
 
 
@@ -886,14 +906,15 @@ function GeneratorJs() {
 
 
 
-                // // referencelist
-                // referrencePatternList = /^\[\^([^\]]*)]:([^\n]*)$/gmi
-                // match1 = md.matchAll(referrencePatternList)
-                // matchList = Array.from(match1)
-                // matchList.forEach(p => {
-                //     // console.log(p[0])
-                //     md = md.replaceAll(p[0], `<li id="${p[1]}">${p[2]}</li>`)
-                // })
+                // referencelist
+                // https://regex101.com/r/oZ8gFY/1
+                referrencePatternList = /^\[\^([^\]]*)]:([^\n]*)$/gmi
+                match1 = md.matchAll(referrencePatternList)
+                matchList = Array.from(match1)
+                matchList.forEach(p => {
+                    // console.log(p[0])
+                    md = md.replaceAll(p[0], `<li id="Reference-${p[1]}">${p[2]}</li>`)
+                })
 
 
 
