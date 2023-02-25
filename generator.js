@@ -818,9 +818,9 @@ function GeneratorJs() {
                 })
 
 
-                // Hline pattern
-                // https://regex101.com/r/KkWAJn/1
-                headingPattern = /^[-]{3}\n$/gmi
+                // Hline pattern ---
+                // https://regex101.com/r/mtFa8I/1
+                headingPattern = /^[-|*|_]{3}$/gmi
                 match1 = md.matchAll(headingPattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
@@ -924,16 +924,14 @@ function GeneratorJs() {
 
 
 
-                //list
-
-                // // // code
-                // listPattern = /^\* (.*)[\n\n]/gmi
-                // match1 = md.matchAll(codePattern)
-                // matchList = Array.from(match1)
-                // matchList.forEach(p => {
-                //     console.log(p)
-                //     md = md.replaceAll(p[0], `<ul>${p[2]}</ul>`)
-                // })
+                list
+                listPattern = /^\* (.*)$/gmi
+                match1 = md.matchAll(codePattern)
+                matchList = Array.from(match1)
+                matchList.forEach(p => {
+                    console.log(p)
+                    md = md.replaceAll(p[0], `<li>${p[2]}</li>`)
+                })
                 return md
             }
 
