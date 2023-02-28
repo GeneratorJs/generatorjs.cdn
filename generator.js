@@ -888,7 +888,17 @@ function GeneratorJs() {
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
                     log(p)
-                    md = md.replaceAll(p[0], `<code>${p[2]}</code>`)
+                    md = md.replaceAll(p[0], htmltostring(gen(code, '', p[2], 'parsemd-del')))
+                })
+
+                // // strikethrough
+                // https://regex101.com/r/hPFQIP/1
+                var strikethroughPattern = /~~([^]*?)~~/img
+                match1 = md.matchAll(strikethroughPattern)
+                matchList = Array.from(match1)
+                matchList.forEach(p => {
+                    // log(p)
+                    md = md.replaceAll(p[0], htmltostring(gen(del, '', p[1], 'parsemd-del')))
                 })
 
 
