@@ -25,17 +25,38 @@ function GeneratorJs() {
                 var expression = `window.${tag} = '${tag}'`
                 self.eval(expression)
             }
-
         })
     };
 
+
+    //get
+    self.get = (parentid) => {
+        var parentElement = null;
+        try {
+            if (parentid instanceof Object == true) { parentElement = parentid }
+            else {
+                parentElement = document.querySelectorAll(parentid);
+            }
+        }
+        catch (err) {
+            console.log(`get(${parentid})`)
+            console.error(err)
+        }
+        return parentElement
+
+    };
+
+
+
+
+    // append
     self.append = (parentid, childhtml, position = 'after') => {
         try {
             if (parentid instanceof Object == true) { var parentElement = parentid }
             else {
                 var parentElement = document.querySelectorAll(parentid)[0];
             }
-
+            // var parentElement = self.get(parentid)[0]
             var T = document.createElement('div')
             T.id = 'T'
             T.innerHTML = ""
@@ -103,6 +124,10 @@ function GeneratorJs() {
         ;
 
 
+
+
+
+    //gen
     self.gen = (elementtype, idin, htmlin, classin, src, event) => {
         try {
             if (htmlin != undefined) {
@@ -693,7 +718,7 @@ function GeneratorJs() {
             var applog = document.getElementById("applog")
             if (applog == null || applog == undefined) {
                 // document.getElementById("app").append(gen(div, "applog", "", "applog,applog"))
-                self.append(app, self.gen("div", "applog", self.gen(span, "", "close", "cross material-symbols-outlined", { "onclick": "GeneratorJs().hide(this.parentElement)" }), "applog"))
+                self.append("body", self.gen("div", "applog", self.gen(span, "", "close", "cross material-symbols-outlined", { "onclick": "GeneratorJs().hide(this.parentElement)" }), "applog"))
 
                 // append(app, gen("div", "applog", "", "applog", { "onclick": "hide(this)" }))
                 self.loadscss(self.logStyleScss, "log")
@@ -1117,43 +1142,6 @@ function GeneratorJs() {
 
 
 
-
-
-
-
-    // function{            //             var searchAndReplace = [
-    //     //     [/(\*{3})([\w\s\d&,.?\N]+?)(\1)/g, `<b><i>$2</i></b>`],
-    //     //     [/(\*{2})([\w\s\d&,.?\N]+?)(\1)/g, `<i>$2</i>`],
-    //     //     [/(\*{1})([\w\s\d&,.?\N]+?)(\1)/g, `<b>$2</b>`],
-    //     //     [/(\#{6} )([\w\s\d&,.?\N]+?)(\n)/g, `<h6>$2</h6>`],
-    //     //     [/(\#{5} )([\w\s\d&,.?\N]+?)(\n)/g, `<h5>$2</h5>`],
-    //     //     [/(\#{4} )([\w\s\d&,.?\N]+?)(\n)/g, `<h4>$2</h4>`],
-    //     //     [/(\#{3} )([\w\s\d&,.?\N]+?)(\n)/g, `<h3>$2</h3>`],
-    //     //     [/(\#{2} )([\w\s\d&,.?\N]+?)(\n)/g, `<h2>$2</h2>`],
-    //     //     [/(\#{1})\s([\w\s\d&,.?\N]+?)(\n)/g, `<h1>$2</h1>`],
-    //     //     [/(\`{3})\s([\w\s\d&,.?\N]+?)(\1)/g, `<code>$2</code>`],
-    //     // ]
-
-    //     // searchAndReplace.forEach(G => {
-    //     //     var M = res.match(G[0])
-    //     //     if (M != null && M.length > 0) {
-    //     //         res = res.replace(G[0], G[1])
-    //     //     }
-
-    //     // })}
-
-
-
-
-
-
-
-
-
-
-
-
-
     self.remove = (c) => {
         if (c != null) self.append(c, "", 'replace')
     };
@@ -1242,7 +1230,7 @@ function GeneratorJs() {
 
 
     self.loadFunctions = (RequiredFunctions) => {
-        if (RequiredFunctions == undefined) RequiredFunctions = 'append,cssvar,gen,getfile,hide,jsonToElement,loadcss,loadjs,loadscss,load,log,remove,parsemd,verb,htmltostring'
+        if (RequiredFunctions == undefined) RequiredFunctions = 'get,append,cssvar,gen,getfile,hide,jsonToElement,loadcss,loadjs,loadscss,load,log,remove,parsemd,verb,htmltostring'
         RequiredFunctions.split(",").forEach(v => {
             // let expression = `window.${v}=self.${v}`
 
