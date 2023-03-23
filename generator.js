@@ -845,7 +845,7 @@ function GeneratorJs() {
                 match1 = md.matchAll(linkPattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
-                    log(p)
+//                    log(p)
                     md = md.replaceAll(p[0], `<a href="${p[2]}">${p[1]}</a>`)
 
                 })
