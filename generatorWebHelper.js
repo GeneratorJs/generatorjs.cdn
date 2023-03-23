@@ -106,7 +106,7 @@ const GeneratorWebHelper = () => {
                 }
                 else if (element == undefined) {
 
-                    var codeblocks = document.querySelectorAll('code,.code,pre,.pre,.copy')
+                    var codeblocks = document.querySelectorAll('code,.code,.copy')
                 }
                 if (codeblocks.length != 0) {
                     codeblocks.forEach(c => {
