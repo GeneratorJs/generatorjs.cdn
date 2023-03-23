@@ -887,7 +887,7 @@ function GeneratorJs() {
                 match1 = md.matchAll(codePattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
-                    log(p)
+                    // log(p)
                     md = md.replaceAll(p[0], htmltostring(gen(code, '', p[2], 'parsemd-del')))
                 })
 
