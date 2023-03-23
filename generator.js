@@ -115,7 +115,8 @@ function GeneratorJs() {
                     if (htmlin.nodeName === undefined) {
                         // console.log(typeof (htmlin))
                         if (typeof (htmlin) != "object") {
-                            if (elementtype == 'code' || elementtype == 'pre') {
+                            // if (elementtype == 'code' || elementtype == 'pre') {
+                            if (elementtype == 'code') {
                                 element.innerText = htmlin;
                             } else if (elementtype == 'input') {
                                 element.value = htmlin;
@@ -786,6 +787,14 @@ function GeneratorJs() {
 
 
             function parseBlock(md) {
+
+
+
+
+
+
+
+
                 // heading pattern
                 // https://regex101.com/r/eXAQjk/1
                 var headingPattern = /^([#]+) ([^\n]*)$/gmi
@@ -818,6 +827,18 @@ function GeneratorJs() {
                 })
 
 
+                // paragraph pattern
+                // https://regex101.com/r/eXAQjk/1
+                var paragraphPattern = /^(?!\s*$|\${2}|\\\[|#{1,6}\s|\*\s|\d+.\s|!|\[|>+\s+|-|\||`)([\s\S]*?)\n{2,}/gmi
+                match1 = md.matchAll(paragraphPattern)
+                matchList = Array.from(match1)
+                matchList.forEach(p => {
+                    console.log(p[0])
+                    console.log(p[1])
+                    console.log(p[2])
+                    md = md.replaceAll(p[0], `<p>${p[1]}</p>`)
+                })
+
                 // Hline pattern ---
                 // https://regex101.com/r/9sKxn2/1
                 var headingPattern = /^([-|*|_]{3})$/gmi
@@ -845,7 +866,7 @@ function GeneratorJs() {
                 match1 = md.matchAll(linkPattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
-//                    log(p)
+                    //                    log(p)
                     md = md.replaceAll(p[0], `<a href="${p[2]}">${p[1]}</a>`)
 
                 })
@@ -877,10 +898,10 @@ function GeneratorJs() {
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
                     //               console.log(p)
-                    md = md.replaceAll(p[0], `<code><pre class="${p[1]}, language-${p[1]}">${p[2]}</pre></code>`)
+                    md = md.replaceAll(p[0], `<pre><code class="${p[1]}, language-${p[1]}">${p[2]}</code></pre>`)
                 })
 
-                // // code
+                // For MathJax
                 // https://regex101.com/r/hPFQIP/1
                 // inlinecodePattern = /`([^`]*)`/gmi
                 var inlinecodePattern = /`([^`\n][^`]+)`[^`]/gmi
@@ -890,6 +911,31 @@ function GeneratorJs() {
                     // log(p)
                     md = md.replaceAll(p[0], htmltostring(gen(code, '', p[2], 'parsemd-del')))
                 })
+
+
+                // // blockMath
+                //https://regex101.com/r/QdJcQS/1
+                var blockMathPattern = /\${2}([^$\n]+)\${2}/gm
+                match1 = md.matchAll(blockMathPattern)
+                matchList = Array.from(match1)
+                matchList.forEach(p => {
+                    // log(p)
+                    md = md.replaceAll(p[0], `\\[ ${p[1]} \\]`)
+                })
+
+
+                // // inlineMath
+                //https://regex101.com/r/QdJcQS/1
+                var inlineMathPattern = /(?<!\$)\$([^$\n]+)\$(?!\$)/gm
+                match1 = md.matchAll(inlineMathPattern)
+                matchList = Array.from(match1)
+                matchList.forEach(p => {
+                    // log(p)
+                    md = md.replaceAll(p[0], `\\( ${p[1]} \\)`)
+                })
+
+
+
 
                 // // strikethrough
                 // https://regex101.com/r/hPFQIP/1
