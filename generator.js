@@ -852,17 +852,7 @@ function GeneratorJs() {
                 })
 
 
-                // paragraph pattern
-                // https://regex101.com/r/eXAQjk/1
-                var paragraphPattern = /^(?!\s*$|\${2}|\\\[|#{1,6}\s|\*\s|\d+.\s|!|\[|>+\s+|-|\||`)([\s\S]*?)\n{2,}/gmi
-                match1 = md.matchAll(paragraphPattern)
-                matchList = Array.from(match1)
-                matchList.forEach(p => {
-                    console.log(p[0])
-                    console.log(p[1])
-                    console.log(p[2])
-                    md = md.replaceAll(p[0], `<p>${p[1]}</p>`)
-                })
+
 
                 // Hline pattern ---
                 // https://regex101.com/r/9sKxn2/1
@@ -1031,6 +1021,18 @@ function GeneratorJs() {
                     })
 
 
+
+                    // paragraph pattern
+                    // https://regex101.com/r/eXAQjk/1
+                    var paragraphPattern = /^(?!\s*$|\${2}|\\\[|#{1,6}\s|\*\s|\d+.\s|!|\[|>+\s+|-|\||`)([\s\S]*?)\n{2,}/gmi
+                    match1 = md.matchAll(paragraphPattern)
+                    matchList = Array.from(match1)
+                    matchList.forEach(p => {
+                        console.log(p[0])
+                        console.log(p[1])
+                        console.log(p[2])
+                        md = md.replaceAll(p[0], `<p>${p[1]}</p>`)
+                    })
 
                     md = md.replaceAll(p[0], `<ul>${block}</ul>`)
                 })
