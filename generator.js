@@ -840,8 +840,8 @@ function GeneratorJs() {
                 })
 
                 // // link
-                https://regex101.com/r/1JnwUz/1
-                var linkPattern = /[^!]\[([^\]]*)\]\(([^\)]*)\)/gmi
+                https://regex101.com/r/APBkU8/1
+                var linkPattern = /(?<!!)\[([^\]]*)\]\(([^\)]*)\)/gmi
                 match1 = md.matchAll(linkPattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
