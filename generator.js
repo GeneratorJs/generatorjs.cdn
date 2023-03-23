@@ -845,14 +845,14 @@ function GeneratorJs() {
                 match1 = md.matchAll(linkPattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
-                    //               console.log(p)
+                    log(p)
                     md = md.replaceAll(p[0], `<a href="${p[2]}">${p[1]}</a>`)
 
                 })
 
                 // // bold/italic/emph
-                // https://regex101.com/r/pcSMGQ/1
-                var italicPattern = /([\*]{1,3})([^\n\*]*)\1/gmi
+                // https://regex101.com/r/Bs3QvS/1
+                var italicPattern = /((\*|_){1,3})([^\n\*]*)\1/gmi
                 match1 = md.matchAll(italicPattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
@@ -877,7 +877,7 @@ function GeneratorJs() {
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
                     //               console.log(p)
-                    md = md.replaceAll(p[0], `<div><br /><pre class=${p[1]}>${p[2]}</pre><br /></div>`)
+                    md = md.replaceAll(p[0], `<code><pre class="${p[1]}, language-${p[1]}">${p[2]}</pre></code>`)
                 })
 
                 // // code
