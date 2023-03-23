@@ -1093,6 +1093,7 @@ function GeneratorJs() {
 
                     // md = md.replaceAll(p[0], `<ol>${block}</ol>`)
                     md = md.replaceAll(p[0], htmltostring(gen("blockquote", "", block, 'parse-md-blockquote')))
+                    md = md.replaceAll("<p></p>", "")
                 })
 
 
