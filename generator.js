@@ -918,12 +918,14 @@ function GeneratorJs() {
                 // For MathJax
                 // https://regex101.com/r/hPFQIP/1
                 // inlinecodePattern = /`([^`]*)`/gmi
-                var inlinecodePattern = /`([^`\n][^`]+)`[^`]/gmi
-                match1 = md.matchAll(codePattern)
+                // var inlinecodePattern = /`([^`\n][^`]+)`[^`]/gmi
+                //https://regex101.com/r/6JJNlx/1
+                var inlinecodePattern = /(?<!`)`([^`]*?)`(?!`)/gmi
+                match1 = md.matchAll(inlinecodePattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
                     // log(p)
-                    md = md.replaceAll(p[0], htmltostring(gen(code, '', p[2], 'parsemd-code')))
+                    md = md.replaceAll(p[0], `<code class='parsemd-code'>${p[1]}</code>`)
                 })
 
 
@@ -968,7 +970,7 @@ function GeneratorJs() {
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
                     // console.log(p)
-                    md = md.replaceAll(p[0], `< sup > <a href="#Reference-${p[1]}">${p[1]}</a></sup > `)
+                    md = md.replaceAll(p[0], `<sup><a href='#Reference-${p[1]}'>${p[1]}</a></sup>`)
                 })
 
 
@@ -983,7 +985,7 @@ function GeneratorJs() {
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
                     // console.log(p[0])
-                    md = md.replaceAll(p[0], `< li id = "Reference-${p[1]}" > ${p[2]}</li > `)
+                    md = md.replaceAll(p[0], `<li id='Reference-${p[1]}'> ${p[2]}</li>`)
                 })
 
 
@@ -1001,14 +1003,12 @@ function GeneratorJs() {
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
                     var block = p[0]
-                    log(block)
                     // listBlock
                     https://regex101.com/r/J3Yc3A/1
                     var listPattern = /^\*\s([^\n]*)$/gmi
                     list = block.matchAll(listPattern)
                     listEntry = Array.from(list)
                     listEntry.forEach(li => {
-                        log(li)
                         block = block.replaceAll(li[0], `<li>${li[1]}</li> `)
                     })
 
