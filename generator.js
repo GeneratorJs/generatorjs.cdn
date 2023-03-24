@@ -887,8 +887,8 @@ function GeneratorJs() {
                 })
 
                 // // bold/italic/emph
-                // https://regex101.com/r/K9LSUt/1
-                var italicPattern = /((\*|_){1,3})([^\*_]+?)\1/gmi
+                // https://regex101.com/r/lgaepf/1
+                var italicPattern = /((\*|_){1,3})([^\*_\n]+?)\1/gmi
                 match1 = md.matchAll(italicPattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
@@ -994,43 +994,27 @@ function GeneratorJs() {
 
 
 
-                // listBlock
+                // listBlockUnordered
                 https://regex101.com/r/J3Yc3A/1
-                // listBlockPattern = /^\* (.*)$/gmi
                 var listBlockPattern = /^(\*\s[^\n]*\n){1,}$/gmi
                 match1 = md.matchAll(listBlockPattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
                     var block = p[0]
-                    // log(block)
-
-                    var ul = ''
-
+                    log(block)
                     // listBlock
                     https://regex101.com/r/J3Yc3A/1
-                    // listBlockPattern = /^\* (.*)$/gmi
                     var listPattern = /^\*\s([^\n]*)$/gmi
                     list = block.matchAll(listPattern)
                     listEntry = Array.from(list)
                     listEntry.forEach(li => {
-                        // log(li[1])
-
-                        block = block.replaceAll(li[0], `< li > ${li[1]}</li > `)
+                        log(li)
+                        block = block.replaceAll(li[0], `<li>${li[1]}</li> `)
                     })
 
 
 
-                    // paragraph pattern
-                    // https://regex101.com/r/eXAQjk/1
-                    var paragraphPattern = /^(?!\s*$|\${2}|\\\[|#{1,6}\s|\*\s|\d+.\s|!|\[|>+\s+|-|\||`)([\s\S] *?) \n{ 2,} /gmi
-                    match1 = md.matchAll(paragraphPattern)
-                    matchList = Array.from(match1)
-                    matchList.forEach(p => {
-                        console.log(p[0])
-                        console.log(p[1])
-                        console.log(p[2])
-                        md = md.replaceAll(p[0], `<p>${p[1]}</p>`)
-                    })
+
 
                     md = md.replaceAll(p[0], `<ul>${block}</ul>`)
                 })
@@ -1045,17 +1029,13 @@ function GeneratorJs() {
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
                     var block = p[0]
-
-                    var ul = ''
-
                     // listBlockOrdered
                     https://regex101.com/r/1uWUpl/1
                     var listPatternOl = /^\d+.\s([^\n]*)$/gmi
                     list = block.matchAll(listPatternOl)
                     listEntry = Array.from(list)
                     listEntry.forEach(li => {
-                        // block = block.replaceAll(li[0], `<li>${li[1]}</li>`)
-                        block = block.replaceAll(li[0], htmltostring(gen("li", "", li[1], 'parse-md-li')))
+                        block = block.replaceAll(li[0], `<li>${li[1]}</li>`)
                     })
 
 
@@ -1073,6 +1053,20 @@ function GeneratorJs() {
                     // console.log(p[0])
                     md = md.replaceAll(p[0], `<br />`)
                 })
+
+
+                // paragraph pattern
+                // https://regex101.com/r/eXAQjk/1
+                var paragraphPattern = /^(?!\s*$|\${2}|\\\[|#{1,6}\s|\*\s|\d+.\s|!|\[|>+\s+|-|\||`)([\s\S] *?) \n{ 2,} /gmi
+                match1 = md.matchAll(paragraphPattern)
+                matchList = Array.from(match1)
+                matchList.forEach(p => {
+                    console.log(p[0])
+                    console.log(p[1])
+                    console.log(p[2])
+                    md = md.replaceAll(p[0], `<p>${p[1]}</p>`)
+                })
+
 
                 // BlockParagraph
                 https://regex101.com/r/82DjLH/1
