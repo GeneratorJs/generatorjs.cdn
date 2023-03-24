@@ -1065,8 +1065,8 @@ function GeneratorJs() {
                 })
 
                 //connect consecutive list with line break
-                //https://regex101.com/r/jlH6Ds/1
-                var connectListPattern = /<\/(ol|ul)[\s\S]*?<\1[^>]*>/gm
+                //https://regex101.com/r/xLtvb3/1
+                var connectListPattern = /<\/(ol|ul)[^\w\d\t\b]*?<\1[^>]*>/gm
                 match1 = md.matchAll(connectListPattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
