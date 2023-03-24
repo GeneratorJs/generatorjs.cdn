@@ -887,20 +887,19 @@ function GeneratorJs() {
                 })
 
                 // // bold/italic/emph
-                // https://regex101.com/r/Bs3QvS/1
-                var italicPattern = /((\*|_){1,3})([^\n\*]*)\1/gmi
+                // https://regex101.com/r/K9LSUt/1
+                var italicPattern = /((\*|_){1,3})([^\*_]+?)\1/gmi
                 match1 = md.matchAll(italicPattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
-                    //               console.log(p)
                     if (p[1].length == 3) {
-                        md = md.replaceAll(p[0], `<emph><strong>${p[2]}</strong></emph>`)
+                        md = md.replaceAll(p[0], `<emph><strong>${p[3]}</strong></emph>`)
                     }
                     if (p[1].length == 2) {
-                        md = md.replaceAll(p[0], `<strong>${p[2]}</strong>`)
+                        md = md.replaceAll(p[0], `<strong>${p[3]}</strong>`)
                     }
                     if (p[1].length == 1) {
-                        md = md.replaceAll(p[0], `<emph>${p[2]}</emph>`)
+                        md = md.replaceAll(p[0], `<emph>${p[3]}</emph>`)
                     }
                 })
 
@@ -924,7 +923,7 @@ function GeneratorJs() {
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
                     // log(p)
-                    md = md.replaceAll(p[0], htmltostring(gen(code, '', p[2], 'parsemd-del')))
+                    md = md.replaceAll(p[0], htmltostring(gen(code, '', p[2], 'parsemd-code')))
                 })
 
 
@@ -958,8 +957,7 @@ function GeneratorJs() {
                 match1 = md.matchAll(strikethroughPattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
-                    // log(p)
-                    md = md.replaceAll(p[0], htmltostring(gen(del, '', p[1], 'parsemd-del')))
+                    md = md.replaceAll(p[0], `<del class='parsedmd-del'>${p[1]}</del>`)
                 })
 
 
@@ -970,7 +968,7 @@ function GeneratorJs() {
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
                     // console.log(p)
-                    md = md.replaceAll(p[0], `<sup><a href="#Reference-${p[1]}">${p[1]}</a></sup>`)
+                    md = md.replaceAll(p[0], `< sup > <a href="#Reference-${p[1]}">${p[1]}</a></sup > `)
                 })
 
 
@@ -985,7 +983,7 @@ function GeneratorJs() {
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
                     // console.log(p[0])
-                    md = md.replaceAll(p[0], `<li id="Reference-${p[1]}">${p[2]}</li>`)
+                    md = md.replaceAll(p[0], `< li id = "Reference-${p[1]}" > ${p[2]}</li > `)
                 })
 
 
@@ -1017,14 +1015,14 @@ function GeneratorJs() {
                     listEntry.forEach(li => {
                         // log(li[1])
 
-                        block = block.replaceAll(li[0], `<li>${li[1]}</li>`)
+                        block = block.replaceAll(li[0], `< li > ${li[1]}</li > `)
                     })
 
 
 
                     // paragraph pattern
                     // https://regex101.com/r/eXAQjk/1
-                    var paragraphPattern = /^(?!\s*$|\${2}|\\\[|#{1,6}\s|\*\s|\d+.\s|!|\[|>+\s+|-|\||`)([\s\S]*?)\n{2,}/gmi
+                    var paragraphPattern = /^(?!\s*$|\${2}|\\\[|#{1,6}\s|\*\s|\d+.\s|!|\[|>+\s+|-|\||`)([\s\S] *?) \n{ 2,} /gmi
                     match1 = md.matchAll(paragraphPattern)
                     matchList = Array.from(match1)
                     matchList.forEach(p => {
@@ -1066,9 +1064,15 @@ function GeneratorJs() {
                     md = md.replaceAll(p[0], htmltostring(gen("ol", "", block, 'parse-md-ol')))
                 })
 
-
-
-
+                //connect consecutive list with line break
+                //https://regex101.com/r/jlH6Ds/1
+                var connectListPattern = /<\/(ol|ul)[\s\S]*?<\1[^>]*>/gm
+                match1 = md.matchAll(connectListPattern)
+                matchList = Array.from(match1)
+                matchList.forEach(p => {
+                    // console.log(p[0])
+                    md = md.replaceAll(p[0], `<br />`)
+                })
 
                 // BlockParagraph
                 https://regex101.com/r/82DjLH/1
