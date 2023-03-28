@@ -178,7 +178,7 @@ function GeneratorJs() {
 
                     for (var jj = 0; jj < htmlin.length; jj++) {
 
-                        //if not object 
+                        //if not object
                         if (typeof checkfirstinput != 'object') {
                             var elementarray = document.createElement(elementtype);
                             if (idin != undefined && idin != "") {
@@ -817,6 +817,49 @@ function GeneratorJs() {
 
 
 
+                //tableParser
+                // https://regex101.com/r/KBUcbs/1
+                var tablePattern = /(\|.*\|)(\n\|.*\|)+/gmi
+                match1 = md.matchAll(tablePattern)
+                matchList = Array.from(match1)
+                matchList.forEach(p => {
+                    var table = p[0]
+                    var tableHeadBodySepratorPattern = /(^\|)(?=(:|-))([^\w\d\s]*?)(\|$)/gm
+                    var sep = table.matchAll(tableHeadBodySepratorPattern)
+                    var Sep = Array.from(sep)[0][0]
+
+                    var T = table.split(Sep)
+                    thead = T[0]
+                    tbody = T[1]
+                    thead = `<thead>${tableRowsParser(thead)}</thead>`
+                    tbody = `<tbody>${tableRowsParser(tbody)}</tbody>`
+                    // tableRow
+                    // https://regex101.com/r/1uWUpl/1
+                    function tableRowsParser(table) {
+                        var tableRowPattern = /(^\|)(?!(:|-))([^\n]*?)(\|$)/gm
+                        var rows = table.matchAll(tableRowPattern)
+                        rowsList = Array.from(rows)
+                        rowsList.forEach(Row => {
+                            var R = RowParser(Row[3])
+                            table = table.replaceAll(Row[0], R)
+                        })
+                        return table
+                    }
+
+                    function RowParser(Row) {
+                        var tableRow = Row.replaceAll("|", `</td><td>`)
+                        var parsedRow = `<tr>\n\t<td>${tableRow}</td>\n</tr>\n`
+                        return parsedRow
+                    }
+
+
+                    var tab = `<table class="parse-md-table">${thead}\n${tbody}</table>`
+
+                    md = md.replaceAll(p[0], tab)
+                })
+
+
+
 
 
 
@@ -1023,7 +1066,7 @@ function GeneratorJs() {
 
 
                 // listBlockOrdered
-                https://regex101.com/r/axjYKK/1
+                // https://regex101.com/r/axjYKK/1
                 var listBlockPatternOl = /^(\d+.\s[^\n]*\n){1,}$/gmi
                 match1 = md.matchAll(listBlockPatternOl)
                 matchList = Array.from(match1)
@@ -1043,6 +1086,37 @@ function GeneratorJs() {
                     // md = md.replaceAll(p[0], `<ol>${block}</ol>`)
                     md = md.replaceAll(p[0], htmltostring(gen("ol", "", block, 'parse-md-ol')))
                 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                 //connect consecutive list with line break
                 //https://regex101.com/r/xLtvb3/1
@@ -1191,7 +1265,7 @@ function GeneratorJs() {
     word-spacing: 1em;
     user-select:none;
 
-    
+
 
     >.log{
         user-select:text;
@@ -1204,7 +1278,7 @@ function GeneratorJs() {
         box-shadow:1px 1px 2px black;
         border-radius: 5px;
         color: #fff;
-        
+
     }
     .cross {
         user-select:none;
@@ -1215,9 +1289,11 @@ function GeneratorJs() {
         &:hover{
             color:red;
         }
-        
+
     }
 }
+
+
 
 `;
 
@@ -1250,7 +1326,3 @@ function GeneratorJs() {
     self.loadBasicHtmlVariables()
     return self
 }
-
-
-
-
