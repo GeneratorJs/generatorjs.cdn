@@ -28,24 +28,7 @@ const GeneratorWebHelper = () => {
             --h:var(--hue,0);
             --s:var(--sat,80%);
             --l:var(--light,15%);
-                display: flex;
                 position: relative;
-                flex-direction: column;
-                flex-wrap: wrap;
-                background-color: hsla(0, var(--s), calc(var(--l) * var(--lightFactor,1)), .2);
-                border: 1px solid hsla(var(--h), var(--s), calc(var(--l) / var(--lightFactor)), 1);
-                padding: 1em 2em;
-                margin: 1em;
-                border-radius: 1em;
-                resize: both;
-                max-width: 70em;
-                font-family: "Courier", "Courier New", "Lucida Console", Inconsolata, terminal,consolas,arial;
-                font-size: .8em;
-                hyphens: auto;
-                word-wrap: break-word;
-                word-break: break-all;
-                box-shadow:1px 2px 10px  hsla(var(--h), var(--s), calc(calc(100% - var(--l)) * var(--lightFactor,1)), .1);
-    
                 .copyIcon{
                     position: absolute;
                     top: 15px;
@@ -57,7 +40,7 @@ const GeneratorWebHelper = () => {
                     user-select: none;
                     cursor:pointer;
 
-                    transition:all 2s ease-in-out;
+                    transition:all 1s ease-in-out;
                     &:before,&:after{
                         content:"";
                         position:absolute;
@@ -87,13 +70,13 @@ const GeneratorWebHelper = () => {
                         transform:translate(-3px,4px);
                         background:hsla(150,80%,70%,1);
                     }
-     
-                    
+
+
                 }
             }
-    
-    
-            
+
+
+
         `
 
         try {
@@ -163,21 +146,21 @@ const GeneratorWebHelper = () => {
             width:100%;
             min-height:100vh;
         }
-        
+
     #gameInst {
         opacity: .05;
         transition: all 500ms ease-out;
         animation: gameblink 2s 5;
         padding: 50px;
-    
+
         &:hover {
             opacity: .5;
             // animation: gameblink 2s 1;
         }
-    
+
         #keylist {
             display: flex;
-    
+
             .gamekey {
                 display: flex;
                 justify-content: left;
@@ -188,25 +171,25 @@ const GeneratorWebHelper = () => {
                 font-style: italic;
                 border-radius: 2px;
                 border: 1px solid #fff;
-    
+
             }
         }
-    
-    
+
+
     }
-    
+
     @keyframes gameblink {
         from {
             opacity: .01;
         }
-    
-    
+
+
         to {
             opacity: .1;
         }
-    
+
     }
-    
+
     `
 
         loadscss(spacegamestyle, "spaceGame")
@@ -360,7 +343,7 @@ const GeneratorWebHelper = () => {
             // firstSection.innerHTML += canvasOne
 
 
-            // 
+            //
 
             window.addEventListener('resize', resizeCanvas)
 
@@ -541,7 +524,7 @@ const GeneratorWebHelper = () => {
                         &:hover{
                             opacity:1;
                         }
-    
+
                         p {
                             padding-left: 10px;
                             margin-left: 20px;
@@ -620,7 +603,7 @@ const GeneratorWebHelper = () => {
                 right: 0px;
                 width: minmax(400px, 30%);
                 max-width: 80vw;
-                
+
                 color: white;
                 filter: blur(4px);
                 display: flex;
@@ -630,14 +613,14 @@ const GeneratorWebHelper = () => {
                 padding-left: var(--leftpadding);
                 transform: translateX(calc(100% - var(--leftpadding)));
                 transition: all 200ms ease-out;
-    
+
                 overflow-x: hidden;
                 overflow-y: auto;
-                
+
                 width: var(--leftpadding);
-    
-    
-    
+
+
+
                 *{
                     text-decoration:none;
                     link-style:none;
@@ -650,7 +633,7 @@ const GeneratorWebHelper = () => {
                     display: flex;
                     flex-direction: column;
                     padding:10px;
-                    
+
                     .themeControlUl{
                         margin-top:10px;
                         margin-bottom:10px;
@@ -662,8 +645,8 @@ const GeneratorWebHelper = () => {
                             cursor:pointer;
                         }
                     }
-    
-    
+
+
                     .material-symbols-rounded {
                         font-variation-settings:
                             'FILL'0,
@@ -671,7 +654,7 @@ const GeneratorWebHelper = () => {
                             'GRAD'0,
                             'opsz'48
                     }
-                
+
                     .material-symbols-outlined {
                         font-variation-settings:
                             'FILL'0,
@@ -686,7 +669,7 @@ const GeneratorWebHelper = () => {
                     --hueComp:40;
                     // background-color: hsla(var(--hueComp,50), 20%, 10%, 0.5);
                     display: flex;
-                    flex-direction: column; 
+                    flex-direction: column;
                     min-height: 40vh;
                     max-height: min(calc(100% - 20px), calc(100vh -20px));
                     overflow-y: auto;
@@ -704,11 +687,11 @@ const GeneratorWebHelper = () => {
                         overflow-x:auto;
                         text-shadow:none;
                     }
-    
+
                 }
-    
+
                 &:hover,&:focus-within{
-    
+
                 border-top:2px solid aqua;
                     padding-inline: 30px;
                     --sat: 10%;
@@ -719,7 +702,7 @@ const GeneratorWebHelper = () => {
                     filter: blur(0px);
                     width: auto;
                 }
-                
+
                 .hoverblock {
                     display: block;
                     padding: 5px;
@@ -731,20 +714,20 @@ const GeneratorWebHelper = () => {
                     // perspective:100px;
                     // perspective:100px;
                     transform: perspective(100px) translateZ(-10px);
-    
+
                     &:hover {
-    
+
                     transform: perspective(100px) translateZ(0);
                         // transform: perspective(100px) translateZ(10px);
                         box-shadow: 2px 2px 15px rgba(0, 0, 0, .5);
                         // z-index:calc(inherit + 2 );
                         padding-block:calc(inherit + 5px);
                         margin-block:calc(inherit + -5px);
-    
+
                     }
-                }                                           
-    
-    
+                }
+
+
                 .copyurl{
                     padding-bottom:40px;
                     font-size:12px;
@@ -752,10 +735,10 @@ const GeneratorWebHelper = () => {
                         color:aqua;
                     }
                 }
-    
-                
+
+
             }
-    
+
             .active.hoverblock:before{
                     content:"";
                     position:absolute;
@@ -765,18 +748,18 @@ const GeneratorWebHelper = () => {
                     right:0px;
                     border-top:5px solid aqua;
                     color:hsl(var(--hueAscent,180),60%,50%);
-    
-       
-                
+
+
+
             }
-    
+
             // .active+.hoverblock{
             //     padding-block:calc(inherit + 10px);
             //     margin-block:calc(inherit + -10px);
             //     transform: perspective(100px) translateZ(-5px);
             //     color:red;
             // }
-    
+
         }
         `
             loadscss(pageNavStyle, 'pageNav')
@@ -922,30 +905,30 @@ const GeneratorWebHelper = () => {
                 border:2px solid white;
                 border-radius:5px;
                 margin-block:2px;
-    
+
                 #customizerh3{
                     // font-family:Open sans, Arial,sans-serif,Verdana;
                     font-size:20px;
                     text-transform:uppercase;
                 }
-    
+
                 .themeSliderGroup{
                     display:flex;
                     flex-direction:column;
-    
+
                     .themeSliderGroupP{
                         max-width:100%;
                         padding:2px;
-    
+
                         &:nth-child(3n){
                             margin-bottom:20px;
                             // padding-bottom:.5em;
-    
+
                         }
                         .sliderDisp{
                             margin-inline:4px;
                         }
-                
+
                         .themeslider,.themeselect{
                             max-width:100%;
                             width:100%;
@@ -955,15 +938,15 @@ const GeneratorWebHelper = () => {
                             padding:4px;
                             margin-left:6px;
                         }
-    
+
                         >span{
                             display:flex;
                             flex-direction:row;
                         }
                     }
-    
-    
-    
+
+
+
                 }
                 .customizerButtonGroup{
                     display:flex;
@@ -978,7 +961,7 @@ const GeneratorWebHelper = () => {
                         cursor:pointer;
                     &:hover{
                         box-shadow:0px 0px 4px white;
-        
+
                     }
                     }
                 }
