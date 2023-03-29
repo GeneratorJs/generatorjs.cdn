@@ -830,7 +830,7 @@ function GeneratorJs() {
 
                     var sep = Array.from(sep)
                     if (sep.length > 0) {
-                        Sep = sep[0][0]
+                        var Sep = sep[0][0]
 
                         var alignment = Sep.substr(1, Sep.length - 2)
                         alignment = alignment.replaceAll(":---:", "center").replaceAll(":---", "left").replaceAll("---:", "right").replaceAll("---", "justify")
@@ -849,7 +849,7 @@ function GeneratorJs() {
                     // tableRow
                     // https://regex101.com/r/1uWUpl/1
                     function tableRowsParser(table, alignment = null) {
-                        var tableRowPattern = /(^\|)(?!(:|-))([^\n]*?)(\|$)/gm
+                        var tableRowPattern = /(^\|)(?!(:|-))([^\n]*?)(\|\s?$)/gm
                         var rows = table.matchAll(tableRowPattern)
                         rowsList = Array.from(rows)
                         rowsList.forEach(Row => {
