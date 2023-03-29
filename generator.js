@@ -825,30 +825,57 @@ function GeneratorJs() {
                 matchList.forEach(p => {
                     var table = p[0]
                     var tableHeadBodySepratorPattern = /(^\|)(?=(:|-))([^\w\d\s]*?)(\|$)/gm
-                    var sep = table.matchAll(tableHeadBodySepratorPattern)
-                    var Sep = Array.from(sep)[0][0]
 
-                    var T = table.split(Sep)
-                    thead = T[0]
-                    tbody = T[1]
-                    thead = `<thead>${tableRowsParser(thead)}</thead>`
-                    tbody = `<tbody>${tableRowsParser(tbody)}</tbody>`
+                    var sep = table.matchAll(tableHeadBodySepratorPattern)
+
+                    var sep = Array.from(sep)
+                    if (sep.length > 0) {
+                        Sep = sep[0][0]
+
+                        var alignment = Sep.substr(1, Sep.length - 2)
+                        alignment = alignment.replaceAll(":---:", "center").replaceAll(":---", "left").replaceAll("---:", "right").replaceAll("---", "justify")
+                        alignment = alignment.split("|")
+                        var T = table.split(Sep)
+                        var thead = T[0]
+                        var tbody = T[1]
+                        thead = `<thead>${tableRowsParser(thead, alignment)}</thead>`
+                        tbody = `<tbody>${tableRowsParser(tbody, alignment)}</tbody>`
+                    }
+                    else {
+                        var alignment = null
+                        var thead = ""
+                        var tbody = `<tbody>${tableRowsParser(table, alignment)}</tbody>`
+                    }
                     // tableRow
                     // https://regex101.com/r/1uWUpl/1
-                    function tableRowsParser(table) {
+                    function tableRowsParser(table, alignment = null) {
                         var tableRowPattern = /(^\|)(?!(:|-))([^\n]*?)(\|$)/gm
                         var rows = table.matchAll(tableRowPattern)
                         rowsList = Array.from(rows)
                         rowsList.forEach(Row => {
-                            var R = RowParser(Row[3])
+                            if (alignment == null) {
+                                alignment = []
+                                for (i = 0; i < Row[3].split("|").length; i++) {
+                                    alignment.push("center")
+                                }
+                            }
+
+
+
+
+                            var R = RowParser(Row[3], alignment)
                             table = table.replaceAll(Row[0], R)
                         })
                         return table
                     }
 
-                    function RowParser(Row) {
-                        var tableRow = Row.replaceAll("|", `</td><td>`)
-                        var parsedRow = `<tr>\n\t<td>${tableRow}</td>\n</tr>\n`
+                    function RowParser(Row, alignment) {
+                        var parsedRow = ""
+                        var Col = Row.split("|")
+                        Col.forEach((cell, i) => {
+                            parsedRow = parsedRow + `<td class='${alignment[i]}'>${cell}</td>`
+                        })
+                        parsedRow = `<tr>\n\t${parsedRow}\n</tr>\n`
                         return parsedRow
                     }
 
@@ -899,7 +926,7 @@ function GeneratorJs() {
 
                 // Hline pattern ---
                 // https://regex101.com/r/9sKxn2/1
-                var headingPattern = /^([-|*|_]{3})$/gmi
+                var headingPattern = /^([-|*|_]{3})\n{1,}$/gmi
                 match1 = md.matchAll(headingPattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
