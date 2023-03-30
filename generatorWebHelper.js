@@ -25,14 +25,15 @@ const GeneratorWebHelper = () => {
         let copyIconStyle = `
 
             .copy{
-            --h:var(--hue,0);
-            --s:var(--sat,80%);
-            --l:var(--light,15%);
+                --h:var(--hue,0);
+                --s:var(--sat,80%);
+                --l:var(--light,15%);
                 position: relative;
+                display: block;
                 .copyIcon{
                     position: absolute;
-                    top: 15px;
-                    right: 15px;
+                    top: .5em;
+                    right: .5em;
                     width:10px;
                     height:12px;
                     padding:1px;
@@ -54,9 +55,6 @@ const GeneratorWebHelper = () => {
                     &:before{
                         transform:translate(-3px,4px);
                     }
-                    // &:after{
-                    //     transform:translate(3px,-4px);
-                    // }
                     &:hover{
                         background:hsl(150,80%,70%);
                     }

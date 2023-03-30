@@ -814,6 +814,10 @@ function GeneratorJs() {
             function parseBlock(md) {
 
 
+                // https://regex101.com/r/LIp0M9/1
+                //classPattern
+                var classPattern = /{:\s*([^}]*)}/g
+
 
 
 
