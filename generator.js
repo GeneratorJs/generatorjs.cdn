@@ -818,13 +818,15 @@ function GeneratorJs() {
 
 
                 //tableParser
-                // https://regex101.com/r/KBUcbs/1
-                var tablePattern = /(\|.*\|)(\n\|.*\|)+/gmi
+                // https://regex101.com/r/p2uS56/1
+                // var tablePattern = /(\|.*\|)(\n\|.*\|)+/gmi
+                var tablePattern = /(^\|.*?\|\s*\n+$)/gms
                 match1 = md.matchAll(tablePattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
                     var table = p[0]
-                    var tableHeadBodySepratorPattern = /(^\|)(?=(:|-))([^\w\d\s]*?)(\|$)/gm
+                    // https://regex101.com/r/I059re/1
+                    var tableHeadBodySepratorPattern = /(^\|)(?=(:|-))([^\w\d\s]*?)(\|\s*$)/gm
 
                     var sep = table.matchAll(tableHeadBodySepratorPattern)
 
@@ -847,9 +849,9 @@ function GeneratorJs() {
                         var tbody = `<tbody>${tableRowsParser(table, alignment)}</tbody>`
                     }
                     // tableRow
-                    // https://regex101.com/r/1uWUpl/1
                     function tableRowsParser(table, alignment = null) {
-                        var tableRowPattern = /(^\|)(?!(:|-))([^\n]*?)(\|\s?$)/gm
+                        // https://regex101.com/r/zRBXEm/1
+                        var tableRowPattern = /(^\|)(?!(:|-))([^\n]*?)(\|\s*$)/gm
                         var rows = table.matchAll(tableRowPattern)
                         rowsList = Array.from(rows)
                         rowsList.forEach(Row => {
