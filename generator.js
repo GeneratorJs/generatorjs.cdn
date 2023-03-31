@@ -941,8 +941,8 @@ function GeneratorJs() {
                 })
 
                 // // imageurl
-                // https://regex101.com/r/zmkGnC/1
-                var imageUrlPattern = /!\[([^\]]*)\]\(([^\)]*)\)/gmi
+                // https://regex101.com/r/EXVZcK/1
+                var imageUrlPattern = /!\[([^\]]*)]\("?([^\)"']*)"?\)/gm
                 match1 = md.matchAll(imageUrlPattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
