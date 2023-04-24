@@ -1030,8 +1030,8 @@ function GeneratorJs() {
 
 
                 // // strikethrough
-                // https://regex101.com/r/hPFQIP/1
-                var strikethroughPattern = /~~([^]*?)~~/img
+                // https://regex101.com/r/MLsQRh/1
+                var strikethroughPattern = /~~([^~]*?)~~/img
                 match1 = md.matchAll(strikethroughPattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
