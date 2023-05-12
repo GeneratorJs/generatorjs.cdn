@@ -29,8 +29,9 @@ function GeneratorJs() {
     };
 
 
-    //get
+    //get depricated
     self.get = (parentid) => {
+        console.error("get is depricated, use grab instead")
         var parentElement = null;
         try {
             if (parentid instanceof Object == true) { parentElement = parentid }
@@ -39,7 +40,24 @@ function GeneratorJs() {
             }
         }
         catch (err) {
-            console.log(`get(${parentid})`)
+            console.log(`grab(${parentid})`)
+            console.error(err)
+        }
+        return parentElement
+
+    };
+
+    //grab
+    self.grab = (parentid) => {
+        var parentElement = null;
+        try {
+            if (parentid instanceof Object == true) { parentElement = parentid }
+            else {
+                parentElement = document.querySelectorAll(parentid);
+            }
+        }
+        catch (err) {
+            console.log(`grab(${parentid})`)
             console.error(err)
         }
         return parentElement
@@ -343,7 +361,7 @@ function GeneratorJs() {
                         response = await xhr.response
                         xhr.DONE
                         if (response != null && response != "") {
-                            sessionStorage.setItem(name, response)
+                            // sessionStorage.setItem(name, response)
                             if (typeof callback === "function") callback(response)
                         }
                     }
@@ -1340,7 +1358,7 @@ function GeneratorJs() {
 
 
     self.loadFunctions = (RequiredFunctions) => {
-        if (RequiredFunctions == undefined) RequiredFunctions = 'get,append,cssvar,gen,getfile,hide,jsonToElement,loadcss,loadjs,loadscss,load,log,remove,parsemd,verb,htmltostring'
+        if (RequiredFunctions == undefined) RequiredFunctions = 'get,grab,append,cssvar,gen,getfile,hide,jsonToElement,loadcss,loadjs,loadscss,load,log,remove,parsemd,verb,htmltostring'
         RequiredFunctions.split(",").forEach(v => {
             // let expression = `window.${v}=self.${v}`
 
