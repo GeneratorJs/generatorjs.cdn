@@ -838,6 +838,54 @@ function GeneratorJs() {
 
 
 
+                // // code
+                // https://regex101.com/r/WpO7gY/1
+                // codePattern = /```([^\s]*)([^```]*)```/gmi
+                var codePattern = /`{3}([^\n]*)\n([^`]*)`{3}/gmi
+                match1 = md.matchAll(codePattern)
+                matchList = Array.from(match1)
+                matchList.forEach(p => {
+                    //               console.log(p)
+                    md = md.replaceAll(p[0], `<pre><code class="${p[1]}, language-${p[1]}">${p[2]}</code></pre>`)
+                })
+
+                // For MathJax
+                // https://regex101.com/r/hPFQIP/1
+                // inlinecodePattern = /`([^`]*)`/gmi
+                // var inlinecodePattern = /`([^`\n][^`]+)`[^`]/gmi
+                //https://regex101.com/r/6JJNlx/1
+                var inlinecodePattern = /(?<!`)`([^`]*?)`(?!`)/gmi
+                match1 = md.matchAll(inlinecodePattern)
+                matchList = Array.from(match1)
+                matchList.forEach(p => {
+                    // log(p)
+                    md = md.replaceAll(p[0], `<code class='parsemd-code'>${p[1]}</code>`)
+                })
+
+
+                // // blockMath
+                //https://regex101.com/r/QdJcQS/1
+                var blockMathPattern = /\${2}([^$\n]+)\${2}/gm
+                match1 = md.matchAll(blockMathPattern)
+                matchList = Array.from(match1)
+                matchList.forEach(p => {
+                    // log(p)
+                    md = md.replaceAll(p[0], `\\[ ${p[1]} \\]`)
+                })
+
+
+                // // inlineMath
+                //https://regex101.com/r/QdJcQS/1
+                var inlineMathPattern = /(?<!\$)\$([^$\n]+)\$(?!\$)/gm
+                match1 = md.matchAll(inlineMathPattern)
+                matchList = Array.from(match1)
+                matchList.forEach(p => {
+                    // log(p)
+                    md = md.replaceAll(p[0], `\\( ${p[1]} \\)`)
+                })
+
+
+
 
                 //tableParser
                 // https://regex101.com/r/p2uS56/1
@@ -998,54 +1046,6 @@ function GeneratorJs() {
                 })
 
 
-                // // code
-                // https://regex101.com/r/WpO7gY/1
-                // codePattern = /```([^\s]*)([^```]*)```/gmi
-                var codePattern = /`{3}([^\n]*)\n([^`]*)`{3}/gmi
-                match1 = md.matchAll(codePattern)
-                matchList = Array.from(match1)
-                matchList.forEach(p => {
-                    //               console.log(p)
-                    md = md.replaceAll(p[0], `<pre><code class="${p[1]}, language-${p[1]}">${p[2]}</code></pre>`)
-                })
-
-                // For MathJax
-                // https://regex101.com/r/hPFQIP/1
-                // inlinecodePattern = /`([^`]*)`/gmi
-                // var inlinecodePattern = /`([^`\n][^`]+)`[^`]/gmi
-                //https://regex101.com/r/6JJNlx/1
-                var inlinecodePattern = /(?<!`)`([^`]*?)`(?!`)/gmi
-                match1 = md.matchAll(inlinecodePattern)
-                matchList = Array.from(match1)
-                matchList.forEach(p => {
-                    // log(p)
-                    md = md.replaceAll(p[0], `<code class='parsemd-code'>${p[1]}</code>`)
-                })
-
-
-                // // blockMath
-                //https://regex101.com/r/QdJcQS/1
-                var blockMathPattern = /\${2}([^$\n]+)\${2}/gm
-                match1 = md.matchAll(blockMathPattern)
-                matchList = Array.from(match1)
-                matchList.forEach(p => {
-                    // log(p)
-                    md = md.replaceAll(p[0], `\\[ ${p[1]} \\]`)
-                })
-
-
-                // // inlineMath
-                //https://regex101.com/r/QdJcQS/1
-                var inlineMathPattern = /(?<!\$)\$([^$\n]+)\$(?!\$)/gm
-                match1 = md.matchAll(inlineMathPattern)
-                matchList = Array.from(match1)
-                matchList.forEach(p => {
-                    // log(p)
-                    md = md.replaceAll(p[0], `\\( ${p[1]} \\)`)
-                })
-
-
-
 
                 // // strikethrough
                 // https://regex101.com/r/MLsQRh/1
@@ -1182,7 +1182,14 @@ function GeneratorJs() {
 
                 // paragraph pattern
                 // https://regex101.com/r/eXAQjk/1
-                var paragraphPattern = /^(?!\s*$|\${2}|\\\[|#{1,6}\s|\*\s|\d+.\s|!|\[|>+\s+|-|\||`)([\s\S] *?) \n{ 2,} /gmi
+                // var paragraphPattern = /^(?!\s*$|\${2}|\\\[|#{1,6}\s|\*\s|\d+.\s|!|\[|>+\s+|-|\||`)([\s\S]*?)\n{ 2,}/gmi
+
+
+                
+                // paragraph pattern
+                // https://regex101.com/r/Ah1UkH/1
+                var paragraphPattern=/^(?!\s*$|\${2}|\\\[|#{1,6}\s|\*\s|\d+.\s|!|\[|>+\s+|-|\||```)([\s\S]*?)(?!```)\n{2,}/gmi
+
                 match1 = md.matchAll(paragraphPattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
@@ -1193,7 +1200,7 @@ function GeneratorJs() {
                 })
 
 
-                // BlockParagraph
+                // BlockParagraph blockQuote
                 https://regex101.com/r/82DjLH/1
                 var BlockParaPattern = /^(>\s[^\n]*\n){1,}/img
                 match1 = md.matchAll(BlockParaPattern)
