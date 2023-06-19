@@ -1030,8 +1030,8 @@ function GeneratorJs() {
                 })
 
                 // // bold/italic/emph
-                // https://regex101.com/r/lgaepf/1
-                var italicPattern = /((\*|_){1,3})([^\*_\n]+?)\1/gmi
+                // https://regex101.com/r/DwzQ1b/1
+                var italicPattern = /\s+((\*|_){1,3})([^\*_\n]+?)\1\s+/gmi
                 match1 = md.matchAll(italicPattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
