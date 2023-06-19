@@ -963,15 +963,16 @@ function GeneratorJs() {
 
 
                 // heading pattern
-                // https://regex101.com/r/eXAQjk/1
-                var headingPattern = /^([#]+) ([^\n]*)$/gmi
+                // https://regex101.com/r/D0w9eD/1
+                var headingPattern = /^([#]+)\s+([^\n]*)$/gmi
                 match1 = md.matchAll(headingPattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
                     // console.log(p[0])
                     // console.log(p[1])
                     // console.log(p[2])
-                    md = md.replaceAll(p[0], `<h${p[1].length}>${p[2]}</h${p[1].length}>\n`)
+                    // md = md.replace(p[0], `<h${p[1].length}>${p[2]}</h${p[1].length}>\n`)
+                    md = md.replace(p[0], `<h${p[1].length}>${p[2]}</h${p[1].length}>\n`)
                 })
 
 
@@ -1092,14 +1093,14 @@ function GeneratorJs() {
 
                 // listBlockUnordered
                 https://regex101.com/r/J3Yc3A/1
-                var listBlockPattern = /^(\*\s[^\n]*\n){1,}$/gmi
+                var listBlockPattern = /^(\*\s+[^\n]*\n){1,}$/gmi
                 match1 = md.matchAll(listBlockPattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
                     var block = p[0]
                     // listBlock
                     https://regex101.com/r/J3Yc3A/1
-                    var listPattern = /^\*\s([^\n]*)$/gmi
+                    var listPattern = /^\*\s+([^\n]*)$/gmi
                     list = block.matchAll(listPattern)
                     listEntry = Array.from(list)
                     listEntry.forEach(li => {
@@ -1155,6 +1156,22 @@ function GeneratorJs() {
 
 
 
+                // not working
+                // CheckList pattern
+                // https://regex101.com/r/zd9emg/1
+                var ChecklistPatternOl = /^-\s+\[(\s|\S)\]\s+([^\n]*)$/gmi
+                match1 = md.matchAll(ChecklistPatternOl)
+                matchList = Array.from(match1)
+                matchList.forEach(p => {
+                    var block = p[0]
+
+
+
+
+                    // md = md.replaceAll(p[0], `<ol>${block}</ol>`)
+                    // md = md.replaceAll(p[0], htmltostring(gen("ol", "", block, 'parse-md-ol')))
+                })
+
 
 
 
@@ -1186,23 +1203,12 @@ function GeneratorJs() {
 
 
                 
-                // paragraph pattern
-                // https://regex101.com/r/Ah1UkH/1
-                var paragraphPattern=/^(?!\s*$|\${2}|\\\[|#{1,6}\s|\*\s|\d+.\s|!|\[|>+\s+|-|\||```)([\s\S]*?)(?!```)\n{2,}/gmi
-
-                match1 = md.matchAll(paragraphPattern)
-                matchList = Array.from(match1)
-                matchList.forEach(p => {
-                    console.log(p[0])
-                    console.log(p[1])
-                    console.log(p[2])
-                    md = md.replaceAll(p[0], `<p>${p[1]}</p>`)
-                })
+                
 
 
                 // BlockParagraph blockQuote
                 https://regex101.com/r/82DjLH/1
-                var BlockParaPattern = /^(>\s[^\n]*\n){1,}/img
+                var BlockParaPattern = /^(>\s+[^\n]*\n){1,}/img
                 match1 = md.matchAll(BlockParaPattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
@@ -1212,7 +1218,7 @@ function GeneratorJs() {
 
                     // listBlockOrdered
                     https://regex101.com/r/1uWUpl/1
-                    var BlockParaPatternline = /^>\s([^\n]*)$/img
+                    var BlockParaPatternline = /^>\s+([^\n]*)$/img
                     list = block.matchAll(BlockParaPatternline)
                     listEntry = Array.from(list)
                     listEntry.forEach(li => {
@@ -1231,7 +1237,18 @@ function GeneratorJs() {
 
 
 
+                // paragraph pattern
+                // https://regex101.com/r/Ah1UkH/1
+                var paragraphPattern=/^(?!\s*$|\${2}|\\\[|#{1,6}\s|\*\s|\d+.\s|!|\[|>+\s+|-|\||```)([\s\S]*?)(?!```)\n{2,}/gmi
 
+                match1 = md.matchAll(paragraphPattern)
+                matchList = Array.from(match1)
+                matchList.forEach(p => {
+                    console.log(p[0])
+                    console.log(p[1])
+                    console.log(p[2])
+                    md = md.replaceAll(p[0], `<p>${p[1]}</p>`)
+                })
 
 
 
