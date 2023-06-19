@@ -1019,7 +1019,7 @@ function GeneratorJs() {
                 })
 
                 // // link
-                https://regex101.com/r/APBkU8/1
+                // https://regex101.com/r/APBkU8/1
                 var linkPattern = /(?<!!)\[([^\]]*)\]\(([^\)]*)\)/gmi
                 match1 = md.matchAll(linkPattern)
                 matchList = Array.from(match1)
@@ -1030,19 +1030,19 @@ function GeneratorJs() {
                 })
 
                 // // bold/italic/emph
-                // https://regex101.com/r/DwzQ1b/1
-                var italicPattern = /\s+((\*|_){1,3})([^\*_\n]+?)\1\s+/gmi
+                // https://regex101.com/r/cH2mWI/1
+                var italicPattern = /\W+((\*|_){1,3})([^\*_\n]+?)\1\W+/gmi
                 match1 = md.matchAll(italicPattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
                     if (p[1].length == 3) {
-                        md = md.replaceAll(p[0], `<emph><strong>${p[3]}</strong></emph>`)
+                        md = md.replace(p[0], `<emph><strong>${p[3]}</strong></emph>`)
                     }
                     if (p[1].length == 2) {
-                        md = md.replaceAll(p[0], `<strong>${p[3]}</strong>`)
+                        md = md.replace(p[0], `<strong>${p[3]}</strong>`)
                     }
                     if (p[1].length == 1) {
-                        md = md.replaceAll(p[0], `<emph>${p[3]}</emph>`)
+                        md = md.replace(p[0], `<emph>${p[3]}</emph>`)
                     }
                 })
 
