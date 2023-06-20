@@ -1036,13 +1036,13 @@ function GeneratorJs() {
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
                     if (p[1].length == 3) {
-                        md = md.replace(p[0], `<emph><strong>${p[3]}</strong></emph>`)
+                        md = md.replace(p[0], `<i><b>${p[3]}</b></i>`)
                     }
                     if (p[1].length == 2) {
-                        md = md.replace(p[0], `<strong>${p[3]}</strong>`)
+                        md = md.replace(p[0], `<b>${p[3]}</b>`)
                     }
                     if (p[1].length == 1) {
-                        md = md.replace(p[0], `<emph>${p[3]}</emph>`)
+                        md = md.replace(p[0], `<i>${p[3]}</i>`)
                     }
                 })
 
@@ -1092,19 +1092,28 @@ function GeneratorJs() {
 
 
                 // listBlockUnordered
-                https://regex101.com/r/J3Yc3A/1
-                var listBlockPattern = /^(\*\s+[^\n]*\n){1,}$/gmi
+                // https://regex101.com/r/5rGpdT/1
+                var listBlockPattern = /(^ *(\*|-)\s+[^\n]*){1,}/gmi
                 match1 = md.matchAll(listBlockPattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
                     var block = p[0]
                     // listBlock
-                    https://regex101.com/r/J3Yc3A/1
-                    var listPattern = /^\*\s+([^\n]*)$/gmi
+                    // https://regex101.com/r/G1T1QW/1
+                    var listPattern = /^(\*|-)\s+([^\n]*)$/gmi
                     list = block.matchAll(listPattern)
                     listEntry = Array.from(list)
                     listEntry.forEach(li => {
                         block = block.replaceAll(li[0], `<li>${li[1]}</li> `)
+                    })
+
+                    // sublistBlock
+                    // https://regex101.com/r/DYvI2z/1
+                    var sublistPattern = /^ +(\*|-)\s+([^\n]*)$/gmi
+                    list = block.matchAll(sublistPattern)
+                    listEntry = Array.from(list)
+                    listEntry.forEach(li => {
+                        block = block.replaceAll(li[0], `<ul><li>${li[1]}</li></ul>`)
                     })
 
 
@@ -1118,21 +1127,29 @@ function GeneratorJs() {
 
 
                 // listBlockOrdered
-                // https://regex101.com/r/axjYKK/1
-                var listBlockPatternOl = /^(\d+.\s[^\n]*\n){1,}$/gmi
+                // https://regex101.com/r/9ydKmi/1
+                var listBlockPatternOl = /(^ *\d.\s+[^\n]*){1,}/gmi
                 match1 = md.matchAll(listBlockPatternOl)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
                     var block = p[0]
-                    // listBlockOrdered
-                    https://regex101.com/r/1uWUpl/1
-                    var listPatternOl = /^\d+.\s([^\n]*)$/gmi
+                    // listOrdered
+                    // https://regex101.com/r/03ju1y/1
+                    var listPatternOl = /^\d. +([^\n]*)$/gmi
                     list = block.matchAll(listPatternOl)
                     listEntry = Array.from(list)
                     listEntry.forEach(li => {
                         block = block.replaceAll(li[0], `<li>${li[1]}</li>`)
                     })
 
+                    // sublistBlock
+                    // https://regex101.com/r/8OuyuF/1
+                    var sublistPattern = /^ +\d. +([^\n]*)$/gmi
+                    list = block.matchAll(sublistPattern)
+                    listEntry = Array.from(list)
+                    listEntry.forEach(li => {
+                        block = block.replaceAll(li[0], `<ul><li>${li[1]}</li></ul>`)
+                    })
 
 
                     // md = md.replaceAll(p[0], `<ol>${block}</ol>`)
@@ -1207,8 +1224,9 @@ function GeneratorJs() {
 
 
                 // BlockParagraph blockQuote
-                https://regex101.com/r/82DjLH/1
-                var BlockParaPattern = /^(>\s+[^\n]*\n){1,}/img
+                // https://regex101.com/r/82DjLH/1
+                // var BlockParaPattern = /^(>\s+[^\n]*\n){1,}/img
+                var BlockParaPattern=/^(>+\s+.*)(?=\n)$/img
                 match1 = md.matchAll(BlockParaPattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
