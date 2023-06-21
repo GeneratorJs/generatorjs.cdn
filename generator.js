@@ -846,7 +846,7 @@ function GeneratorJs() {
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
                     //               console.log(p)
-                    md = md.replaceAll(p[0], `<pre><code class="${p[1]}, language-${p[1]}">${p[2]}</code></pre>`)
+                    md = md.replaceAll(p[0], `\n<pre><code class="${p[1]}, language-${p[1]}">${p[2]}</code></pre>`)
                 })
 
                 // For MathJax
@@ -859,7 +859,7 @@ function GeneratorJs() {
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
                     // log(p)
-                    md = md.replaceAll(p[0], `<code class='parsemd-code'>${p[1]}</code>`)
+                    md = md.replaceAll(p[0], `\n<code class='parsemd-code'>${p[1]}</code>`)
                 })
 
 
@@ -910,13 +910,13 @@ function GeneratorJs() {
                         var T = table.split(Sep)
                         var thead = T[0]
                         var tbody = T[1]
-                        thead = `<thead>${tableRowsParser(thead, alignment)}</thead>`
-                        tbody = `<tbody>${tableRowsParser(tbody, alignment)}</tbody>`
+                        thead = `\n\t<thead>${tableRowsParser(thead, alignment)}\n</thead>`
+                        tbody = `\n\t<tbody>${tableRowsParser(tbody, alignment)}\n</tbody>`
                     }
                     else {
                         var alignment = null
                         var thead = ""
-                        var tbody = `<tbody>${tableRowsParser(table, alignment)}</tbody>`
+                        var tbody = `\n\t<tbody>${tableRowsParser(table, alignment)}\n</tbody>`
                     }
                     // tableRow
                     function tableRowsParser(table, alignment = null) {
@@ -947,12 +947,12 @@ function GeneratorJs() {
                         Col.forEach((cell, i) => {
                             parsedRow = parsedRow + `<td class='${alignment[i]}'>${cell}</td>`
                         })
-                        parsedRow = `<tr>\n\t${parsedRow}\n</tr>\n`
+                        parsedRow = `\n\t<tr>\n\t${parsedRow}\n</tr>\n`
                         return parsedRow
                     }
 
 
-                    var tab = `<table class="parse-md-table">${thead}\n${tbody}</table>`
+                    var tab = `\n<table class="parse-md-table">${thead}\n${tbody}\n</table>`
 
                     md = md.replaceAll(p[0], tab)
                 })
@@ -972,7 +972,7 @@ function GeneratorJs() {
                     // console.log(p[1])
                     // console.log(p[2])
                     // md = md.replace(p[0], `<h${p[1].length}>${p[2]}</h${p[1].length}>\n`)
-                    md = md.replace(p[0], `<h${p[1].length}>${p[2]}</h${p[1].length}>\n`)
+                    md = md.replace(p[0], `\n<h${p[1].length}>${p[2]}</h${p[1].length}>\n`)
                 })
 
 
@@ -982,7 +982,7 @@ function GeneratorJs() {
                 match1 = md.matchAll(headingPattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
-                    md = md.replaceAll(p[0], `<h1>${p[1]}</h1>`)
+                    md = md.replaceAll(p[0], `\n<h1>${p[1]}</h1>`)
                 })
 
                 // h2 pattern with----
@@ -991,7 +991,7 @@ function GeneratorJs() {
                 match1 = md.matchAll(headingPattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
-                    md = md.replaceAll(p[0], `<h2>${p[1]}</h2>`)
+                    md = md.replaceAll(p[0], `\n<h2>${p[1]}</h2>`)
                 })
 
 
@@ -1004,7 +1004,7 @@ function GeneratorJs() {
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
                     // log(p)
-                    md = md.replaceAll(p[0], `<hr /><br />`)
+                    md = md.replaceAll(p[0], `\n<hr /><br />`)
                 })
 
                 // // imageurl
@@ -1014,7 +1014,7 @@ function GeneratorJs() {
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
                     //               console.log(p)
-                    md = md.replaceAll(p[0], `<img src="${p[2]}" alt="${p[1]}" />`)
+                    md = md.replaceAll(p[0], `\n<img src="${p[2]}" alt="${p[1]}" />`)
 
                 })
 
@@ -1036,13 +1036,13 @@ function GeneratorJs() {
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
                     if (p[1].length == 3) {
-                        md = md.replace(p[0], `<i><b>${p[3]}</b></i>`)
+                        md = md.replace(p[0], `<em><strong>${p[3]}</strong></em>`)
                     }
                     if (p[1].length == 2) {
-                        md = md.replace(p[0], `<b>${p[3]}</b>`)
+                        md = md.replace(p[0], `<strong>${p[3]}</strong>`)
                     }
                     if (p[1].length == 1) {
-                        md = md.replace(p[0], `<i>${p[3]}</i>`)
+                        md = md.replace(p[0], `<em>${p[3]}</em>`)
                     }
                 })
 
@@ -1075,12 +1075,12 @@ function GeneratorJs() {
 
                 // referencelist
                 // https://regex101.com/r/oZ8gFY/1
-                var referrencePatternList = /^\[\^([^\]]*)]:([^\n]*)$/gmi
+                var referrencePatternList = /^\[\^([^\]]*)]: +([^\n]+)$/gmi
                 match1 = md.matchAll(referrencePatternList)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
                     // console.log(p[0])
-                    md = md.replaceAll(p[0], `<li id='Reference-${p[1]}'> ${p[2]}</li>`)
+                    md = md.replaceAll(p[0], `\n<li id='Reference-${p[1]}'> ${p[2]}</li>`)
                 })
 
 
@@ -1104,7 +1104,7 @@ function GeneratorJs() {
                     list = block.matchAll(listPattern)
                     listEntry = Array.from(list)
                     listEntry.forEach(li => {
-                        block = block.replaceAll(li[0], `<li>${li[1]}</li> `)
+                        block = block.replaceAll(li[0], `\n\t<li>${li[2]}</li> `)
                     })
 
                     // sublistBlock
@@ -1113,14 +1113,14 @@ function GeneratorJs() {
                     list = block.matchAll(sublistPattern)
                     listEntry = Array.from(list)
                     listEntry.forEach(li => {
-                        block = block.replaceAll(li[0], `<ul><li>${li[1]}</li></ul>`)
+                        block = block.replaceAll(li[0], `\n<ul>\n\t<li>${li[1]}</li></ul>`)
                     })
 
 
 
 
 
-                    md = md.replaceAll(p[0], `<ul>${block}</ul>`)
+                    md = md.replaceAll(p[0], `\n<ul>${block}</ul>`)
                 })
 
 
@@ -1139,7 +1139,7 @@ function GeneratorJs() {
                     list = block.matchAll(listPatternOl)
                     listEntry = Array.from(list)
                     listEntry.forEach(li => {
-                        block = block.replaceAll(li[0], `<li>${li[1]}</li>`)
+                        block = block.replaceAll(li[0], `\n<li>${li[1]}</li>`)
                     })
 
                     // sublistBlock
@@ -1148,12 +1148,12 @@ function GeneratorJs() {
                     list = block.matchAll(sublistPattern)
                     listEntry = Array.from(list)
                     listEntry.forEach(li => {
-                        block = block.replaceAll(li[0], `<ul><li>${li[1]}</li></ul>`)
+                        block = block.replaceAll(li[0], `\n<ul>\n\t<li>${li[1]}</li></ul>`)
                     })
 
 
                     // md = md.replaceAll(p[0], `<ol>${block}</ol>`)
-                    md = md.replaceAll(p[0], htmltostring(gen("ol", "", block, 'parse-md-ol')))
+                    md = md.replaceAll(p[0], "\n"+htmltostring(gen("ol", "", block, 'parse-md-ol')))
                 })
 
 
@@ -1243,7 +1243,7 @@ function GeneratorJs() {
                         // block = block.replaceAll(li[0], `<li>${li[1]}</li>`)
                         block = block.replaceAll(li[0], li[1])
                     })
-                    block = htmltostring(gen("p", "", block, 'parse-md-blockquote-p'))
+                    block = "\n"+htmltostring(gen("p", "", block, 'parse-md-blockquote-p'))
 
 
 
@@ -1257,7 +1257,7 @@ function GeneratorJs() {
 
                 // paragraph pattern
                 // https://regex101.com/r/Ah1UkH/1
-                var paragraphPattern=/^(?!\s*$|\${2}|\\\[|#{1,6}\s|\*\s|\d+.\s|!|\[|>+\s+|-|\||```)([\s\S]*?)(?!```)\n{2,}/gmi
+                var paragraphPattern=/^(?!\s*$|\${2}|\\\[|#{1,6}\s|\*\s|\d+.\s|!|\[|>+\s+|-|\||```)([\s\S]+?)(?!```)\n+$/gmi
 
                 match1 = md.matchAll(paragraphPattern)
                 matchList = Array.from(match1)
@@ -1265,11 +1265,10 @@ function GeneratorJs() {
                     console.log(p[0])
                     console.log(p[1])
                     console.log(p[2])
-                    md = md.replaceAll(p[0], `<p>${p[1]}</p>`)
+                    md = md.replaceAll(p[0], `\n<p>${p[1]}</p>`)
                 })
 
-
-
+                md = md.replaceAll("<p></p>", "")
 
                 return md
             }
