@@ -1128,14 +1128,14 @@ function GeneratorJs() {
 
                 // listBlockOrdered
                 // https://regex101.com/r/9ydKmi/1
-                var listBlockPatternOl = /(^ *\d.\s+[^\n]*){1,}/gmi
+                var listBlockPatternOl = /(^ *\d+.\s+[^\n]*){1,}/gmi
                 match1 = md.matchAll(listBlockPatternOl)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
                     var block = p[0]
                     // listOrdered
                     // https://regex101.com/r/03ju1y/1
-                    var listPatternOl = /^\d. +([^\n]*)$/gmi
+                    var listPatternOl = /^\d+. +([^\n]*)$/gmi
                     list = block.matchAll(listPatternOl)
                     listEntry = Array.from(list)
                     listEntry.forEach(li => {
@@ -1144,7 +1144,7 @@ function GeneratorJs() {
 
                     // sublistBlock
                     // https://regex101.com/r/8OuyuF/1
-                    var sublistPattern = /^ +\d. +([^\n]*)$/gmi
+                    var sublistPattern = /^ +\d+. +([^\n]*)$/gmi
                     list = block.matchAll(sublistPattern)
                     listEntry = Array.from(list)
                     listEntry.forEach(li => {
