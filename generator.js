@@ -69,6 +69,7 @@ function GeneratorJs() {
 
     // append
     self.append = (parentid, childhtml, position = 'after') => {
+        position = position.toLowerCase()
         try {
             if (parentid instanceof Object == true) { var parentElement = parentid }
             else {
@@ -114,16 +115,16 @@ function GeneratorJs() {
             }
 
 
-            if (position == 'before') {
+            if (position == 'before' || position == 'b') {
                 parentElement.innerHTML = T.innerHTML + parentElement.innerHTML
-            } else if (position == 'over') {
+            } else if (position == 'over' || position == 'o') {
                 if (T.innerHTML != null) parentElement.innerHTML = T.innerHTML
                 if (T.innerHTML == null) parentElement.innerHTML = ''
-            } else if (position == 'replace') {
+            } else if (position == 'replace' || position == 'r') {
                 parentElement.outerHTML = T.innerHTML
-            } else if (position == 'after') {
+            } else if (position == 'after' || position == 'a') {
                 parentElement.innerHTML = parentElement.innerHTML + T.innerHTML
-            } else if (position == 'parent') {
+            } else if (position == 'parent' || position == 'p') {
                 var oldElement = parentElement.outerHTML
                 parentElement.innerHTML = ""
                 T.childNodes[0].innerHTML += oldElement
@@ -1153,7 +1154,7 @@ function GeneratorJs() {
 
 
                     // md = md.replaceAll(p[0], `<ol>${block}</ol>`)
-                    md = md.replaceAll(p[0], "\n"+htmltostring(gen("ol", "", block, 'parse-md-ol')))
+                    md = md.replaceAll(p[0], "\n" + htmltostring(gen("ol", "", block, 'parse-md-ol')))
                 })
 
 
@@ -1219,14 +1220,14 @@ function GeneratorJs() {
                 // var paragraphPattern = /^(?!\s*$|\${2}|\\\[|#{1,6}\s|\*\s|\d+.\s|!|\[|>+\s+|-|\||`)([\s\S]*?)\n{ 2,}/gmi
 
 
-                
-                
+
+
 
 
                 // BlockParagraph blockQuote
                 // https://regex101.com/r/82DjLH/1
                 // var BlockParaPattern = /^(>\s+[^\n]*\n){1,}/img
-                var BlockParaPattern=/^(>+\s+.*)(?=\n)$/img
+                var BlockParaPattern = /^(>+\s+.*)(?=\n)$/img
                 match1 = md.matchAll(BlockParaPattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
@@ -1243,7 +1244,7 @@ function GeneratorJs() {
                         // block = block.replaceAll(li[0], `<li>${li[1]}</li>`)
                         block = block.replaceAll(li[0], li[1])
                     })
-                    block = "\n"+htmltostring(gen("p", "", block, 'parse-md-blockquote-p'))
+                    block = "\n" + htmltostring(gen("p", "", block, 'parse-md-blockquote-p'))
 
 
 
@@ -1257,7 +1258,7 @@ function GeneratorJs() {
 
                 // paragraph pattern
                 // https://regex101.com/r/Ah1UkH/1
-                var paragraphPattern=/^(?!\s*$|\${2}|\\\[|#{1,6}\s|\*\s|\d+.\s|!|\[|>+\s+|-|\||```)([\s\S]+?)(?!```)\n+$/gmi
+                var paragraphPattern = /^(?!\s*$|\${2}|\\\[|#{1,6}\s|\*\s|\d+.\s|!|\[|>+\s+|-|\||```)([\s\S]+?)(?!```)\n+$/gmi
 
                 match1 = md.matchAll(paragraphPattern)
                 matchList = Array.from(match1)
