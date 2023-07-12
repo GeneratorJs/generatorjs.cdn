@@ -285,6 +285,20 @@ function GeneratorJs() {
         ;
 
 
+    self.gens = (...args) => {
+        var el = self.gen(args)
+        var elstr = el.outerHTML.toString()
+        return elstr
+    }
+
+    self.genp = (...args) => {
+        var el = self.gens(args)
+        var elstr = el.replaceAll("&", '&amp;').replaceAll('</', '&lt;&#47;').replaceAll("<", "&lt;").replaceAll(">", '&gt;')
+        return elstr
+    }
+
+
+
     self.jsonToElement = (obj) => {
         // obj={"tag":"a","id":"idname","href":"url","class","class1,class2,class3"}
         // objectToElement(obj)
