@@ -1414,7 +1414,7 @@ function GeneratorJs() {
 
 
     self.loadFunctions = (RequiredFunctions) => {
-        if (RequiredFunctions == undefined) RequiredFunctions = 'get,grab,append,cssvar,gen,getfile,hide,jsonToElement,loadcss,loadjs,loadscss,load,log,remove,parsemd,verb,htmltostring'
+        if (RequiredFunctions == undefined) RequiredFunctions = 'get,grab,append,cssvar,gen,gens,genp,getfile,hide,jsonToElement,loadcss,loadjs,loadscss,load,log,remove,parsemd,verb,htmltostring'
         RequiredFunctions.split(",").forEach(v => {
             // let expression = `window.${v}=self.${v}`
 
