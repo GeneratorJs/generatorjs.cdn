@@ -869,7 +869,8 @@ function GeneratorJs() {
                 // inlinecodePattern = /`([^`]*)`/gmi
                 // var inlinecodePattern = /`([^`\n][^`]+)`[^`]/gmi
                 //https://regex101.com/r/6JJNlx/1
-                var inlinecodePattern = /(?<!`)`([^`]*?)`(?!`)/gmi
+                // var inlinecodePattern = /(?<!`)`([^`]*?)`(?!`)/gmi
+                var inlinecodePattern = /(^|[^`])`([^`]*?)`(?!`)/gmi;
                 match1 = md.matchAll(inlinecodePattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
@@ -891,7 +892,9 @@ function GeneratorJs() {
 
                 // // inlineMath
                 //https://regex101.com/r/QdJcQS/1
-                var inlineMathPattern = /(?<!\$)\$([^$\n]+)\$(?!\$)/gm
+                // var inlineMathPattern = /(?<!\$)\$([^$\n]+)\$(?!\$)/gm
+                var inlineMathPattern = /(^|[^$])\$([^$\n]+)\$(?!\$)/gm;
+
                 match1 = md.matchAll(inlineMathPattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
@@ -1035,7 +1038,8 @@ function GeneratorJs() {
 
                 // // link
                 // https://regex101.com/r/APBkU8/1
-                var linkPattern = /(?<!!)\[([^\]]*)\]\(([^\)]*)\)/gmi
+                var linkPattern = /[^!]\[([^\]]*)\]\(([^\)]*)\)/gmi
+                
                 match1 = md.matchAll(linkPattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
@@ -1046,7 +1050,8 @@ function GeneratorJs() {
 
                 // // bold/italic/emph
                 // https://regex101.com/r/QQJ4i1/1
-                var italicPattern = /(?<=\W+)((\*|_){1,3})([^\*_\n]+?)\1(?=\W)/gmi
+                // var italicPattern = /(?<=\W+)((\*|_){1,3})([^\*_\n]+?)\1(?=\W)/gmi
+                var italicPattern = /([\s]+)((\*|_){1,3})([^\*_\n]+?)\1(?=\W)/gmi
                 match1 = md.matchAll(italicPattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
