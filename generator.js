@@ -815,14 +815,14 @@ function GeneratorJs() {
     self.parsemd = (md, callback) => {
         // var parsedmd = ""
 
-        console.log("loading markdown")
+        // console.log("loading markdown")
         if (md.length > 2) {
 
             function cleanMdLinebreak(md) {
                 // Clear extra linebreaks
                 var cleanLinebreakPattern = /([\n]{3,})/gmi
-                match1 = md.matchAll(cleanLinebreakPattern)
-                matchList = Array.from(match1)
+                var match1 = md.matchAll(cleanLinebreakPattern)
+                var matchList = Array.from(match1)
                 matchList.forEach(p => {
                     // log(p[0])
                     md = md.replaceAll(p[0], '\n\n')
@@ -857,8 +857,8 @@ function GeneratorJs() {
                 // https://regex101.com/r/WpO7gY/1
                 // codePattern = /```([^\s]*)([^```]*)```/gmi
                 var codePattern = /`{3}([^\n]*)\n([^`]*)`{3}/gmi
-                match1 = md.matchAll(codePattern)
-                matchList = Array.from(match1)
+                var match1 = md.matchAll(codePattern)
+                var matchList = Array.from(match1)
                 matchList.forEach(p => {
                     //               console.log(p)
                     md = md.replaceAll(p[0], `\n<pre><code class="${p[1]}, language-${p[1]}">${p[2]}</code></pre>`)
@@ -1050,19 +1050,24 @@ function GeneratorJs() {
 
                 // // bold/italic/emph
                 // https://regex101.com/r/QQJ4i1/1
-                // var italicPattern = /(?<=\W+)((\*|_){1,3})([^\*_\n]+?)\1(?=\W)/gmi
-                var italicPattern = /([\s]+)((\*|_){1,3})([^\*_\n]+?)\1(?=\W)/gmi
+                var italicPattern = /(?<=\W+)((\*|_){1,3})([^\*_\n]+?)\1(?=\W)*/gmi
+                // var italicPattern = /([\s]+)((\*|_){1,3})([^\*_\n]+?)\1(?=\W)/gmi
                 match1 = md.matchAll(italicPattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
+                    console.log("=====================")
+                    console.log(p[3])
+                    console.log(p[1])
+                    console.log(p[2])
+                    console.log(p[1].length)
                     if (p[1].length == 3) {
-                        md = md.replace(p[0], `<em><strong>${p[3]}</strong></em>`)
+                        md = md.replaceAll(p[0], `<em><strong>${p[3]}</strong></em>`)
                     }
                     if (p[1].length == 2) {
-                        md = md.replace(p[0], `<strong>${p[3]}</strong>`)
+                        md = md.replaceAll(p[0], `<strong>${p[3]}</strong>`)
                     }
                     if (p[1].length == 1) {
-                        md = md.replace(p[0], `<em>${p[3]}</em>`)
+                        md = md.replaceAll(p[0], `<em>${p[3]}</em>`)
                     }
                 })
 
