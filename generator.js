@@ -1038,7 +1038,8 @@ function GeneratorJs() {
 
                 // // link
                 // https://regex101.com/r/APBkU8/1
-                var linkPattern = /[^!]\[([^\]]*)\]\(([^\)]*)\)/gmi
+                // var linkPattern = /[^!]\[([^\]]*)\]\(([^\)]*)\)/gmi
+                var linkPattern = /(?<!!)\[([^\]]*)\]\(([^\)]*)\)/gmi
                 
                 match1 = md.matchAll(linkPattern)
                 matchList = Array.from(match1)
@@ -1048,6 +1049,11 @@ function GeneratorJs() {
 
                 })
 
+
+ 
+
+
+
                 // // bold/italic/emph
                 // https://regex101.com/r/QQJ4i1/1
                 var italicPattern = /(?<=\W+)((\*|_){1,3})([^\*_\n]+?)\1(?=\W)*/gmi
@@ -1055,11 +1061,6 @@ function GeneratorJs() {
                 match1 = md.matchAll(italicPattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
-                    console.log("=====================")
-                    console.log(p[3])
-                    console.log(p[1])
-                    console.log(p[2])
-                    console.log(p[1].length)
                     if (p[1].length == 3) {
                         md = md.replaceAll(p[0], `<em><strong>${p[3]}</strong></em>`)
                     }
@@ -1075,22 +1076,12 @@ function GeneratorJs() {
 
                 // // strikethrough
                 // https://regex101.com/r/MLsQRh/1
-                var strikethroughPattern = /~~([^~]*?)~~/img
+                var strikethroughPattern = /~~(.*)~~/igm
+                // var strikethroughPattern =/~~([\s\S]*?)~~/gm;
                 match1 = md.matchAll(strikethroughPattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
-                    md = md.replaceAll(p[0], `<del class='parsedmd-del'>${p[1]}</del>`)
-                })
-
-
-                // // reference
-                // https://regex101.com/r/CZ2fjd/1
-                var referrencePattern = /\[\^([^\]]*)][^:]/gmi
-                match1 = md.matchAll(referrencePattern)
-                matchList = Array.from(match1)
-                matchList.forEach(p => {
-                    // console.log(p)
-                    md = md.replaceAll(p[0], `<sup><a href='#Reference-${p[1]}'>${p[1]}</a></sup>`)
+                    md = md.replace(p[0], `<del class='parsedmd-del'>${p[1]} </del>`)
                 })
 
 
@@ -1098,14 +1089,54 @@ function GeneratorJs() {
 
 
 
-                // referencelist
-                // https://regex101.com/r/oZ8gFY/1
-                var referrencePatternList = /^\[\^([^\]]*)]: +([^\n]+)$/gmi
-                match1 = md.matchAll(referrencePatternList)
+
+
+
+
+               // reference
+               https://regex101.com/r/eLzXSC/1                                 
+               var referencelinkPattern = /(?<!!)\[([^\]]*)\]\s{0,3}\[([^\]]*)\]/gmi
+               
+               match1 = md.matchAll(referencelinkPattern)
+               matchList = Array.from(match1)
+               matchList.forEach(p => {
+                   //                    log(p)
+                   md = md.replaceAll(p[0], `<a href="#${p[2]}">${p[1]}</a>`)
+
+               })
+
+
+
+
+
+
+                // Blockreferencelist
+                // https://regex101.com/r/xu97SN/1
+                var listBlockPattern = /(^ *(\[[^\]]*\]:)\s+[^\n]*){1,}/gmi
+                match1 = md.matchAll(listBlockPattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
-                    // console.log(p[0])
-                    md = md.replaceAll(p[0], `\n<li id='Reference-${p[1]}'> ${p[2]}</li>`)
+                    var block = p[0]
+                    // referencelistBlock
+                    // https://regex101.com/r/JC0xSx/1
+                    var listPattern = /^\[([^\]]*)\]:\s+([^\n]*)$/gmi
+                    list = block.matchAll(listPattern)
+                    listEntry = Array.from(list)
+                    listEntry.forEach(li => {
+                        block = block.replaceAll(li[0], `\n\t<span id="${li[1]}">${li[2]}</span> `)
+                    })
+
+                    // subreferencelist
+                    // https://regex101.com/r/DYvI2z/1
+                    var sublistPattern = /^ +(\*|-)\s+([^\n]*)$/gmi
+                    list = block.matchAll(sublistPattern)
+                    listEntry = Array.from(list)
+                    listEntry.forEach(li => {
+                        block = block.replaceAll(li[0], `\n<ul>\n\t<li>${li[1]}</li></ul>`)
+                    })
+
+                    // md = md.replaceAll(p[0], `\n<ul>${block}</ul>`)
+                    md = md.replaceAll(p[0], `\n${block}`)
                 })
 
 
@@ -1140,10 +1171,6 @@ function GeneratorJs() {
                     listEntry.forEach(li => {
                         block = block.replaceAll(li[0], `\n<ul>\n\t<li>${li[1]}</li></ul>`)
                     })
-
-
-
-
 
                     md = md.replaceAll(p[0], `\n<ul>${block}</ul>`)
                 })
@@ -1206,10 +1233,6 @@ function GeneratorJs() {
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
                     var block = p[0]
-
-
-
-
                     // md = md.replaceAll(p[0], `<ol>${block}</ol>`)
                     // md = md.replaceAll(p[0], htmltostring(gen("ol", "", block, 'parse-md-ol')))
                 })
