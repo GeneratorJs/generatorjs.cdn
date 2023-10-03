@@ -893,7 +893,7 @@ function GeneratorJs() {
                 // // inlineMath
                 //https://regex101.com/r/QdJcQS/1
                 // var inlineMathPattern = /(?<!\$)\$([^$\n]+)\$(?!\$)/gm
-                var inlineMathPattern = /(^|[^$])\$([^$\n]+)\$(?!\$)/gm;
+                var inlineMathPattern = /(?<!\$)\$([^$\n]+)\$(?!\$)/mg;
 
                 match1 = md.matchAll(inlineMathPattern)
                 matchList = Array.from(match1)
