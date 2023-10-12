@@ -609,7 +609,7 @@ const GeneratorWebHelper = () => {
                 justify-content: flex-start;;
                 --leftpadding: min(8vw, 150px);
                 padding-left: var(--leftpadding);
-                transform: translateX(calc(100% - var(--leftpadding)));
+                transform: translateX(calc(100% - 2em));
                 transition: all 200ms ease-out;
 
                 overflow-x: hidden;
