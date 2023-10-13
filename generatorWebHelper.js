@@ -603,12 +603,13 @@ const GeneratorWebHelper = () => {
                 max-width: 80vw;
 
                 color: white;
-                filter: blur(4px);
+                // filter: blur(4px);
                 display: flex;
                 flex-direction: column;
                 justify-content: flex-start;;
                 --leftpadding: min(8vw, 150px);
                 padding-left: var(--leftpadding);
+                // transform: translateX(calc(100% - var(--leftpadding)));
                 transform: translateX(calc(100% - 2em));
                 transition: all 200ms ease-out;
 
@@ -674,7 +675,7 @@ const GeneratorWebHelper = () => {
                     padding-top: 10px;
                     padding-bottom: 110%;
                     // z-index: 4;
-                    li>a {
+                    .pageNavUlLiA {
                         --sat: 10%;
                         --light: 80%;
                         --lightLink: 10%;
@@ -690,7 +691,7 @@ const GeneratorWebHelper = () => {
 
                 &:hover,&:focus-within{
 
-                border-top:2px solid aqua;
+                    border-top:2px solid aqua;
                     padding-inline: 30px;
                     --sat: 10%;
                     --light: 5%;
@@ -751,12 +752,6 @@ const GeneratorWebHelper = () => {
 
             }
 
-            // .active+.hoverblock{
-            //     padding-block:calc(inherit + 10px);
-            //     margin-block:calc(inherit + -10px);
-            //     transform: perspective(100px) translateZ(-5px);
-            //     color:red;
-            // }
 
         }
         `
@@ -800,8 +795,26 @@ const GeneratorWebHelper = () => {
 
             var sectionlist = document.querySelectorAll("main #hero>h1,main div h1,main section h1,footer h1")
             sectionlist.forEach(element => {
+                var firstHeading=element.childNodes[0]
                 var pageNavUl = document.getElementById("pageNavUl")
-                append(pageNavUl, gen("li", "", gen(a, "", element.innerHTML, 'pageNavUlLiA hoverblock', `#${element.parentElement.id}`.replaceAll("##", "#")), "pageNavUlLi"))
+                append(pageNavUl, 
+                    gen("li", "", 
+                        gen(
+                            a, 
+                            "", 
+                            element.innerHTML, 
+                            'pageNavUlLiA hoverblock ', 
+                            {
+                                // not working onclick 
+                                // to remove href and 
+                                // use element.scrollInToView()
+                                // onclick:`${firstHeading}.scrollIntoView()`,
+                                "href":`#${element.parentElement.id}`.replaceAll("##", "#")
+                            }
+                            ), 
+                        "pageNavUlLi"
+                        )
+                    )
             });
             PageNavSelf.updateActiveSection()
         }
@@ -1087,12 +1100,14 @@ const GeneratorWebHelper = () => {
                 })
             };
             customizerSelf.resetTheme = () => {
+                console.info("resetTheme")
                 customizerSelf.loadSavedTheme("defaultColorConfig")
                 customizerSelf.updateThemeSliders()
                 localStorage.removeItem("colorConfig")
                 sessionStorage.removeItem("colorConfig")
             };
             customizerSelf.saveTheme = (varName = "colorConfig") => {
+                console.info("saveTheme")
                 // var selectedFont = document.getElementById("FontSelect").value
                 // cssVar("--fontFamily", selectedFont)
 
@@ -1168,11 +1183,16 @@ const GeneratorWebHelper = () => {
             return customizerSelf
         }
 
+        window.addEventListener(onhashchange,()=>{
+            console.info("hashchage")
+            self.updatePageNavUl()
+        })
         // PageNavSelf.init()
         return PageNavSelf
     }
 
     // self.init()
+
     return self
 }
 
