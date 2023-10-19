@@ -286,13 +286,13 @@ function GeneratorJs() {
 
 
     self.gens = (...args) => {
-        var el = self.gen(args)
+        var el = self.gen(...args)
         var elstr = el.outerHTML.toString()
         return elstr
     }
 
     self.genp = (...args) => {
-        var el = self.gens(args)
+        var el = self.gens(...args)
         var elstr = el.replaceAll("&", '&amp;').replaceAll('</', '&lt;&#47;').replaceAll("<", "&lt;").replaceAll(">", '&gt;')
         return elstr
     }
