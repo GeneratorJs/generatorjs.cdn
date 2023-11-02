@@ -861,7 +861,7 @@ function GeneratorJs() {
                 var matchList = Array.from(match1)
                 matchList.forEach(p => {
                     //               console.log(p)
-                    md = md.replaceAll(p[0], `\n<pre><code class="${p[1]}, language-${p[1]}">${p[2]}</code></pre>`)
+                    md = md.replaceAll(p[0], `\n<pre><code class="${p[1]}, language-${p[1]},code-block">${p[2]}</code></pre>`)
                 })
 
                 // For MathJax
@@ -870,12 +870,12 @@ function GeneratorJs() {
                 // var inlinecodePattern = /`([^`\n][^`]+)`[^`]/gmi
                 //https://regex101.com/r/6JJNlx/1
                 // var inlinecodePattern = /(?<!`)`([^`]*?)`(?!`)/gmi
-                var inlinecodePattern = /(^|[^`])`([^`]*?)`(?!`)/gmi;
+                // var inlinecodePattern = /(^|[^`])`([^`]*?)`(?!`)/gmi;
+                var inlinecodePattern=/(?<!`)`([^`]*?)`(?!`)/gmi;
                 match1 = md.matchAll(inlinecodePattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
-                    // log(p)
-                    md = md.replaceAll(p[0], `\n<code class='parsemd-code'>${p[1]}</code>`)
+                    md = md.replaceAll(p[0], `<code class='parsemd-code code-inline'>${p[1]}</code>`)
                 })
 
 
@@ -1262,12 +1262,6 @@ function GeneratorJs() {
                 })
 
 
-                // paragraph pattern
-                // https://regex101.com/r/eXAQjk/1
-                // var paragraphPattern = /^(?!\s*$|\${2}|\\\[|#{1,6}\s|\*\s|\d+.\s|!|\[|>+\s+|-|\||`)([\s\S]*?)\n{ 2,}/gmi
-
-
-
 
 
 
@@ -1304,15 +1298,12 @@ function GeneratorJs() {
 
 
                 // paragraph pattern
-                // https://regex101.com/r/Ah1UkH/1
-                var paragraphPattern = /^(?!\s*$|\${2}|\\\[|#{1,6}\s|\*\s|\d+.\s|!|\[|>+\s+|-|\||```)([\s\S]+?)(?!```)\n+$/gmi
+                // https://regex101.com/r/wU5n2x/1
+                var paragraphPattern = /^(?!<|\s*$|\${2}|\\\[|#{1,6}\s|\*\s|\d+.\s|!|\[|>+\s+|-|\||```)([\s\S]*?)(?!```)\n{2,}/igm
 
                 match1 = md.matchAll(paragraphPattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
-                    console.log(p[0])
-                    console.log(p[1])
-                    console.log(p[2])
                     md = md.replaceAll(p[0], `\n<p>${p[1]}</p>`)
                 })
 
