@@ -1132,7 +1132,8 @@ function GeneratorJs() {
                     list = block.matchAll(sublistPattern)
                     listEntry = Array.from(list)
                     listEntry.forEach(li => {
-                        block = block.replaceAll(li[0], `\n<ul>\n\t<li>${li[1]}</li></ul>`)
+//                        block = block.replaceAll(li[0], `\n<ul>\n\t<li>${li[1]}</li></ul>`) trying sub list
+                        block = block.replaceAll(li[0], `\n<ul>\n\t<li>${li[2]}</li></ul>`)
                     })
 
                     // md = md.replaceAll(p[0], `\n<ul>${block}</ul>`)
