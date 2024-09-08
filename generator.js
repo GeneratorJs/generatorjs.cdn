@@ -708,21 +708,38 @@ function GeneratorJs() {
 
 
             function idToCssSelectorChain(id, mediaQuery) {
+                
                 cssSelectorChain = ""
                 for (let i_id = mediaQuery; i_id < id.length; i_id++) {
                     var currentId = id[i_id];
+                    // log(currentId)
                     if (currentId.includes(",")) {
-
+                    
                         currentId = currentId.replaceAll(" ,", ',').replaceAll(", ", ',')
                         var idParts = currentId.split(",")
                         var expandedChain = ""
                         idParts.forEach(idPart => {
                             expandedChain += cssSelectorChain + " " + idPart + ", "
                         });
-                        // log(expandedChain.substring(0, expandedChain.length - 2))
+
+
                         cssSelectorChain = expandedChain.substring(0, expandedChain.length - 2)
                     }
-                    else { cssSelectorChain = cssSelectorChain + " " + id[i_id] }
+                    else { 
+
+                        // if (cssSelectorChain.includes("pdf")){
+                            var newChain=""
+                            cssSelectorChain.split(",").forEach(part =>{
+                                if (newChain!="")   {                                    newChain+=", "                                    }
+                                newChain += part+ " " + id[i_id]
+                            })
+                            cssSelectorChain=newChain
+                        // }
+                        // else{
+                            
+                        // cssSelectorChain = cssSelectorChain + " " + id[i_id] 
+                        // }
+                    }
                 }
                 cssSelectorChain = cssSelectorChain.replaceAll(" :", ":").replaceAll(" &:", ":")
 
