@@ -79,7 +79,26 @@ function GeneratorJs() {
             var T = document.createElement('div')
             T.id = 'T'
             T.innerHTML = ""
+            // array
             if (Array.isArray(childhtml) == true) {
+                childhtml.forEach((child,index) => {
+                    console.log(child)
+                    if (typeof child == 'string') {
+                        T.innerHTML += child
+                    }
+                    if (typeof child != 'string') {
+                        if (child.outerHTML != undefined) {
+                            T.innerHTML += child.outerHTML
+                        }
+                        if (child.outerHTML == undefined) {
+                            T.innerHTML += objtohtml(child)
+                        }
+                    }
+                    console.log(T.innerHTML)
+                });
+
+
+
                 for (let i = 0; i < childhtml.length; i++) {
                     if (typeof childhtml[i] == 'string') {
                         T.innerHTML += childhtml[i]
@@ -97,6 +116,7 @@ function GeneratorJs() {
                 }
 
             }
+            // non array
             if (Array.isArray(childhtml) == false) {
 
                 if (childhtml != undefined) {
@@ -146,8 +166,229 @@ function GeneratorJs() {
 
 
 
-    //gen
-    self.gen = (elementtype, idin, htmlin, classin, src, event) => {
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //gen new update dec 2024
+    self.gen = (...args) => {
+        //const gentest = (...args) =>{
+        try {
+
+
+
+
+            function internalgen(arglength, ...args) {
+                var tagnamein = 'div';
+                var idin = ""
+                var classin = ""
+
+                if (arglength > 0) {
+                    var tagnamein = args[0];
+                    var element = document.createElement(tagnamein);
+                }
+                if (arglength > 1) {
+                    var idin = args[1];
+                    if (idin != undefined && idin != "") {
+                        element.id = idin;
+                    }
+                }
+
+
+                if (arglength > 3) {
+                    var classin = args[3];
+                    if (classin != undefined && classin != "") {
+                        element.classList += classin.replaceAll(',', ' ').replaceAll(', ', ' ');
+                        // console.log(element.classList)
+                    }
+                }
+                if (arglength > 4) {
+                    var srcin = args[4];
+                    if (srcin instanceof Object == false) {
+                        if (tagnamein == 'a') { element.href = srcin } else { element.src = srcin }
+                        if (tagnamein == 'img') { element.src = srcin }
+                    }
+                }
+                
+
+                //htmlin
+                if (arglength > 2) {
+                    var htmlin = args[2];
+
+                    // Handle single element input
+                    if (Array.isArray(htmlin)== false) {
+                        if (htmlin.nodeName === undefined) {
+                            // console.log(typeof (htmlin))
+                            // console.log(htmlin)
+                            if (typeof htmlin === "string") {
+                                // if (tagnamein == 'code' || tagnamein == 'pre') {
+                                if (tagnamein == 'code') {
+                                    element.innerText = htmlin;
+                                } else if (tagnamein == 'input') {
+                                    element.value = htmlin;
+                                } else if (tagnamein == 'img') {
+                                    element.alt = htmlin;
+                                }
+                                else {
+                                    element.innerHTML = htmlin;
+                                }
+                            }
+                            if (typeof (htmlin) == "object") {
+                                element.innerHTML = htmlin;
+                                if (tagnamein == 'input') element.value = htmlin;
+                                if (tagnamein == 'img') element.alt = htmlin;
+                            }
+                        }
+
+
+                    
+                    };
+                    if (htmlin.nodeName != undefined) {
+                        console.log(htmlin)
+                        // element.append(htmlin);
+                        element.innerHTML = htmlin.outerHTML;
+                    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    // Handle array input
+                    if (Array.isArray(htmlin)) {
+
+                        var firstArrayOject = htmlin[0]
+                        if (typeof firstArrayOject === "object" && !firstArrayOject.nodeName) {
+                            var container = document.createElement("div");
+                            htmlin.forEach((item,index) => {    
+                                let childElement = document.createElement(tagnamein);
+                                childElement.id = `${idin}-${index}`;
+                                childElement.classList += classin.replaceAll(',', ' ').replaceAll(', ', ' ')
+                                childElement.append(jsonToElement(item));
+                                container.appendChild(childElement);
+                            }) 
+                            
+                        }
+                        if (typeof firstArrayOject === "string" && firstArrayOject.nodeName) {
+                        
+
+                        htmlin.forEach((item,index) => {
+                            console.log(item)
+
+                            // For non-object items
+                            if (typeof item !== "object" || item.nodeName) {
+                                let childElement = document.createElement(tagnamein);
+
+                                if (idin) childElement.id = `${idin}-${index}`;
+                                if (typeof item === "string") {
+                                    childElement.innerHTML = item;
+                                } else if (item.nodeName) {
+                                    childElement.append(item);
+                                }
+                            }
+
+                            // For object items like json user jsonToElement
+                       
+
+                            container.appendChild(childElement);
+                        });
+                    }
+
+
+
+
+                        return container.innerHTML;
+                    }
+
+
+
+
+
+
+
+
+
+
+                }
+
+
+
+
+                return element
+            }
+
+
+
+
+            var lastarg = args[args.length - 1]
+            var arglength = args.length
+
+
+            if (lastarg instanceof Object == false) {
+                var parselength = arglength
+                var element = internalgen(parselength, ...args)
+            }
+            
+            if (lastarg instanceof Object == true ) {
+
+                if (Array.isArray(lastarg) == false) {
+                var parselength = arglength - 1
+                var element = internalgen(parselength, ...args)
+                var objArray = Object.entries(lastarg);
+                objArray.forEach(A1 => {
+                    // console.log(A1)
+                    element.setAttribute(A1[0], A1[1])
+                })
+                }
+                if (Array.isArray(lastarg) == true) {
+                    //use jsonToElement
+                    var parselength = arglength
+                    var element = internalgen(parselength, ...args)
+                    
+                }
+
+
+            }
+
+
+        }//tryend
+
+
+
+        catch (err) {
+            console.error("Error during gen(", args, ")", err)
+        }
+        return element
+    }
+
+
+
+
+
+
+    //genbak
+    self.genbak = (elementtype, idin, htmlin, classin, src, event) => {
         try {
             if (htmlin != undefined) {
                 // console.log(htmlin.isArray)
@@ -313,6 +554,7 @@ function GeneratorJs() {
                 keylist.forEach((key) => {
                     eval(`elem.${key}=obj.${key}`)
                 })
+                return elem
             }
             if (Array.isArray(obj) == true) {
                 var placeholder = document.createElement(div)
@@ -335,9 +577,9 @@ function GeneratorJs() {
                 elem = placeholder
                 // console.log(elem.outerHTML)
 
+                return elem.innerHTML
             }
 
-            return elem
         }
         catch { console.error("jsonToElement(", obj, ")") }
     }
@@ -708,13 +950,13 @@ function GeneratorJs() {
 
 
             function idToCssSelectorChain(id, mediaQuery) {
-                
+
                 cssSelectorChain = ""
                 for (let i_id = mediaQuery; i_id < id.length; i_id++) {
                     var currentId = id[i_id];
                     // log(currentId)
                     if (currentId.includes(",")) {
-                    
+
                         currentId = currentId.replaceAll(" ,", ',').replaceAll(", ", ',')
                         var idParts = currentId.split(",")
                         var expandedChain = ""
@@ -725,18 +967,18 @@ function GeneratorJs() {
 
                         cssSelectorChain = expandedChain.substring(0, expandedChain.length - 2)
                     }
-                    else { 
+                    else {
 
                         // if (cssSelectorChain.includes("pdf")){
-                            var newChain=""
-                            cssSelectorChain.split(",").forEach(part =>{
-                                if (newChain!="")   {                                    newChain+=", "                                    }
-                                newChain += part+ " " + id[i_id]
-                            })
-                            cssSelectorChain=newChain
+                        var newChain = ""
+                        cssSelectorChain.split(",").forEach(part => {
+                            if (newChain != "") { newChain += ", " }
+                            newChain += part + " " + id[i_id]
+                        })
+                        cssSelectorChain = newChain
                         // }
                         // else{
-                            
+
                         // cssSelectorChain = cssSelectorChain + " " + id[i_id] 
                         // }
                     }
@@ -888,7 +1130,7 @@ function GeneratorJs() {
                 //https://regex101.com/r/6JJNlx/1
                 // var inlinecodePattern = /(?<!`)`([^`]*?)`(?!`)/gmi
                 // var inlinecodePattern = /(^|[^`])`([^`]*?)`(?!`)/gmi;
-                var inlinecodePattern=/(?<!`)`([^`]*?)`(?!`)/gmi;
+                var inlinecodePattern = /(?<!`)`([^`]*?)`(?!`)/gmi;
                 match1 = md.matchAll(inlinecodePattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
@@ -1057,7 +1299,7 @@ function GeneratorJs() {
                 // https://regex101.com/r/APBkU8/1
                 // var linkPattern = /[^!]\[([^\]]*)\]\(([^\)]*)\)/gmi
                 var linkPattern = /(?<!!)\[([^\]]*)\]\(([^\)]*)\)/gmi
-                
+
                 match1 = md.matchAll(linkPattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
@@ -1067,7 +1309,7 @@ function GeneratorJs() {
                 })
 
 
- 
+
 
 
 
@@ -1110,17 +1352,17 @@ function GeneratorJs() {
 
 
 
-               // reference
-               https://regex101.com/r/eLzXSC/1                                 
-               var referencelinkPattern = /(?<!!)\[([^\]]*)\]\s{0,3}\[([^\]]*)\]/gmi
-               
-               match1 = md.matchAll(referencelinkPattern)
-               matchList = Array.from(match1)
-               matchList.forEach(p => {
-                   //                    log(p)
-                   md = md.replaceAll(p[0], `<a href="#${p[2]}">${p[1]}</a>`)
+                // reference
+                https://regex101.com/r/eLzXSC/1                                 
+                var referencelinkPattern = /(?<!!)\[([^\]]*)\]\s{0,3}\[([^\]]*)\]/gmi
 
-               })
+                match1 = md.matchAll(referencelinkPattern)
+                matchList = Array.from(match1)
+                matchList.forEach(p => {
+                    //                    log(p)
+                    md = md.replaceAll(p[0], `<a href="#${p[2]}">${p[1]}</a>`)
+
+                })
 
 
 
@@ -1149,7 +1391,7 @@ function GeneratorJs() {
                     list = block.matchAll(sublistPattern)
                     listEntry = Array.from(list)
                     listEntry.forEach(li => {
-//                        block = block.replaceAll(li[0], `\n<ul>\n\t<li>${li[1]}</li></ul>`) trying sub list
+                        //                        block = block.replaceAll(li[0], `\n<ul>\n\t<li>${li[1]}</li></ul>`) trying sub list
                         block = block.replaceAll(li[0], `\n<ul>\n\t<li>${li[2]}</li></ul>`)
                     })
 
