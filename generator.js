@@ -72,89 +72,209 @@ function GeneratorJs() {
     }
 
 
-    // append
-    self.append = (parentid, childhtml, position = 'after') => {
-        position = position.toLowerCase()
-        try {
-            if (parentid instanceof Object == true) { var parentElement = parentid }
-            else {
-                var parentElement = document.querySelectorAll(parentid)[0];
-            }
-            // var parentElement = self.get(parentid)[0]
-            var T = document.createElement('div')
-            T.id = 'T'
-            T.innerHTML = ""
-            // array
-            if (Array.isArray(childhtml) == true) {
+    // // append Orignal Old
+    // self.append = (parentid, childhtml, position = 'after') => {
+    //     position = position.toLowerCase()
+    //     try {
+    //         if (parentid instanceof Object == true) { 
+    //             var parentElement = parentid 
+    //         }
+    //         else {
+    //             var parentElement = document.querySelectorAll(parentid)[0];
+    //         }
+    //         var parentTag = parentElement.tagName.toLowerCase()
+
+    //         // parentTag is table,thead,tbody,or tr
+
+    //         if (parentTag == 'table' || parentTag == 'thead' || parentTag == 'tbody' || parentTag == 'tr' || parentTag == 'td') {
+    //             //table element use table placeholder
+    //             var T = document.createElement('table')
+    //             T.id = 'T'
+    //             T.innerHTML = ""
+    //         }
+    //         else {
+    //             // non table element use div placeholder
+
+    //             // var parentElement = self.get(parentid)[0]
+    //             var T = document.createElement('div')
+    //             T.id = 'T'
+    //             T.innerHTML = ""
+    //         }
+    //         // array
+    //         if (Array.isArray(childhtml) == true) {
          
-                childhtml.forEach((child,index) => {
+    //             childhtml.forEach((child,index) => {
+    //                 if (typeof child == 'string') {
+    //                     T.innerHTML += child
+    //                 }
+    //                 else if (typeof child != 'string') {
+    //                     if (child.outerHTML != undefined) {
+    //                         T.innerHTML += child.outerHTML
+    //                     }
+    //                     if (child.outerHTML == undefined) {
+    //                         T.innerHTML += objtohtml(child)
+    //                     }
+    //                 }
+    //                 //may be removed
+    //                 else if (self.isHTML(child)){
+    //                     T.innerHTML += child.outerHTML
+    //                 }
+    //                 // console.log(T.innerHTML)
+    //             });
+
+
+    //         }
+    //         // non array
+    //         else if (Array.isArray(childhtml) == false) {
+
+    //             if (childhtml != undefined) {
+    //                 if (typeof childhtml == 'string') {
+    //                     T.innerHTML += childhtml
+    //                 }
+    //                 if (typeof childhtml != 'string') {
+    //                     if (childhtml.outerHTML != undefined) {
+    //                         T.innerHTML += childhtml.outerHTML
+    //                     }
+    //                     if (childhtml.outerHTML == undefined) {
+    //                         T.innerHTML += childhtml
+    //                     }
+    //                 }
+    //             }
+    //         }
+
+
+    //         if (position == 'before' || position == 'b') {
+    //             parentElement.innerHTML = T.innerHTML + parentElement.innerHTML
+    //         } else if (position == 'over' || position == 'o') {
+    //             if (T.innerHTML != null) parentElement.innerHTML = T.innerHTML
+    //             if (T.innerHTML == null) parentElement.innerHTML = ''
+    //         } else if (position == 'replace' || position == 'r') {
+    //             parentElement.outerHTML = T.innerHTML
+    //         } else if (position == 'after' || position == 'a') {
+    //             parentElement.innerHTML = parentElement.innerHTML + T.innerHTML
+    //         } else if (position == 'parent' || position == 'p') {
+    //             var oldElement = parentElement.outerHTML
+    //             parentElement.innerHTML = ""
+    //             T.childNodes[0].innerHTML += oldElement
+    //             parentElement.outerHTML = T.innerHTML
+    //         } else {
+    //             parentElement.innerHTML = parentElement.innerHTML + T.innerHTML
+    //         }
+    //     }
+    //     catch (err) {
+    //         console.log(`append(${parentid}, ${childhtml}, ${position})`)
+    //         console.error(err)
+    //     }
+
+    // }
+
+    //     ;
+
+
+
+    self.append = (parentid, childhtml, position = 'after') => {
+        // Convert position to lowercase for case-insensitive comparison
+        position = position.toLowerCase();
+    
+        try {
+            // Determine the parent element
+            let parentElement;
+            if (parentid instanceof Object) { 
+                // If parentid is already a DOM element, use it directly
+                parentElement = parentid;
+            } else {
+                // Otherwise, query the DOM to find the first matching element
+                parentElement = document.querySelectorAll(parentid)[0];
+            }
+    
+            // Get the tag name of the parent element in lowercase
+            var parentTag = parentElement.tagName.toLowerCase();
+    
+            // Check if the parent element is part of a table (table, thead, tbody, tr, or td)
+            if (parentTag == 'table' || parentTag == 'thead' || parentTag == 'tbody' || parentTag == 'tr' || parentTag == 'td') {
+                // For table elements, create a temporary <table> placeholder
+                var T = document.createElement('table');
+                T.id = 'T';
+                T.innerHTML = ""; // Initialize with empty content
+            } else {
+                // For non-table elements, create a temporary <div> placeholder
+                var T = document.createElement('div');
+                T.id = 'T';
+                T.innerHTML = ""; // Initialize with empty content
+            }
+    
+            // Handle childhtml if it is an array
+            if (Array.isArray(childhtml)) {
+                childhtml.forEach((child, index) => {
                     if (typeof child == 'string') {
-                        T.innerHTML += child
-                    }
-                    else if (typeof child != 'string') {
+                        // If the child is a string, append it directly to the placeholder's innerHTML
+                        T.innerHTML += child;
+                    } else if (typeof child != 'string') {
                         if (child.outerHTML != undefined) {
-                            T.innerHTML += child.outerHTML
+                            // If the child is a DOM element with outerHTML, append its outerHTML
+                            T.innerHTML += child.outerHTML;
                         }
                         if (child.outerHTML == undefined) {
-                            T.innerHTML += objtohtml(child)
+                            // If the child is an object without outerHTML, convert it to HTML using objtohtml
+                            T.innerHTML += objtohtml(child);
                         }
                     }
-                    //may be removed
-                    else if (self.isHTML(child)){
-                        T.innerHTML += child.outerHTML
+                    // This block may be removed (legacy or unused logic)
+                    else if (self.isHTML(child)) {
+                        T.innerHTML += child.outerHTML;
                     }
-                    // console.log(T.innerHTML)
                 });
-
-
             }
-            // non array
+            // Handle childhtml if it is not an array
             else if (Array.isArray(childhtml) == false) {
-
                 if (childhtml != undefined) {
                     if (typeof childhtml == 'string') {
-                        T.innerHTML += childhtml
+                        // If childhtml is a string, append it directly to the placeholder's innerHTML
+                        T.innerHTML += childhtml;
                     }
                     if (typeof childhtml != 'string') {
                         if (childhtml.outerHTML != undefined) {
-                            T.innerHTML += childhtml.outerHTML
+                            // If childhtml is a DOM element with outerHTML, append its outerHTML
+                            T.innerHTML += childhtml.outerHTML;
                         }
                         if (childhtml.outerHTML == undefined) {
-                            T.innerHTML += childhtml
+                            // If childhtml is an object without outerHTML, append it directly
+                            T.innerHTML += childhtml;
                         }
                     }
                 }
             }
-
-
+    
+            // Insert the content based on the specified position
             if (position == 'before' || position == 'b') {
-                parentElement.innerHTML = T.innerHTML + parentElement.innerHTML
+                // Insert the content before the parent element's existing content
+                parentElement.innerHTML = T.innerHTML + parentElement.innerHTML;
             } else if (position == 'over' || position == 'o') {
-                if (T.innerHTML != null) parentElement.innerHTML = T.innerHTML
-                if (T.innerHTML == null) parentElement.innerHTML = ''
+                // Replace the parent element's content entirely
+                if (T.innerHTML != null) parentElement.innerHTML = T.innerHTML;
+                if (T.innerHTML == null) parentElement.innerHTML = '';
             } else if (position == 'replace' || position == 'r') {
-                parentElement.outerHTML = T.innerHTML
+                // Replace the parent element itself with the new content
+                parentElement.outerHTML = T.innerHTML;
             } else if (position == 'after' || position == 'a') {
-                parentElement.innerHTML = parentElement.innerHTML + T.innerHTML
+                // Insert the content after the parent element's existing content
+                parentElement.innerHTML = parentElement.innerHTML + T.innerHTML;
             } else if (position == 'parent' || position == 'p') {
-                var oldElement = parentElement.outerHTML
-                parentElement.innerHTML = ""
-                T.childNodes[0].innerHTML += oldElement
-                parentElement.outerHTML = T.innerHTML
+                // Wrap the parent element with the new content
+                var oldElement = parentElement.outerHTML;
+                parentElement.innerHTML = "";
+                T.childNodes[0].innerHTML += oldElement;
+                parentElement.outerHTML = T.innerHTML;
             } else {
-                parentElement.innerHTML = parentElement.innerHTML + T.innerHTML
+                // Default behavior: append the content after the parent element's existing content
+                parentElement.innerHTML = parentElement.innerHTML + T.innerHTML;
             }
+        } catch (err) {
+            // Log any errors that occur during execution
+            console.log(`append(${parentid}, ${childhtml}, ${position})`);
+            console.error(err);
         }
-        catch (err) {
-            console.log(`append(${parentid}, ${childhtml}, ${position})`)
-            console.error(err)
-        }
-
-    }
-
-        ;
-
-
+    };
 
 
 
@@ -369,12 +489,22 @@ function GeneratorJs() {
         ;
 
     //cssvar read and modify css vars
-    self.cssvar = (name, value) => {
-        var r = document.querySelector(':root')
-        var rs = getComputedStyle(r)
-        if (name[0] != '-') name = '--' + name
-        if (value) r.style.setProperty(name, value)
-        return rs.getPropertyValue(name);
+    self.cssvar = (name, value, element = document.querySelector(':root')) => {
+        // Get the computed styles of the specified element
+        var rootStyle = getComputedStyle(element);
+    
+        // Ensure the CSS variable name starts with '--'
+        if (name[0] != '-') {
+            name = `--${name}`;
+        }
+    
+        // If a value is provided, set the CSS variable on the specified element
+        if (value) {
+            element.style.setProperty(name, value);
+        }
+    
+        // Return the current value of the CSS variable
+        return rootStyle.getPropertyValue(name);
     };
 
 
@@ -793,11 +923,11 @@ function GeneratorJs() {
             var applog = document.getElementById("applog")
             if (applog == null || applog == undefined) {
                 // document.getElementById("app").append(gen(div, "applog", "", "applog,applog"))
-                self.append("body", self.gen("div", "applog", self.gen(span, "", "close", "cross material-symbols-outlined", { "onclick": "GeneratorJs().hide(this.parentElement)" }), "applog"))
+                self.append("body", self.gen("div", "applog", self.gen(span, "", "close", "cross material-symbols-outlined", { "onclick": "GeneratorJs().hide(this.parentElement)" }), "applog,dragable"))
 
                 // append(app, gen("div", "applog", "", "applog", { "onclick": "hide(this)" }))
                 self.loadscss(self.logStyleScss, "log")
-
+                dragElement(grab(".dragable")[0])
             }
             // if (data === 'clear' || data === 'hide' || data === null || data === undefined || data === "") {
                 if (data === 'clear' || data === 'hide') {
@@ -840,6 +970,48 @@ function GeneratorJs() {
             console.log(`log(${data}, ${pos})`)
             console.error(err)
         }
+
+        
+        function dragElement(elmnt) {
+            var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            if (document.getElementById(elmnt.id + "header")) {
+              // if present, the header is where you move the DIV from:
+              document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+            } else {
+              // otherwise, move the DIV from anywhere inside the DIV:
+              elmnt.onmousedown = dragMouseDown;
+            }
+          
+            function dragMouseDown(e) {
+              e = e || window.event;
+              e.preventDefault();
+              // get the mouse cursor position at startup:
+              pos3 = e.clientX;
+              pos4 = e.clientY;
+              document.onmouseup = closeDragElement;
+              // call a function whenever the cursor moves:
+              document.onmousemove = elementDrag;
+            }
+          
+            function elementDrag(e) {
+              e = e || window.event;
+              e.preventDefault();
+              // calculate the new cursor position:
+              pos1 = pos3 - e.clientX;
+              pos2 = pos4 - e.clientY;
+              pos3 = e.clientX;
+              pos4 = e.clientY;
+              // set the element's new position:
+              elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+              elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+            }
+          
+            function closeDragElement() {
+              // stop moving when mouse button is released:
+              document.onmouseup = null;
+              document.onmousemove = null;
+            }
+          }
     };
 
 
