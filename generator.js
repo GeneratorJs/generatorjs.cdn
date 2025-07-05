@@ -211,8 +211,8 @@ const parsemdbeta = (mdinput, callback) => {
       if (match) {
           var matchArray = Array.from(match)
           var res = `<h${matchArray[1].length + 1}>${textformat(matchArray[2])}</h${matchArray[1].length + 1}>`
-        //   return textformat(res)
-        return res
+          return textformat(res)
+        // return res
       }
   }
 
@@ -225,8 +225,8 @@ const parsemdbeta = (mdinput, callback) => {
           else if (matchArray[2][2] == "=") var htype = 2
           var res = `<h${htype}>${textformat(matchArray[1])}</h${htype}>`
 
-        //   return textformat(res)
-        return res
+          return textformat(res)
+        // return res
       }
   }
 
@@ -343,24 +343,26 @@ const parsemdbeta = (mdinput, callback) => {
 
 
       // // bold/italic/emph
-      // https://regex101.com/r/3GWtGB/1
-    //   var italicPattern = /(?<=\W+)((\*|_){1,3})(\S[^\*_\n]+?\S)\1(?=\W)/gmi
-      var italicPattern = /(?<marks>\*{1,3}|_{1,3})(?<content>[^\s*_]+)\k<marks>/gmi
-      // var italicPattern = /([\s]+)((\*|_){1,3})([^\*_\n]+?)\1(?=\W)/gmi
-      match1 = md.matchAll(italicPattern)
-      matchList = Array.from(match1)
-      matchList.forEach(p => {
-          if (p[1].length == 3) {
-              md = md.replaceAll(p[0], `<em><strong>${p[2]}</strong></em>`)
-          }
-          if (p[1].length == 2) {
-              md = md.replaceAll(p[0], `<strong>${p[2]}</strong>`)
-          }
-          if (p[1].length == 1) {
-              md = md.replaceAll(p[0], `<em>${p[2]}</em>`)
-          }
-      })
+      var italicPattern = /([*_]{1,3})(\S[^\*_\n]+?\S)\1/mig
+      //   var italicPattern = /(?<marks>\*{1,3}|_{1,3})(?<content>[^\s*_]+)\k<marks>/gmi
+        // var italicPattern = /([\s]+)((\*|_){1,3})([^\*_\n]+?)\1(?=\W)/gmi
+        match1 = md.matchAll(italicPattern)
+        matchList = Array.from(match1)
+        matchList.forEach(p => {
+            if (p[1].length == 3) {
+                md = md.replaceAll(p[0], `<em><strong>${p[2]}</strong></em>`)
+            }
+            else if (p[1].length == 2) {
+                md = md.replaceAll(p[0], `<strong>${p[2]}</strong>`)
+            }
+            else if (p[1].length == 1) {
+                md = md.replaceAll(p[0], `<em>${p[2]}</em>`)
+            }
+        })
 
+
+     
+  
       // // strikethrough
       // https://regex101.com/r/MLsQRh/1
       var strikethroughPattern = /~~(.*)~~/igm
