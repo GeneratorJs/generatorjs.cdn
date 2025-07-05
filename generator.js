@@ -365,12 +365,13 @@ const parsemdbeta = (mdinput, callback) => {
   
       // // strikethrough
       // https://regex101.com/r/MLsQRh/1
-      var strikethroughPattern = /~~(.*)~~/igm
-      // var strikethroughPattern =/~~([\s\S]*?)~~/gm;
+    //   var strikethroughPattern = /([~=]{2})(.*)\1/igm
+    var strikethroughPattern = /([~=]{2})([^~=\n]+)\1/igm
       match1 = md.matchAll(strikethroughPattern)
       matchList = Array.from(match1)
       matchList.forEach(p => {
-          md = md.replace(p[0], `<del class='parsedmd-del'>${p[1]} </del>`)
+        if (p[1][0]== "~") {md = md.replace(p[0], `<del class='parsedmd-del'>${p[2]} </del>`)}
+        else if (p[1][0]== "=") {md = md.replace(p[0], `<mark class='parsedmd-mark'>${p[2]} </mark>`)}
       })
 
 
