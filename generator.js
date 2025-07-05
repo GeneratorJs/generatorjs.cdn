@@ -342,11 +342,13 @@ const parsemdbeta = (mdinput, callback) => {
 
       // // bold/italic/emph
       // https://regex101.com/r/3GWtGB/1
-      var italicPattern = /(?<=\W+)((\*|_){1,3})(\S[^\*_\n]+?\S)\1(?=\W)/gmi
+    //   var italicPattern = /(?<=\W+)((\*|_){1,3})(\S[^\*_\n]+?\S)\1(?=\W)/gmi
+      var italicPattern = /(?<marks>\*{1,3}|_{1,3})(?<content>[^\s*_]+)\k<marks>/gmi
       // var italicPattern = /([\s]+)((\*|_){1,3})([^\*_\n]+?)\1(?=\W)/gmi
       match1 = md.matchAll(italicPattern)
       matchList = Array.from(match1)
       matchList.forEach(p => {
+        log(p)
           if (p[1].length == 3) {
               md = md.replaceAll(p[0], `<em><strong>${p[3]}</strong></em>`)
           }
