@@ -279,7 +279,7 @@ function GeneratorJs() {
             })
 
             var res = md.join("\n\n").replaceAll(/<\/ul>\n+<ul>/g, "").replaceAll(/<\/ol>\n+<ol>/g, "").replaceAll("</ol><ol>", "").replaceAll("</ul><ul>", "")
-            return testformat(res)
+            return textformat(res)
         }
 
         const textformat = (md) => {
