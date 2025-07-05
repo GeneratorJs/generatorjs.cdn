@@ -242,149 +242,6 @@ function GeneratorJs() {
             }
 
 
-            const textformat = (md) => {
-
-                var inlinecodePattern = /(?<!`)`([^`]*?)`(?!`)/gmi;
-                match1 = md.matchAll(inlinecodePattern)
-                matchList = Array.from(match1)
-                matchList.forEach(p => {
-                    md = md.replaceAll(p[0], `<code class='parsemd-code code-inline'>${p[1]}</code>`)
-                })
-
-
-                // // blockMath
-                //https://regex101.com/r/QdJcQS/1
-                var blockMathPattern = /\${2}([^$\n]+)\${2}/gm
-                match1 = md.matchAll(blockMathPattern)
-                matchList = Array.from(match1)
-                matchList.forEach(p => {
-                    // log(p)
-                    md = md.replaceAll(p[0], `\\[ ${p[1]} \\]`)
-                })
-
-
-                // // inlineMath
-                //https://regex101.com/r/QdJcQS/1
-                // var inlineMathPattern = /(?<!\$)\$([^$\n]+)\$(?!\$)/gm
-                var inlineMathPattern = /(?<!\$)\$([^$\n]+)\$(?!\$)/mg;
-
-                match1 = md.matchAll(inlineMathPattern)
-                matchList = Array.from(match1)
-                matchList.forEach(p => {
-                    // log(p)
-                    md = md.replaceAll(p[0], `\\( ${p[1]} \\)`)
-                })
-
-
-
-                // // imageurl
-                // https://regex101.com/r/EXVZcK/1
-
-                var imageUrlPattern = /!\[([^\]]*)]\("?([^\)"']*)"?\)/gm
-                match1 = md.matchAll(imageUrlPattern)
-                matchList = Array.from(match1)
-                matchList.forEach(p => {
-                    //               console.log(p)
-                    md = md.replaceAll(p[0], `\n<img src="${p[2]}" alt="${p[1]}" />`)
-
-                })
-
-                // // link
-                // https://regex101.com/r/APBkU8/1
-                // var linkPattern = /[^!]\[([^\]]*)\]\(([^\)]*)\)/gmi
-                var linkPattern = /(?<!!)\[([^\]]*)\]\(([^\)]*)\)/gmi
-
-                match1 = md.matchAll(linkPattern)
-                matchList = Array.from(match1)
-                matchList.forEach(p => {
-                    //                    log(p)
-                    md = md.replaceAll(p[0], `<a href="${p[2]}">${p[1]}</a>`)
-
-                })
-
-
-                // // bold/italic/emph
-                // https://regex101.com/r/3GWtGB/1
-                var italicPattern = /(?<=\W+)((\*|_){1,3})(\S[^\*_\n]+?\S)\1(?=\W)/gmi
-                // var italicPattern = /([\s]+)((\*|_){1,3})([^\*_\n]+?)\1(?=\W)/gmi
-                match1 = md.matchAll(italicPattern)
-                matchList = Array.from(match1)
-                matchList.forEach(p => {
-                    if (p[1].length == 3) {
-                        md = md.replaceAll(p[0], `<em><strong>${p[3]}</strong></em>`)
-                    }
-                    if (p[1].length == 2) {
-                        md = md.replaceAll(p[0], `<strong>${p[3]}</strong>`)
-                    }
-                    if (p[1].length == 1) {
-                        md = md.replaceAll(p[0], `<em>${p[3]}</em>`)
-                    }
-                })
-
-                // // strikethrough
-                // https://regex101.com/r/MLsQRh/1
-                var strikethroughPattern = /~~(.*)~~/igm
-                // var strikethroughPattern =/~~([\s\S]*?)~~/gm;
-                match1 = md.matchAll(strikethroughPattern)
-                matchList = Array.from(match1)
-                matchList.forEach(p => {
-                    md = md.replace(p[0], `<del class='parsedmd-del'>${p[1]} </del>`)
-                })
-
-
-
-                // reference
-                https://regex101.com/r/eLzXSC/1                                 
-                var referencelinkPattern = /(?<!!)\[([^\]]*)\]\s{0,3}\[([^\]]*)\]/gmi
-
-                match1 = md.matchAll(referencelinkPattern)
-                matchList = Array.from(match1)
-                matchList.forEach(p => {
-                    //                    log(p)
-                    md = md.replaceAll(p[0], `<a href="#${p[2]}">${p[1]}</a>`)
-
-                })
-
-                // Blockreferencelist
-                // https://regex101.com/r/xu97SN/1
-                var listBlockPattern = /(^ *(\[[^\]]*\]:)\s+[^\n]*){1,}/gmi
-                match1 = md.matchAll(listBlockPattern)
-                matchList = Array.from(match1)
-                matchList.forEach(p => {
-                    var block = p[0]
-                    // referencelistBlock
-                    // https://regex101.com/r/JC0xSx/1
-                    var listPattern = /^\[([^\]]*)\]:\s+([^\n]*)$/gmi
-                    list = block.matchAll(listPattern)
-                    listEntry = Array.from(list)
-                    listEntry.forEach(li => {
-                        block = block.replaceAll(li[0], `\n\t<span id="${li[1]}">${li[2]}</span> `)
-                    })
-
-                    // subreferencelist
-                    // https://regex101.com/r/DYvI2z/1
-                    var sublistPattern = /^ +(\*|-)\s+([^\n]*)$/gmi
-                    list = block.matchAll(sublistPattern)
-                    listEntry = Array.from(list)
-                    listEntry.forEach(li => {
-                        //                        block = block.replaceAll(li[0], `\n<ul>\n\t<li>${li[1]}</li></ul>`) trying sub list
-                        block = block.replaceAll(li[0], `\n<ul>\n\t<li>${li[2]}</li></ul>`)
-                    })
-
-                    // md = md.replaceAll(p[0], `\n<ul>${block}</ul>`)
-                    md = md.replaceAll(p[0], `\n${block}`)
-                })
-                return md
-
-            }
-
-            //subfunctions end
-
-
-
-
-
-
             md = md.split(/\n+/)
 
             md = md.map(line => {
@@ -425,8 +282,148 @@ function GeneratorJs() {
             return testformat(res)
         }
 
+        const textformat = (md) => {
 
-        //parsemdbeta end
+            var inlinecodePattern = /(?<!`)`([^`]*?)`(?!`)/gmi;
+            match1 = md.matchAll(inlinecodePattern)
+            matchList = Array.from(match1)
+            matchList.forEach(p => {
+                md = md.replaceAll(p[0], `<code class='parsemd-code code-inline'>${p[1]}</code>`)
+            })
+
+
+            // // blockMath
+            //https://regex101.com/r/QdJcQS/1
+            var blockMathPattern = /\${2}([^$\n]+)\${2}/gm
+            match1 = md.matchAll(blockMathPattern)
+            matchList = Array.from(match1)
+            matchList.forEach(p => {
+                // log(p)
+                md = md.replaceAll(p[0], `\\[ ${p[1]} \\]`)
+            })
+
+
+            // // inlineMath
+            //https://regex101.com/r/QdJcQS/1
+            // var inlineMathPattern = /(?<!\$)\$([^$\n]+)\$(?!\$)/gm
+            var inlineMathPattern = /(?<!\$)\$([^$\n]+)\$(?!\$)/mg;
+
+            match1 = md.matchAll(inlineMathPattern)
+            matchList = Array.from(match1)
+            matchList.forEach(p => {
+                // log(p)
+                md = md.replaceAll(p[0], `\\( ${p[1]} \\)`)
+            })
+
+
+
+            // // imageurl
+            // https://regex101.com/r/EXVZcK/1
+
+            var imageUrlPattern = /!\[([^\]]*)]\("?([^\)"']*)"?\)/gm
+            match1 = md.matchAll(imageUrlPattern)
+            matchList = Array.from(match1)
+            matchList.forEach(p => {
+                //               console.log(p)
+                md = md.replaceAll(p[0], `\n<img src="${p[2]}" alt="${p[1]}" />`)
+
+            })
+
+            // // link
+            // https://regex101.com/r/APBkU8/1
+            // var linkPattern = /[^!]\[([^\]]*)\]\(([^\)]*)\)/gmi
+            var linkPattern = /(?<!!)\[([^\]]*)\]\(([^\)]*)\)/gmi
+
+            match1 = md.matchAll(linkPattern)
+            matchList = Array.from(match1)
+            matchList.forEach(p => {
+                //                    log(p)
+                md = md.replaceAll(p[0], `<a href="${p[2]}">${p[1]}</a>`)
+
+            })
+
+
+            // // bold/italic/emph
+            // https://regex101.com/r/3GWtGB/1
+            var italicPattern = /(?<=\W+)((\*|_){1,3})(\S[^\*_\n]+?\S)\1(?=\W)/gmi
+            // var italicPattern = /([\s]+)((\*|_){1,3})([^\*_\n]+?)\1(?=\W)/gmi
+            match1 = md.matchAll(italicPattern)
+            matchList = Array.from(match1)
+            matchList.forEach(p => {
+                if (p[1].length == 3) {
+                    md = md.replaceAll(p[0], `<em><strong>${p[3]}</strong></em>`)
+                }
+                if (p[1].length == 2) {
+                    md = md.replaceAll(p[0], `<strong>${p[3]}</strong>`)
+                }
+                if (p[1].length == 1) {
+                    md = md.replaceAll(p[0], `<em>${p[3]}</em>`)
+                }
+            })
+
+            // // strikethrough
+            // https://regex101.com/r/MLsQRh/1
+            var strikethroughPattern = /~~(.*)~~/igm
+            // var strikethroughPattern =/~~([\s\S]*?)~~/gm;
+            match1 = md.matchAll(strikethroughPattern)
+            matchList = Array.from(match1)
+            matchList.forEach(p => {
+                md = md.replace(p[0], `<del class='parsedmd-del'>${p[1]} </del>`)
+            })
+
+
+
+            // reference
+            https://regex101.com/r/eLzXSC/1                                 
+            var referencelinkPattern = /(?<!!)\[([^\]]*)\]\s{0,3}\[([^\]]*)\]/gmi
+
+            match1 = md.matchAll(referencelinkPattern)
+            matchList = Array.from(match1)
+            matchList.forEach(p => {
+                //                    log(p)
+                md = md.replaceAll(p[0], `<a href="#${p[2]}">${p[1]}</a>`)
+
+            })
+
+            // Blockreferencelist
+            // https://regex101.com/r/xu97SN/1
+            var listBlockPattern = /(^ *(\[[^\]]*\]:)\s+[^\n]*){1,}/gmi
+            match1 = md.matchAll(listBlockPattern)
+            matchList = Array.from(match1)
+            matchList.forEach(p => {
+                var block = p[0]
+                // referencelistBlock
+                // https://regex101.com/r/JC0xSx/1
+                var listPattern = /^\[([^\]]*)\]:\s+([^\n]*)$/gmi
+                list = block.matchAll(listPattern)
+                listEntry = Array.from(list)
+                listEntry.forEach(li => {
+                    block = block.replaceAll(li[0], `\n\t<span id="${li[1]}">${li[2]}</span> `)
+                })
+
+                // subreferencelist
+                // https://regex101.com/r/DYvI2z/1
+                var sublistPattern = /^ +(\*|-)\s+([^\n]*)$/gmi
+                list = block.matchAll(sublistPattern)
+                listEntry = Array.from(list)
+                listEntry.forEach(li => {
+                    //                        block = block.replaceAll(li[0], `\n<ul>\n\t<li>${li[1]}</li></ul>`) trying sub list
+                    block = block.replaceAll(li[0], `\n<ul>\n\t<li>${li[2]}</li></ul>`)
+                })
+
+                // md = md.replaceAll(p[0], `\n<ul>${block}</ul>`)
+                md = md.replaceAll(p[0], `\n${block}`)
+            })
+            return md
+
+        }
+
+        //subfunctions end
+
+
+
+
+
 
 
 
@@ -526,72 +523,11 @@ function GeneratorJs() {
 
 
     }
+    //parsemdbeta end
 
 
-
-
-
-    var self = {}
-    self = (...args) => {
-        console.log(args.length)
-        if (args.length == 1) {
-            let selector = args[0];
-            return document.querySelectorAll(selector)
-        }
-        else if (args.length == 2) {
-            let selector = args[0]; let index = args[1];
-            return document.querySelectorAll(selector)[index];
-        }
-        // self.loadBasicHtmlVariables()
-    };
-    self.eval = (expression) => {
-        Function("return " + expression)();
-        // eval(expression)
-    };
-    self.loadBasicHtmlVariables = () => {
-        // console.info("loadBasicHtmlVariables")
-        let listOfBasicHtmlTags = "div,p,span,b,i,img,video,picture,canvas,svg,audio,h1,h2,h3,h4,h5,h6,table,thead,tbody,tr,td,ul,li,ol,a,textarea,input,output,select,option,checkbox,radio,button,embed,object,iframe,kbd,code,dl,dt,dd,meta,pre,form,fieldset,legend,label,section,main,aside,header,footer,nav,meta,head,body,dialog,details,summary,figure,figcaption,sidebar,style,script,del,ins,wbr,mark,time";
-        let list = listOfBasicHtmlTags.replaceAll(' ', ',').replaceAll(',,', ',')
-        list.split(",").forEach(tag => {
-            if (tag.length > 0) {
-                var expression = `window.${tag} = '${tag}'`
-                self.eval(expression)
-            }
-        })
-    };
-
-
-    //get depricated
-    self.get = (parentid) => {
-        console.error("get is depricated, use grab instead")
-        var parentElement = null;
-        try {
-            if (parentid instanceof Object == true) { parentElement = parentid }
-            else {
-                parentElement = document.querySelectorAll(parentid);
-            }
-        }
-        catch (err) {
-            console.log(`grab(${parentid})`)
-            console.error(err)
-        }
-        return parentElement
-
-    };
-
-    //grab
-    self.grab = grab;
-
-    // check if content is html
-    self.isHTML = (content) => {
-        const tempElement = document.createElement('div');
-        tempElement.innerHTML = content;
-        return tempElement.children.length > 0;
-    }
-
-
-    // append
-    self.append = (parentid, childhtml, position = 'after') => {
+    //append start
+    const append = (parentid, childhtml, position = 'after') => {
         position = position.toLowerCase()
         try {
             if (parentid instanceof Object == true) { var parentElement = parentid }
@@ -668,28 +604,11 @@ function GeneratorJs() {
             console.error(err)
         }
 
-    }
-
-        ;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    };
+    //append 
 
     //gen start
-    self.gen = (elementtype, idin, htmlin, classin, src, event) => {
+    const gen = (elementtype, idin, htmlin, classin, src, event) => {
         try {
             if (htmlin != undefined) {
                 // console.log(htmlin.isArray)
@@ -823,7 +742,93 @@ function GeneratorJs() {
             )
         }
     };
+    //gen end    
     //gen end
+
+
+    var self = {}
+    self = (...args) => {
+        console.log(args.length)
+        if (args.length == 1) {
+            let selector = args[0];
+            return document.querySelectorAll(selector)
+        }
+        else if (args.length == 2) {
+            let selector = args[0]; let index = args[1];
+            return document.querySelectorAll(selector)[index];
+        }
+        // self.loadBasicHtmlVariables()
+    };
+    self.eval = (expression) => {
+        Function("return " + expression)();
+        // eval(expression)
+    };
+    self.loadBasicHtmlVariables = () => {
+        // console.info("loadBasicHtmlVariables")
+        let listOfBasicHtmlTags = "div,p,span,b,i,img,video,picture,canvas,svg,audio,h1,h2,h3,h4,h5,h6,table,thead,tbody,tr,td,ul,li,ol,a,textarea,input,output,select,option,checkbox,radio,button,embed,object,iframe,kbd,code,dl,dt,dd,meta,pre,form,fieldset,legend,label,section,main,aside,header,footer,nav,meta,head,body,dialog,details,summary,figure,figcaption,sidebar,style,script,del,ins,wbr,mark,time";
+        let list = listOfBasicHtmlTags.replaceAll(' ', ',').replaceAll(',,', ',')
+        list.split(",").forEach(tag => {
+            if (tag.length > 0) {
+                var expression = `window.${tag} = '${tag}'`
+                self.eval(expression)
+            }
+        })
+    };
+
+
+    //get depricated
+    self.get = (parentid) => {
+        console.error("get is depricated, use grab instead")
+        var parentElement = null;
+        try {
+            if (parentid instanceof Object == true) { parentElement = parentid }
+            else {
+                parentElement = document.querySelectorAll(parentid);
+            }
+        }
+        catch (err) {
+            console.log(`grab(${parentid})`)
+            console.error(err)
+        }
+        return parentElement
+
+    };
+
+    //grab
+    self.grab = grab;
+
+    //new parsemd from parsemdbeta
+    self.parsemd = parsemdbeta
+
+    // check if content is html
+    self.isHTML = (content) => {
+        const tempElement = document.createElement('div');
+        tempElement.innerHTML = content;
+        return tempElement.children.length > 0;
+    }
+
+
+    // append
+    self.append = append;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //gen start
+    self.gen = gen;
 
 
     self.gens = (...args) => {
@@ -1363,8 +1368,6 @@ function GeneratorJs() {
 
 
 
-    //new parsemd from parsemdbeta
-    self.parsemd = parsemdbeta
 
 
 
