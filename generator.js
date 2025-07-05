@@ -348,15 +348,14 @@ const parsemdbeta = (mdinput, callback) => {
       match1 = md.matchAll(italicPattern)
       matchList = Array.from(match1)
       matchList.forEach(p => {
-        log(p)
           if (p[1].length == 3) {
-              md = md.replaceAll(p[0], `<em><strong>${p[3]}</strong></em>`)
+              md = md.replaceAll(p[0], `<em><strong>${p[2]}</strong></em>`)
           }
           if (p[1].length == 2) {
-              md = md.replaceAll(p[0], `<strong>${p[3]}</strong>`)
+              md = md.replaceAll(p[0], `<strong>${p[2]}</strong>`)
           }
           if (p[1].length == 1) {
-              md = md.replaceAll(p[0], `<em>${p[3]}</em>`)
+              md = md.replaceAll(p[0], `<em>${p[2]}</em>`)
           }
       })
 
