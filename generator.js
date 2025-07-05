@@ -23,7 +23,7 @@ function GeneratorJs() {
     };
     //grab end
 
-    //parsemdbeta start
+   //parsemdbeta start
 const parsemdbeta = (mdinput, callback) => {
 
   //subfunctions start
@@ -210,8 +210,9 @@ const parsemdbeta = (mdinput, callback) => {
       const match = block.match(pattern);
       if (match) {
           var matchArray = Array.from(match)
-          var res = `<h${matchArray[1].length + 1}>${matchArray[2]}</h${matchArray[1].length + 1}>`
-          return textformat(res)
+          var res = `<h${matchArray[1].length + 1}>${textformat(matchArray[2])}</h${matchArray[1].length + 1}>`
+        //   return textformat(res)
+        return res
       }
   }
 
@@ -222,9 +223,10 @@ const parsemdbeta = (mdinput, callback) => {
           var matchArray = Array.from(match)
           if (matchArray[2][2] == "-") var htype = 1
           else if (matchArray[2][2] == "=") var htype = 2
-          var res = `<h${htype}>${matchArray[1]}</h${htype}>`
+          var res = `<h${htype}>${textformat(matchArray[1])}</h${htype}>`
 
-          return textformat(res)
+        //   return textformat(res)
+        return res
       }
   }
 
